@@ -1,0 +1,25 @@
+<div class=" form-inline">
+  <label [ngClass]="labelCssClass ? labelCssClass : labelDefaultCssClass">
+    {{label || targetProperty}}:
+  </label>
+  <div #formGroup class="form-group" style="width: 69.5%"
+       [ngClass]="{'has-error': hasError(boxControl),
+                   'has-success': hasSuccess(),
+                   'has-feedback': hasError(boxControl) ||
+                                   hasSuccess()}">
+    <div #searchBox class="app-searchBox" style="width: 100%;">
+      <input #box #boxControl="ngForm" [formControl]="boxFormControl"
+             type="text" placeholder="Search"
+             class="form-control typeahead"
+             style="border-radius: 8px;
+                    height: 30px;
+                    width: 100%">
+      <span [ngClass]="{
+            'glyphicon form-control-feedback':
+                hasError(boxControl) || hasSuccess(boxControl),
+            'glyphicon-remove': hasError(boxControl),
+            'glyphicon-ok': hasSuccess(boxControl)}">
+      </span>
+    </div>
+  </div>
+</div>

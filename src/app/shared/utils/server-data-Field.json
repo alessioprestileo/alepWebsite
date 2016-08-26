@@ -1,0 +1,1280 @@
+[
+  {
+    "Field": "Field1"
+  },
+  {
+    "Field": "Field2"
+  },
+{
+  "Field": "AVG_TOT_ASSETS"
+},
+{
+  "Field": "SEC_DEBT"
+},
+{
+  "Field": "CAP_AD_RATIO"
+},
+{
+  "Field": "CENTRAL_BANK_DEP"
+},
+{
+  "Field": "COM_FEES_PAY"
+},
+{
+  "Field": "COM_FEES_REC"
+},
+{
+  "Field": "SEC_HOLDINGS"
+},
+{
+  "Field": "CORE_CAP_PCT"
+},
+{
+  "Field": "COV_TO_COM_LENDING"
+},
+{
+  "Field": "COV_TO_PRIV_LENDING"
+},
+{
+  "Field": "COV_TO_TOT_ASSETS"
+},
+{
+  "Field": "COV_TO_TOT_LENDING"
+},
+{
+  "Field": "COV_TRANS_COM"
+},
+{
+  "Field": "COV_TRANS_HOUSE"
+},
+{
+  "Field": "NON_PERF_LOANS"
+},
+{
+  "Field": "DEP_TO_TOT_LOANS_ADJ"
+},
+{
+  "Field": "DEPOSITS"
+},
+{
+  "Field": "DEPOSITS_PCT"
+},
+{
+  "Field": "DEPRECIATION"
+},
+{
+  "Field": "DIV_PER_SHARE"
+},
+{
+  "Field": "DRAWING_RIGHTS"
+},
+{
+  "Field": "EQUITY"
+},
+{
+  "Field": "EX_ORD_PROF_NET"
+},
+{
+  "Field": "EXPENSES"
+},
+{
+  "Field": "FIXED_ASSETS"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS"
+},
+{
+  "Field": "GROUP_TOTAL_ASSETS"
+},
+{
+  "Field": "GUARANTIES"
+},
+{
+  "Field": "INCOME"
+},
+{
+  "Field": "INVEST_IN_SUBSID"
+},
+{
+  "Field": "JUST_BM_ANDEL_END"
+},
+{
+  "Field": "LOANS_TO_CRED_INST"
+},
+{
+  "Field": "LOAN_LOSSES"
+},
+{
+  "Field": "LOANS_FROM_CRED_INST"
+},
+{
+  "Field": "NET_INCOME"
+},
+{
+  "Field": "NET_LOANS"
+},
+{
+  "Field": "NET_LOANS_PCT"
+},
+{
+  "Field": "NET_LOSSES_WRITEDOWNS"
+},
+{
+  "Field": "NOTCH_LT2"
+},
+{
+  "Field": "NOTCH_SENIOR"
+},
+{
+  "Field": "NOTCH_T1"
+},
+{
+  "Field": "NOTCH_UT2"
+},
+{
+  "Field": "OP_PROFIT"
+},
+{
+  "Field": "OP_PROFIT_AFTER_TAX"
+},
+{
+  "Field": "OPEC_PERCENT_EX_OTI"
+},
+{
+  "Field": "OPEC_PERCENT"
+},
+{
+  "Field": "OTHER_ASSETS"
+},
+{
+  "Field": "OTHER_LIABILITIES"
+},
+{
+  "Field": "OTHER_OP_INCOME"
+},
+{
+  "Field": "OTHER_OPEC"
+},
+{
+  "Field": "PARENTAL_SUPP"
+},
+{
+  "Field": "PROB_LOANS"
+},
+{
+  "Field": "PRIV_LENDING"
+},
+{
+  "Field": "PROFIT"
+},
+{
+  "Field": "RET_EARNINGS"
+},
+{
+  "Field": "RET_EQY"
+},
+{
+  "Field": "RET_EQY_RWA"
+},
+{
+  "Field": "RISK_A"
+},
+{
+  "Field": "RISK_B"
+},
+{
+  "Field": "RISK_C"
+},
+{
+  "Field": "RISK_D"
+},
+{
+  "Field": "RISK_E"
+},
+{
+  "Field": "RISK_MN"
+},
+{
+  "Field": "RISK_REST"
+},
+{
+  "Field": "RISK_UK"
+},
+{
+  "Field": "RWA"
+},
+{
+  "Field": "ROE"
+},
+{
+  "Field": "S_BYGG"
+},
+{
+  "Field": "S_EIENDOM"
+},
+{
+  "Field": "S_FISKE"
+},
+{
+  "Field": "S_HANDEL"
+},
+{
+  "Field": "S_HOTELL"
+},
+{
+  "Field": "S_INDUSTRI"
+},
+{
+  "Field": "S_JORDBRUK"
+},
+{
+  "Field": "S_KRAFT"
+},
+{
+  "Field": "S_NEDSKRIVNINGER"
+},
+{
+  "Field": "S_OFFENTLIG"
+},
+{
+  "Field": "S_OLJE"
+},
+{
+  "Field": "S_ORG"
+},
+{
+  "Field": "S_OVRIGE"
+},
+{
+  "Field": "S_PERSON"
+},
+{
+  "Field": "S_REST"
+},
+{
+  "Field": "S_SERVICE"
+},
+{
+  "Field": "S_SKIP"
+},
+{
+  "Field": "S_TRANSPORT"
+},
+{
+  "Field": "SAL_AND_OTHER_EXP"
+},
+{
+  "Field": "SHARE_CAP"
+},
+{
+  "Field": "SHARE_PRICE"
+},
+{
+  "Field": "SHAREHOLDINGS"
+},
+{
+  "Field": "SPEC_LOAN_LOSS_PCT"
+},
+{
+  "Field": "SPEC_LOAN_LOSS_PROV"
+},
+{
+  "Field": "SUBORD_LOAN_CAP"
+},
+{
+  "Field": "SUM_DEBT_EQY"
+},
+{
+  "Field": "SUM_OP_COST"
+},
+{
+  "Field": "SUM_OTHER_INC"
+},
+{
+  "Field": "SUP_CAP_PCT"
+},
+{
+  "Field": "SYSTEMIC_SUPP"
+},
+{
+  "Field": "TAXES"
+},
+{
+  "Field": "TOT_ASSETS_PCT"
+},
+{
+  "Field": "TOT_SEC"
+},
+{
+  "Field": "TOTAL_ASSETS"
+},
+{
+  "Field": "TOTAL_LOANS"
+},
+{
+  "Field": "UNSPEC_LOAN_LOSS"
+},
+{
+  "Field": "UNSPEC_LOAN_LOSS_PCT"
+},
+{
+  "Field": "DIVIDENDS"
+},
+{
+  "Field": "NET_LOSS_OF_LOANS"
+},
+{
+  "Field": "OP_PROFIT_BEFORE_LOSS"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_DIV_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_STAB_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_GEO_DIV_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_SHARE_AND_SUST_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_ECO_STAB_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_INTEGRITY_CORR_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LEGAL_SYS_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_DIV_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_SIZE_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CONTROL_AND_RM_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_STAB_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_GEO_DIV_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CORP_GOV_GROWTH_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_SHARE_AND_SUST_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_ECO_STAB_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CREDIT_RISK_CONS_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LEGAL_SYS_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_FIN_REP_TRANS_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUAL_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_RISK_APPETITE_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_INTEGRITY_CORR_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_SH_EQY_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_SIZE_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CONTROL_AND_RM_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_GROSS_LOANS_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_TANGIBLE_COM_EQY_SUB_TREND_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_TIER1_SUB_TREND_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CORP_GOV_GROWTH_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_CREDIT_RISK_CONS_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_COST_TO_INC_RATIO_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_FIN_REP_TRANS_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUAL_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MF_AND_LA_TO_TA_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_RISK_APPETITE_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_SH_EQY_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUANT_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_GROSS_LOANS_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_TANGIBLE_COM_EQY_SUB_TREND_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_TIER1_SUB_TREND_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LOWEST_COMB_FACT_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_MF_AND_LA_TO_TA_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_NET_INC_TO_RWA_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUANT_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_LOWEST_COMB_FACT_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_NET_INC_TO_RWA_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_OP_PROFIT_AFTER_TAX_TO_ADJ_TA_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_OP_PROFIT_AFTER_TAX_TO_ADJ_TA_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PREPROV_PROF_TO_AVG_RWA_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PREPROV_PROF_TO_AVG_RWA_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PARENT_SUPP_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_SYSTEMIC_SUPP_WSCORE"
+},
+{
+  "Field": "NORBANK_FACT_PARENT_SUPP_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_SYSTEMIC_SUPP_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_COST_TO_INC_RATIO_WSCORE"
+},
+{
+  "Field": "NORBANK_CREDIT_SCORE"
+},
+{
+  "Field": "NORBANK_GROUP_ASSET_QUALITY_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_CAP_ADEQ_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_EFFICIENCY_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_FRANCHISE_VAL_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_LIQUIDITY_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_LOWEST_COMB_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_OPER_ENV_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_PROFITABILITY_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_REG_ENV_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_RISK_POSITIONING_UWSCORE"
+},
+{
+  "Field": "NORBANK_GROUP_SUPPORT_UWSCORE"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_DIV_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_ECO_STAB_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_GEO_DIV_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_SHARE_AND_SUST_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_INTEGRITY_CORR_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_LEGAL_SYS_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_SIZE_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_CONTROL_AND_RM_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_CORP_GOV_GROWTH_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_CREDIT_RISK_CONS_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_FIN_REP_TRANS_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUAL_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_MARKET_RISK_APPETITE_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_SH_EQY_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_PROB_LOANS_TO_GROSS_LOANS_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_TANGIBLE_COM_EQY_SUB_TREND_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_TIER1_SUB_TREND_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_COST_TO_INC_RATIO_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_MF_AND_LA_TO_TA_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_LIQUIDITY_MAN_QUANT_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_NET_INC_TO_RWA_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_OP_PROFIT_AFTER_TAX_TO_ADJ_TA_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_PREPROV_PROF_TO_AVG_RWA_INDVAL"
+},
+{
+  "Field": "NORBANK_FACT_EARNINGS_STAB_INDVAL"
+},
+{
+  "Field": "SUM_OTHER_INC_NET"
+},
+{
+  "Field": "NET_SEC_DEBT_AND_BORROWINGS_TO_TA"
+},
+{
+  "Field": "DEPOSITS_TO_TOTAL_LOANS"
+},
+{
+  "Field": "DEPOSITS_TO_TOTAL_LOANS_ADJ"
+},
+{
+  "Field": "DEPOSITS_GROWTH_1Y"
+},
+{
+  "Field": "TOTAL_LOANS_GROWTH_1Y"
+},
+{
+  "Field": "TOTAL_ASSETS_GROWTH_1Y"
+},
+{
+  "Field": "NET_INC_TO_AVG_TA"
+},
+{
+  "Field": "VALUE_ADJ_TO_AVG_TA"
+},
+{
+  "Field": "SUM_OTHER_INC_TO_AVG_TA"
+},
+{
+  "Field": "SUM_OP_COST_TO_AVG_TA"
+},
+{
+  "Field": "OP_PROFIT_BEFORE_LOSS_TO_AVG_TA"
+},
+{
+  "Field": "LOAN_LOSSES_TO_AVG_TA"
+},
+{
+  "Field": "OP_PROFIT_TO_AVG_TA"
+},
+{
+  "Field": "SUM_OP_COST_TO_TOT_INC"
+},
+{
+  "Field": "SUM_OP_COST_TO_TOT_INC_EX_VALUE_ADJ"
+},
+{
+  "Field": "EQUITY_TO_TA"
+},
+{
+  "Field": "SUBORD_LOAN_CAP_TO_TA"
+},
+{
+  "Field": "EQUITY_TO_RWA"
+},
+{
+  "Field": "RWA_TO_TA"
+},
+{
+  "Field": "SEC_DEBT_TO_TA"
+},
+{
+  "Field": "TOT_SEC_TO_TA"
+},
+{
+  "Field": "TOT_PRIV_LENDING_TO_ADJ_TOT_LOANS"
+},
+{
+  "Field": "SPEC_LOAN_LOSS_PROV_TO_TOT_LOANS"
+},
+{
+  "Field": "UNSPEC_LOAN_LOSS_TO_TOT_LOANS"
+},
+{
+  "Field": "NON_PERF_LOANS_TO_TOT_LOANS"
+},
+{
+  "Field": "NON_PERF_LOANS_AND_PROB_LOANS_TO_TOT_LOANS"
+},
+{
+  "Field": "NON_PERF_LOANS_AND_PROB_LOANS_TO_RWA"
+},
+{
+  "Field": "ADJ_TOTAL_ASSETS"
+},
+{
+  "Field": "COM_LENDING_PCT"
+},
+{
+  "Field": "ADJ_COM_LENDING_PCT"
+},
+{
+  "Field": "PROB_LOANS_PCT"
+},
+{
+  "Field": "PROB_LOANS_TO_TOT_LOANS"
+},
+{
+  "Field": "LIQ_IND_ONE"
+},
+{
+  "Field": "COV_LEEWAY"
+},
+{
+  "Field": "PROFIT_TO_AVG_TA"
+},
+{
+  "Field": "SEC_DEBT_TO_TL"
+},
+{
+  "Field": "SEC_HOLDINGS_TO_ADJ_TL"
+},
+{
+  "Field": "ADJ_TL"
+},
+{
+  "Field": "COV_TO_ASSETS"
+},
+{
+  "Field": "GROWTH_INCOME"
+},
+{
+  "Field": "GROWTH_OTHER_INC"
+},
+{
+  "Field": "GROWTH_OP_COST"
+},
+{
+  "Field": "GROWTH_PROFIT"
+},
+{
+  "Field": "INCOME_TO_LOANS"
+},
+{
+  "Field": "TOT_ASSETS"
+},
+{
+  "Field": "NET_LOANS_GROWTH_1Y"
+},
+{
+  "Field": "ROE_UNIFORM"
+},
+{
+  "Field": "AVG_TA_UNIFORM"
+},
+{
+  "Field": "VALUE_ADJ_TO_AVG_TA_UNIFORM"
+},
+{
+  "Field": "OP_PROFIT_AFTER_TAX_TO_AVG_TOT_ASS"
+},
+{
+  "Field": "SUM_OTHER_INC_PCT"
+},
+{
+  "Field": "PRIV_LENDING_PCT"
+},
+{
+  "Field": "SUM_COV_TRANS_HOUSE_AND_COM"
+},
+{
+  "Field": "DEPOSITS_TO_TA"
+},
+{
+  "Field": "SEC_DEBT_TO_TOT_ASSETS"
+},
+{
+  "Field": "LOANS_FROM_CRED_INST_TO_TA"
+},
+{
+  "Field": "OTHER_LIABILITIES_TO_TA"
+},
+{
+  "Field": "SUBORD_LOAN_CAP_TO_TOT_BAL"
+},
+{
+  "Field": "EQUITY_TO_TOT_BALANCE"
+},
+{
+  "Field": "LOAN_LOSSES_TO_TOTAL_LOANS"
+},
+{
+  "Field": "NET_LOSSES_WRTDWNS_TO_AVG_TA"
+},
+{
+  "Field": "INCOME_TO_INC_ADJ_FOR_VAL_ADJ"
+},
+{
+  "Field": "OP_PROFIT_AFTER_TAX_TO_AVG_TOT_ASS_BANK"
+},
+{
+  "Field": "PROV_LOSS_TO_PROB_LOANS"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_TOTAL"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_PERSON"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_OMF"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_PRIM"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_BYGG"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_SKIP"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_SERVICE"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_KRAFT"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_ANNET"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_OVRIG"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_OMFN"
+},
+{
+  "Field": "BANKRAPPORT_SECTOR_ORGOFF"
+},
+{
+  "Field": "SUM_TOTAL_ASSETS_COV_HOUSE COM"
+},
+{
+  "Field": "CORE_TIER_1_RATIO"
+},
+{
+  "Field": "LOANS_TO_CENTRAL_BANK_SUBFIELD"
+},
+{
+  "Field": "LOAN_LOSS_IND_CB"
+},
+{
+  "Field": "LOAN_LOSS_GROUP_CB"
+},
+{
+  "Field": "REP_ASSETS"
+},
+{
+  "Field": "SHARES_IN_FUND"
+},
+{
+  "Field": "EQY_AND_EQYCERT"
+},
+{
+  "Field": "OWN_SUBS"
+},
+{
+  "Field": "OWN_GROUP_COMP"
+},
+{
+  "Field": "INTANG_ASSETS"
+},
+{
+  "Field": "DEF_TAX_ASSETS"
+},
+{
+  "Field": "OTHER_DEF_TAX_ASSETS"
+},
+{
+  "Field": "FIXED_ASSETS_NBGF"
+},
+{
+  "Field": "BUILD_REAL_EST"
+},
+{
+  "Field": "OTHER_FIXED_ASSETS"
+},
+{
+  "Field": "OTHER_ASSETS_NBGF_SUM"
+},
+{
+  "Field": "FIN_DER"
+},
+{
+  "Field": "OTHER_ASSETS_NBGF_SUBFIELD"
+},
+{
+  "Field": "PREP_EXP_AND_ACC_INC"
+},
+{
+  "Field": "OVER_FUND_PENS_OBL"
+},
+{
+  "Field": "OTHER_PREP_EXP_AND_ACC_INC"
+},
+{
+  "Field": "SUM_OTHER_DEBT"
+},
+{
+  "Field": "OTHER_DEBT"
+},
+{
+  "Field": "ACC_EXP_AND_LIAB_AND_PREP_INCM"
+},
+{
+  "Field": "PENSION_LIAB"
+},
+{
+  "Field": "DEFERRED_TAX"
+},
+{
+  "Field": "PROV_FOR_WARRANTY"
+},
+{
+  "Field": "PROV_FOR_ACC_EXP_AND_LIAB"
+},
+{
+  "Field": "HYB_CAP_AND_SUB_LOAN_CAP"
+},
+{
+  "Field": "HYB_CAPITAL"
+},
+{
+  "Field": "SUB_DEBT_WITH_CONV_RIGHTS"
+},
+{
+  "Field": "OTHER_SUB_DEBT"
+},
+{
+  "Field": "SUM_DEBT"
+},
+{
+  "Field": "COMP_EQUITY"
+},
+{
+  "Field": "PREF_SHARE_CAPITAL"
+},
+{
+  "Field": "EQY_SHARE_CAPITAL"
+},
+{
+  "Field": "HOLDINGS_SHARES_EQY_CERT"
+},
+{
+  "Field": "EQY_PREMIUM"
+},
+{
+  "Field": "COMP_FUND_OTHER_EQY"
+},
+{
+  "Field": "PRIMARY_CAPITAL"
+},
+{
+  "Field": "SAVING_BANK_FUND"
+},
+{
+  "Field": "GIFT_FUND"
+},
+{
+  "Field": "EQUALI_FUND"
+},
+{
+  "Field": "REVAL_RESERVE"
+},
+{
+  "Field": "UNREALISED_GAINS"
+},
+{
+  "Field": "OTHER_RET_EARN"
+},
+{
+  "Field": "INCOME_LOANS_CREDIT_INST"
+},
+{
+  "Field": "INCOME_LOANS_CUST"
+},
+{
+  "Field": "INCOME_CERT_BOND_FI"
+},
+{
+  "Field": "OTHER_INT_REC_AND_INC"
+},
+{
+  "Field": "EXPENSES_DEBT_CRED_INST"
+},
+{
+  "Field": "EXPENSES_DEBT__CUST"
+},
+{
+  "Field": "EXPENSES_ISSUED_DEBT"
+},
+{
+  "Field": "EXPENSES_ISSUED_SUB_CAPITAL"
+},
+{
+  "Field": "OTHER_EXPENSES"
+},
+{
+  "Field": "DIVIDENDS_EQTY_SUM"
+},
+{
+  "Field": "DIVIDENDS_IRFUND"
+},
+{
+  "Field": "DIVIDENDS_EQTY"
+},
+{
+  "Field": "INCOME_ASS_COMP"
+},
+{
+  "Field": "INCOME_GROUP_COMP"
+},
+{
+  "Field": "GUARANTEE_FEE"
+},
+{
+  "Field": "OTHER_FEES_COM_SUM"
+},
+{
+  "Field": "MORTG_FEES"
+},
+{
+  "Field": "OTHER_FEES_COM"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_FX_CA"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_BONDS_FI"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_EQY_SUM"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_IR_FUND"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_EQY"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_DERIV"
+},
+{
+  "Field": "OTHER_OP_INCOME_SUM"
+},
+{
+  "Field": "OTHER_OP_INC_REST"
+},
+{
+  "Field": "NET_OTHER_OP_INC"
+},
+{
+  "Field": "SUM_OP_INC"
+},
+{
+  "Field": "SUM_SAL_AND_SOC_COST"
+},
+{
+  "Field": "SALARY"
+},
+{
+  "Field": "PENSIONS"
+},
+{
+  "Field": "SOC_COSTS"
+},
+{
+  "Field": "ADMIN_COSTS"
+},
+{
+  "Field": "ORD_DEPRECIATION"
+},
+{
+  "Field": "IMPAIRMENTS"
+},
+{
+  "Field": "LOSSES_ON_LOANS"
+},
+{
+  "Field": "LOSSES_GUARANTIES"
+},
+{
+  "Field": "CREDIT_LOSSES_NOTES"
+},
+{
+  "Field": "IMPAIRMENT_FIXED_ASSETS"
+},
+{
+  "Field": "NET_LOSS_FIXED_ASSETS"
+},
+{
+  "Field": "TRANSF_AND_ALLOCATIONS"
+},
+{
+  "Field": "DIV_EQY_OR_EQY_CERT"
+},
+{
+  "Field": "GROUP_TRANSFERS"
+},
+{
+  "Field": "REVAL_RESERVES"
+},
+{
+  "Field": "TRANSFERS_UNREAL_FUND"
+},
+{
+  "Field": "TRANSFERS_PRIM_CAPITAL"
+},
+{
+  "Field": "TRANSERS_GIFTS"
+},
+{
+  "Field": "TRANSFERS_EQ_FUND"
+},
+{
+  "Field": "TRANSFERS_OTHER_EQUITY"
+},
+{
+  "Field": "NUMB_EMPLOYEES"
+},
+{
+  "Field": "CONS_CORE_TIER_1_RATIO"
+},
+{
+  "Field": "CONS_CORE_CAP_PCT"
+},
+{
+  "Field": "CONS_CAP_AD_RATIO"
+},
+{
+  "Field": "SUM_NON_PERF_LOANS_AND_PROB_LOANS"
+},
+{
+  "Field": "DEFAULT_AMT"
+},
+{
+  "Field": "IND_WRITEDOWNS_DEFAULT_AMT"
+},
+{
+  "Field": "GROSS_NON_PERF_LOANS"
+},
+{
+  "Field": "IND_WRITEDOWNS_DEFAULT"
+},
+{
+  "Field": "SUM_PORTFOLIO_TRANSFER_COV"
+},
+{
+  "Field": "ACC_PORT_COV_HOUSE"
+},
+{
+  "Field": "ACC_PORT_COV_COM"
+},
+{
+  "Field": "GROSS_COM_LENDING"
+},
+{
+  "Field": "GROSS_PRIV_LENDING"
+},
+{
+  "Field": "GROSS_PUBLIC_LENDING"
+},
+{
+  "Field": "UNUSED_CREDIT_EXPOSURE"
+},
+{
+  "Field": "LOAN_GUARANTEES_FX"
+},
+{
+  "Field": "LOAN_GUARANTEES_COV"
+},
+{
+  "Field": "COV_TO_COM_LENDING_UNIFORM"
+},
+{
+  "Field": "COV_TO_PRIV_LENDING_UNIFORM"
+},
+{
+  "Field": "COV_TO_TOT_ASSETS_UNIFORM"
+},
+{
+  "Field": "COV_TO_TOT_LENDING_UNIFORM"
+},
+{
+  "Field": "JUST_BM_ANDEL_END_UNIFORM"
+},
+{
+  "Field": "BM_JUSTERT"
+},
+{
+  "Field": "DELTA_INNLAAN"
+},
+{
+  "Field": "DELTA_GROSS_LENDING"
+},
+{
+  "Field": "DELTA_GROSS_LENDING_PORT"
+},
+{
+  "Field": "DELTA_COM_LENDING"
+},
+{
+  "Field": "BANKRAPPORT_PROFITABILITY_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_LIQUIDITY_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_CAP_ADEQ_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_EFFICIENCY_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_ASSET_QUALITY_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_FRANCHISE_VAL_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_RISK_POSITIONING_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_OPER_ENV_WEIGHTED"
+},
+{
+  "Field": "BANKRAPPORT_REG_ENV_WEIGHTED"
+},
+{
+  "Field": "NOTCH_OMF"
+},
+{
+  "Field": "NORBANK_GROUP_FRANCHISE_VAL_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_OPER_ENV_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_RISK_POSITIONING_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_ASSET_QUALITY_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_CAP_ADEQ_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_EFFICIENCY_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_LIQUIDITY_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_PROFITABILITY_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "NORBANK_GROUP_REG_ENV_UWSCORE_2012_OVERRIDE"
+},
+{
+  "Field": "SEC_HOLDINGS_TEMP"
+},
+{
+  "Field": "ROE_UNIFORM_Q"
+},
+{
+  "Field": "DIVIDENDS_COM_PAPER_INC_CONCERN"
+},
+{
+  "Field": "OTHER_FEES_COM_INC_PROV"
+},
+{
+  "Field": "VALUE_ADJUSTMENTS_INC_DER"
+},
+{
+  "Field": "EQUITY_RET_AFTER_TAX"
+},
+{
+  "Field": "LCR"
+}
+]

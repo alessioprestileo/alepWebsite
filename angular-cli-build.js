@@ -15,7 +15,22 @@ module.exports = function(defaults) {
       'es6-shim/es6-shim.js',
       'reflect-metadata/**/*.+(ts|js|js.map)',
       'rxjs/**/*.+(js|js.map)',
-      '@angular/**/*.+(js|js.map)'
+      '@angular/**/*.+(js|js.map)',
+      'angular2-in-memory-web-api/**/*.+(js|js.map)',
+      'angular2-datatable/datatable.js',
+      'angular2-datatable/lib/*.js',
+      'bootstrap/dist/js/bootstrap.min.js',
+      'bootstrap/dist/fonts/*.+(woff|woff2)',
+      'bootstrap/dist/css/bootstrap.min.css',
+      'bootstrap/dist/css/bootstrap-theme.min.css',
+      'chart.js/dist/Chart.bundle.min.js',
+      'chart.js/dist/Chart.min.js',
+      'jquery/dist/core.js',
+      'jquery/dist/jquery.min.js',
+      'lodash/**/*.+(js|js.map)',
+      'ng2-charts/ng2-charts.js',
+      'ng2-charts/components/charts/charts.js',
+      'typeahead.js/dist/typeahead.bundle.min.js'
     ]
   });
 };

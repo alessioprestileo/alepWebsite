@@ -29,11 +29,17 @@ const barrels: string[] = [
   '@angular/platform-browser-dynamic',
 
   // Thirdparty barrels.
+  'angular2-datatable',
+  'angular2-in-memory-web-api',
+  'bootstrap',
+  'chart.js',
+  'jquery',
+  'lodash',
+  'ng2-charts',
   'rxjs',
-
+  'typeahead.js',
   // App specific barrels.
   'app',
-  'app/shared',
   /** @cli-barrel */
 ];
 
@@ -49,7 +55,15 @@ declare var System: any;
 System.config({
   map: {
     '@angular': 'vendor/@angular',
+    'angular2-in-memory-web-api': 'vendor/angular2-in-memory-web-api',
+    'angular2-datatable': 'vendor/angular2-datatable',
+    'bootstrap': 'vendor/bootstrap',
+    'chart.js': 'vendor/show-chart.js',
+    'jquery': 'vendor/jquery',
+    'lodash': 'vendor/lodash',
+    'ng2-charts': 'vendor/ng2-charts',
     'rxjs': 'vendor/rxjs',
+    'typeahead.js': 'vendor/typeahead.js',
     'main': 'main.js'
   },
   packages: cliSystemConfigPackages

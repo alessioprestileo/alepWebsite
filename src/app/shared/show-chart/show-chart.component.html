@@ -1,0 +1,19 @@
+<div *ngIf="!validInputChart">
+  <h2>
+    Input not valid
+  </h2>
+</div>
+<div *ngIf="validInputChart">
+  <h2>
+    {{title}}
+  </h2>
+  <br>
+  <base-chart class="chart"
+              [datasets]="chartData"
+              [labels]="chartLabels"
+              [options]="chartOptions"
+              [legend]="chartLegend"
+              [chartType]="chartType">
+  </base-chart>
+</div>
+

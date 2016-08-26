@@ -1,0 +1,135 @@
+<div *ngIf="currentDataSet && formGroup">
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'"
+        style="padding-left: 3%">
+    <app-search-box [formControlKey]="'dataSet-Ticker'"
+                    [inFormGroup]="formGroup"
+                    [method]="'prefetch'"
+                    [source]="dataSetSearchSources.Ticker.prefetch"
+                    [targetProperty]="'Ticker'"
+                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    </app-search-box>
+    <br>
+    <div *ngIf="currentDataSet.Ticker &&
+                dataSetSearchSources.Field.local">
+      <app-search-box [formControlKey]="'dataSet-Field'"
+                      [inFormGroup]="formGroup"
+                      [method]="'local'"
+                      [source]="dataSetSearchSources.Field.local"
+                      [targetProperty]="'Field'"
+                      (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                      (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+      </app-search-box>
+    </div>
+    <br>
+    <div *ngIf="currentDataSet.Id">
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 15%">
+        Id:
+      </label>
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 84%">
+        {{currentDataSet.Id}}
+      </label>
+    </div>
+  </div>
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'"
+        style="padding-left: 3%">
+    <app-search-box [formControlKey]="'dataSet-Field'"
+                    [inFormGroup]="formGroup"
+                    [method]="'prefetch'"
+                    [source]="dataSetSearchSources.Field.prefetch"
+                    [targetProperty]="'Field'"
+                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    </app-search-box>
+    <br>
+    <div *ngIf="currentDataSet.Field &&
+                dataSetSearchSources.Ticker.local">
+      <app-search-box [formControlKey]="'dataSet-Ticker'"
+                      [inFormGroup]="formGroup"
+                      [method]="'local'"
+                      [source]="dataSetSearchSources.Ticker.local"
+                      [targetProperty]="'Ticker'"
+                      (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                      (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+      </app-search-box>
+    </div>
+    <br>
+    <div *ngIf="currentDataSet.Id">
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 15%">
+        Id:
+      </label>
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 84%">
+        {{currentDataSet.Id}}
+      </label>
+    </div>
+  </div>
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option3'"
+        style="padding-left: 3%">
+    <app-search-box [formControlKey]="'dataSet-Id'"
+                    [inFormGroup]="formGroup"
+                    [method]="'prefetch'"
+                    [source]="dataSetSearchSources.Id.prefetch"
+                    [targetProperty]="'Id'"
+                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    </app-search-box>
+    <br>
+    <div *ngIf="currentDataSet.Ticker">
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 15%">
+        Ticker:
+      </label>
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 84%">
+        {{currentDataSet.Ticker}}
+      </label>
+    </div>
+    <br>
+    <div *ngIf="currentDataSet.Field">
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 15%">
+        Field:
+      </label>
+      <label style="font-size: 20px;
+             font-weight: normal;
+             height: 30px;
+             margin-bottom: 0px;
+             vertical-align: middle;
+             width: 84%">
+        {{currentDataSet.Field}}
+      </label>
+    </div>
+  </div>
+</div>

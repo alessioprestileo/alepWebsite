@@ -1,0 +1,9 @@
+<base-chart class="chart"
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+            (chartHover)="onChartHovered($event)"
+            (chartClick)="onChartClicked($event)">
+</base-chart>

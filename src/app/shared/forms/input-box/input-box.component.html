@@ -1,0 +1,22 @@
+<div class=" form-inline">
+  <label [ngClass]="labelCssClass ? labelCssClass : labelDefaultCssClass">
+    {{label}}
+  </label>
+  <div class="form-group" style="width: 70%"
+       [ngClass]="{'has-error': hasError(boxControl),
+                   'has-success': hasSuccess(boxControl),
+                   'has-feedback': hasError(boxControl) ||
+                                   hasSuccess(boxControl)}">
+    <input #box #boxControl="ngForm" [formControl]="inFormControl"
+           type="text" class="form-control"
+           style="border-radius: 8px;
+                  height: 30px;
+                  width: 100%">
+    <span [ngClass]="{
+          'glyphicon form-control-feedback':
+              hasError(boxControl) || hasSuccess(boxControl),
+          'glyphicon-remove': hasError(boxControl),
+          'glyphicon-ok': hasSuccess(boxControl)}">
+    </span>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div *ngIf="formGroup">
+  <form [formGroup]="formGroup">
+    <label style="font-size: 20px;
+                  font-weight: bold;
+                  height: 30px;
+                  margin-bottom: 0px;
+                  vertical-align: middle;
+                  width: 20%">
+      {{titleLabel}}&nbsp;{{currentPosition}}
+    </label>
+    <br>
+    <br>
+    <div style="padding-left: 3%">
+      <app-input-box [label]="'Name:'"
+                     [inFormControl]="formGroup.controls['name']">
+      </app-input-box>
+      <br>
+      <label class="inline"
+             style="cursor: default;
+                    font-size: 20px;
+                    font-weight: bold;
+                    height: 30px;
+                    margin-bottom: 0px;
+                    vertical-align: middle;
+                    width: 20%">
+        Data set
+      </label>
+      <label class="radio-inline"
+             style="padding-left: 5%">
+        <input #radio1 value="option1"
+               type="radio"
+               checked="checked"
+               (click)="onClickRadioInput(radio1, [radio2, radio3])">
+        from Ticker
+      </label>
+      <label class="radio-inline"
+             style="padding-left: 5%">
+        <input #radio2 value="option2"
+               type="radio"
+               (click)="onClickRadioInput(radio2, [radio1, radio3])">
+        from Field
+      </label>
+      <label class="radio-inline"
+             style="padding-left: 5%">
+        <input #radio3 value="option3"
+               type="radio"
+               (click)="onClickRadioInput(radio3, [radio1, radio2])">
+        from Id
+      </label>
+      <br>
+      <br>
+      <app-dataset-form [currentDataSet]="currentCollection.dataSet"
+                        [formGroup]="formGroup">
+      </app-dataset-form>
+    </div>
+  </form>
+</div>
