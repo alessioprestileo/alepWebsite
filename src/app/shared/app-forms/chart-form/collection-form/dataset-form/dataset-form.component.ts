@@ -4,7 +4,7 @@ import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup } from '@angular/f
 import {BehaviorSubject, Observable, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../models/DataSet";
-import { SearchBoxComponent } from '../../../../forms/search-box/search-box.component';
+import { SearchBoxComponent } from '../../../search-box/search-box.component';
 import { ServerService } from '../../../../services/server.service';
 
 class DataSetFeedback {
@@ -37,9 +37,7 @@ interface iSearchSource {
   styleUrls: ['dataset-form.component.css'],
   directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, SearchBoxComponent]
 })
-export class DataSetFormComponent implements DoCheck,
-                                                       OnDestroy,
-                                                       OnInit {
+export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentDataSet: DataSet;
   @Input() private formGroup: FormGroup;
 

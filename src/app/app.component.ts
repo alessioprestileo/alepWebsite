@@ -2,7 +2,7 @@ import { Component, DoCheck, OnInit, OnDestroy } from '@angular/core';
 import { Location }    from '@angular/common';
 import { Subscription }   from 'rxjs/Rx';
 
-// import { NavigationComponent } from './navigation/navigation.component';
+import { NavigationComponent } from './navigation/navigation.component';
 import { AppRoutingService } from './shared/services/app-routing.service';
 // import { ServerService } from './shared/services/server.service';
 
@@ -11,7 +11,9 @@ import { AppRoutingService } from './shared/services/app-routing.service';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  // directives: [ROUTER_DIRECTIVES, NavigationComponent ],
+  directives: [
+    // ROUTER_DIRECTIVES,
+    NavigationComponent ],
   // providers: [ AppRoutingService, ServerService ]
 })
 export class AppComponent implements DoCheck, OnDestroy, OnInit {

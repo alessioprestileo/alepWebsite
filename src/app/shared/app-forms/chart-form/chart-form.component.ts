@@ -1,15 +1,14 @@
 import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup,
-         Validators } from '@angular/forms';
+  Validators } from '@angular/forms';
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 
 import { AppChart } from '../../models/AppChart';
 import { AppChartCollection } from '../../models/AppChartCollection';
-import { ShowChartComponent } from '../../show-chart/show-chart.component';
 import { CollectionFormComponent } from './collection-form/collection-form.component';
-import { InputBoxComponent } from '../../forms/input-box/input-box.component';
-import { SearchBoxComponent } from '../../forms/search-box/search-box.component';
+import { InputBoxComponent } from '../input-box/input-box.component';
+import { ShowChartComponent } from '../../show-chart/show-chart.component';
 
 enum ArrayTypes {
   AppChartCollection,
@@ -38,7 +37,7 @@ class CollectionInput {
   templateUrl: 'chart-form.component.html',
   styleUrls: ['chart-form.component.css'],
   directives: [CollectionFormComponent, FORM_DIRECTIVES,
-               REACTIVE_FORM_DIRECTIVES, InputBoxComponent, ShowChartComponent]
+    REACTIVE_FORM_DIRECTIVES, InputBoxComponent, ShowChartComponent]
 })
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private inputChart: AppChart;

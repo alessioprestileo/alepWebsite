@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
         ViewChild } from '@angular/core';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup,
-         FormControlDirective, Validators } from '@angular/forms';
+  FormControlDirective, Validators } from '@angular/forms';
 
 declare var jQuery: any;
 declare var Bloodhound: any;

@@ -1,6 +1,6 @@
 import { Component, DoCheck, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl,
-         FormControlDirective } from '@angular/forms';
+  FormControlDirective } from '@angular/forms';
 
 declare var jQuery: any;
 
@@ -28,14 +28,14 @@ export class InputBoxComponent implements DoCheck, OnInit {
     this.setPlaceHolder();
   }
 
-  hasError(reference: FormControlDirective) : boolean {
+  public hasError(reference: FormControlDirective) : boolean {
     let result : boolean =
       (reference.control && !reference.control.valid &&
           !reference.control.pristine) ?
         true: false;
     return result;
   }
-  hasSuccess(reference: FormControlDirective) : boolean {
+  public hasSuccess(reference: FormControlDirective) : boolean {
     let result : boolean =
       (reference.control && reference.control.valid &&
           !reference.control.pristine) ?

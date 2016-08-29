@@ -3,10 +3,10 @@ import { NgModule }           from '@angular/core';
 import { ROUTING } from "./new-chart.routing";
 import { NewChartComponent }   from './new-chart.component';
 import { SharedModule } from "../../shared/shared.module";
-import { ShowChartModule } from "../../shared/show-chart/show-chart.module";
+import { BaseChartModule } from "../../shared/show-chart/base-chart.module";
 
 @NgModule({
-  imports:      [ ROUTING, SharedModule, ShowChartModule ],
+  imports:      [ BaseChartModule, ROUTING, SharedModule ],
   declarations: [ NewChartComponent ],
   exports:      [ ],
   providers:    [ ]

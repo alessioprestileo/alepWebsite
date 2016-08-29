@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
+import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
+
 @Component({
   moduleId: module.id,
   selector: 'app-sample-dynamic-chart',
   templateUrl: 'sample-dynamic-chart.component.html',
-  styleUrls: ['sample-dynamic-chart.component.css']
+  styleUrls: ['sample-dynamic-chart.component.css'],
+  directives: [CHART_DIRECTIVES]
 })
 export class SampleDynamicChartComponent implements OnInit {
   private lineChartData: Array<any>;

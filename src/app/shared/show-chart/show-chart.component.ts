@@ -1,7 +1,6 @@
 import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable, Subscription }   from 'rxjs/Rx';
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
 
 import {AppChart} from "../models/AppChart";
 import {AppChartCollection} from "../models/AppChartCollection";
@@ -11,8 +10,7 @@ import {DataSet} from "../models/DataSet";
   moduleId: module.id,
   selector: 'app-show-chart',
   templateUrl: 'show-chart.component.html',
-  styleUrls: ['show-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
+  styleUrls: ['show-chart.component.css']
 })
 export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
   @Input() chart: AppChart;

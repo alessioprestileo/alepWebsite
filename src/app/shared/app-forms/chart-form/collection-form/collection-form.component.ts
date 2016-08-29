@@ -1,11 +1,11 @@
 import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl,
-         FormGroup, Validators } from '@angular/forms';
+  FormGroup, Validators } from '@angular/forms';
 
 import { Subscription }   from 'rxjs/Rx';
 
 import { AppChartCollection } from "../../../models/AppChartCollection";
-import { InputBoxComponent } from '../../../forms/input-box/input-box.component';
+import { InputBoxComponent } from '../../input-box/input-box.component';
 import { DataSetFormComponent } from './dataset-form/dataset-form.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { DataSetFormComponent } from './dataset-form/dataset-form.component';
   templateUrl: 'collection-form.component.html',
   styleUrls: ['collection-form.component.css'],
   directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES,
-               DataSetFormComponent, InputBoxComponent]
+    DataSetFormComponent, InputBoxComponent]
 })
 export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentPosition: number;

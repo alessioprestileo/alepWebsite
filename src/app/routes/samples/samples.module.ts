@@ -10,10 +10,10 @@ import { SamplePlotAreaChartComponent }   from './sample-polar-area-chart/sample
 import { SampleRadarChartComponent }   from './sample-radar-chart/sample-radar-chart.component';
 import { SamplesComponent }   from './samples.component';
 import { SharedModule } from "../../shared/shared.module";
-import { ShowChartModule } from "../../shared/show-chart/show-chart.module";
+import { BaseChartModule } from "../../shared/show-chart/base-chart.module";
 
 @NgModule({
-  imports:      [ ROUTING, SharedModule, ShowChartModule ],
+  imports:      [ BaseChartModule, ROUTING, SharedModule ],
   declarations: [ SampleBarChartComponent, SampleDoughnutChartComponent,
                   SampleDynamicChartComponent, SampleLineChartComponent,
                   SamplePieChartComponent, SamplePlotAreaChartComponent,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ChartFormComponent } from '../../shared/forms/chart-form/chart-form.component';
+import { ChartFormComponent } from '../../shared/app-forms/chart-form/chart-form.component';
 
 @Component({
   moduleId: module.id,
