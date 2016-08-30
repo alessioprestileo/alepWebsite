@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { ChartsNavComponent } from '../shared/charts-nav.component'
 import { SampleLineChartComponent } from './sample-line-chart/sample-line-chart.component';
 import { SampleBarChartComponent } from './sample-bar-chart/sample-bar-chart.component';
 import { SampleDoughnutChartComponent } from './sample-doughnut-chart/sample-doughnut-chart.component';
@@ -13,10 +14,10 @@ import { SampleDynamicChartComponent } from './sample-dynamic-chart/sample-dynam
   selector: 'app-samples',
   templateUrl: 'samples.component.html',
   styleUrls: ['samples.component.css'],
-  directives: [SampleLineChartComponent, SampleBarChartComponent,
-               SampleDoughnutChartComponent, SampleRadarChartComponent,
-               SamplePieChartComponent, SamplePlotAreaChartComponent,
-               SampleDynamicChartComponent]
+  directives: [ChartsNavComponent, SampleLineChartComponent,
+               SampleBarChartComponent, SampleDoughnutChartComponent,
+               SampleRadarChartComponent, SamplePieChartComponent,
+               SamplePlotAreaChartComponent, SampleDynamicChartComponent]
 })
 export class SamplesComponent implements OnInit {
 

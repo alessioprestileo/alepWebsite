@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-import {DataSet} from "../../shared/models/DataSet";
-import { ServerService } from '../../shared/services/server.service'
+import { CHART_DIRECTIVES } from 'ng2-charts/ng2-charts';
+import { ChartsNavComponent } from '../shared/charts-nav.component'
+import { DataSet } from "../../../../shared/models/DataSet";
+import { ServerService } from '../../../../shared/services/server.service'
 
 @Component({
   moduleId: module.id,
   selector: 'app-new-chart',
   templateUrl: 'new-chart.component.html',
   styleUrls: ['new-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
+  directives: [CHART_DIRECTIVES, ChartsNavComponent]
 })
 export class NewChartComponent implements OnInit {
   private chartOptions: any;

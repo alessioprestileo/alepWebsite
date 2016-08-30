@@ -1,0 +1,14 @@
+<div class="container-fluid">
+  <ul class="list-inline">
+    <li style="color: grey;">
+      You are here:
+    </li>
+    <li *ngFor="let label of labels; let index = index"
+        style="color: grey;">
+      /&nbsp;
+      <a (click)="onSelected(index)">
+        {{label}}
+      </a>
+    </li>
+  </ul>
+</div>

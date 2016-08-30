@@ -9,8 +9,8 @@ import { SamplePieChartComponent }   from './sample-pie-chart/sample-pie-chart.c
 import { SamplePlotAreaChartComponent }   from './sample-polar-area-chart/sample-polar-area-chart.component';
 import { SampleRadarChartComponent }   from './sample-radar-chart/sample-radar-chart.component';
 import { SamplesComponent }   from './samples.component';
-import { SharedModule } from "../../shared/shared.module";
-import { BaseChartModule } from "../../shared/show-chart/base-chart.module";
+import { SharedModule } from "../../../../shared/shared.module";
+import { BaseChartModule } from "../../../../shared/show-chart/base-chart.module";
 
 @NgModule({
   imports:      [ BaseChartModule, ROUTING, SharedModule ],

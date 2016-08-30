@@ -40,6 +40,14 @@ const barrels: string[] = [
   'typeahead.js',
   // App specific barrels.
   'app',
+  'app/home',
+  'app/bio',
+  'app/my-cv',
+  'app/projects',
+  'app/who-am-i',
+  'app/charts',
+  'app/warehouse',
+  'app/site-map',
   /** @cli-barrel */
 ];
 
