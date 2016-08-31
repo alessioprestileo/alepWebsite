@@ -3,13 +3,15 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from "rxjs";
 
 import { AppRoutingService } from '../../shared/services/app-routing.service';
+import { CarouselComponent } from "../../shared/carousel/carousel.component";
 import { iNavButton } from "../../shared/models/iNavButton";
 
 @Component({
   moduleId: module.id,
   selector: 'app-projects',
   templateUrl: 'projects.component.html',
-  styleUrls: ['projects.component.css']
+  styleUrls: ['projects.component.css'],
+  directives: [CarouselComponent]
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
   private currentUrl: string;

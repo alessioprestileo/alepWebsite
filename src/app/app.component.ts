@@ -1,7 +1,7 @@
-import { Component, DoCheck, Inject, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewChecked, Component, DoCheck, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Location }    from '@angular/common';
 
-import {Subscription, Observable}   from 'rxjs/Rx';
+import { Subscription }   from 'rxjs/Rx';
 
 import { AppRoutingService } from './shared/services/app-routing.service';
 import { iNavButton } from "./shared/models/iNavButton";
@@ -15,11 +15,13 @@ import { SiteMapComponent } from './shared/site-map/site-map.component';
   styleUrls: ['app.component.css'],
   directives: [NavigationComponent, SiteMapComponent]
 })
-export class AppComponent implements DoCheck, OnDestroy, OnInit {
+export class AppComponent implements AfterViewChecked, DoCheck,
+                                     OnDestroy, OnInit {
   private currentUrl: string;
   private navInput: any[];
+  private ngDoCheckOnResizeCalls: number = 0;
   private prevBrowserPath: string;
-  private windowHeight: number;
+  private projectTitles: string[];
   private siteMapInput: any[];
   private subCurrentUrl: Subscription;
   private title: string;
@@ -29,9 +31,9 @@ export class AppComponent implements DoCheck, OnDestroy, OnInit {
               private appRoutingService: AppRoutingService) {
   }
   ngOnInit() {
-    window.onresize = this.onResize;
-    this.onResize();
+    window.onresize = AppComponent.onResize;
     this.title = 'Alessio\'s Website';
+    this.projectTitles = ['Charts Project', 'Warehouse Project'];
     this.subCurrentUrl = this.appRoutingService.currentUrl.subscribe(
       (url: string) : void => {
         this.currentUrl = url;
@@ -42,6 +44,10 @@ export class AppComponent implements DoCheck, OnDestroy, OnInit {
   ngOnDestroy() {
     // prevent memory leak when component destroyed
     this.cancelSubs();
+  }
+  ngAfterViewChecked() {
+    // Call onResize to get changes in header or footer size due to routing
+    AppComponent.onResize();
   }
   ngDoCheck() {
     // Perform checks for time travel
@@ -71,14 +77,20 @@ export class AppComponent implements DoCheck, OnDestroy, OnInit {
       }
     }
   }
-  public getWindowHeight() : number {
-    return this.windowHeight;
-  }
-  private onResize() : void {
-
-    console.log('height =', window.innerHeight);
-
-    this.windowHeight = window.innerHeight;
+  private static onResize() : void {
+    let header: HTMLElement;
+    let headerHeight: number;
+    let footerHeight: number;
+    let routerOutlet: HTMLElement;
+    header = document.getElementById("app-header");
+    header.style.minHeight = 0.234 * window.innerHeight + 'px';
+    headerHeight = document.getElementById("app-header")
+                                       .clientHeight;
+    footerHeight = document.getElementById("app-footer")
+                                       .clientHeight;
+    routerOutlet = document.getElementById("app-routerOutlet");
+    routerOutlet.style.minHeight = 0.98 * window.innerHeight - headerHeight -
+                                   footerHeight + 'px';
   }
   public onSiteMapClick(link: string[]) : void {
     this.appRoutingService.navigate(link);
@@ -88,7 +100,6 @@ export class AppComponent implements DoCheck, OnDestroy, OnInit {
     let navLevel: number;
     let navSections: iNavButton[];
     let sectionsPerRow: number;
-
     navSections = [
       {
         label: 'Home',

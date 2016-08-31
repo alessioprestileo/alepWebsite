@@ -11,12 +11,12 @@ export class AppRoutingService {
     this.currentUrl = new BehaviorSubject<string>('');
   }
 
-  setCurrentUrl(url: string) {
-    this.currentUrl.next(url);
-  }
   navigate(link: string[]) : void {
     let url: string = link.join('/');
     this.setCurrentUrl(url);
     this.router.navigate(link);
+  }
+  setCurrentUrl(url: string) {
+    this.currentUrl.next(url);
   }
 }

@@ -37,17 +37,10 @@ const barrels: string[] = [
   'lodash',
   'ng2-charts',
   'rxjs',
+  'slick-carousel',
   'typeahead.js',
   // App specific barrels.
   'app',
-  'app/home',
-  'app/bio',
-  'app/my-cv',
-  'app/projects',
-  'app/who-am-i',
-  'app/charts',
-  'app/warehouse',
-  'app/site-map',
   /** @cli-barrel */
 ];
 
@@ -71,6 +64,7 @@ System.config({
     'lodash': 'vendor/lodash',
     'ng2-charts': 'vendor/ng2-charts',
     'rxjs': 'vendor/rxjs',
+    'slick-carousel': 'vendor/slick-carousel',
     'typeahead.js': 'vendor/typeahead.js',
     'main': 'main.js'
   },

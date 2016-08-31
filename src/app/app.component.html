@@ -1,13 +1,25 @@
 <div class="background animated fadeIn">
-  <header>
+  <header id="app-header">
     <app-site-map [labels]="siteMapInput[0]"
                   [links]="siteMapInput[1]"
                   (navEmitter)="onSiteMapClick($event)"
                   style="text-align: right">
     </app-site-map>
-    <h1 id='title'>{{title}}</h1>
+    <h1>{{title}}</h1>
     <br>
-    <div [hidden]="currentUrl.split('/').length > 2">
+    <div *ngIf="siteMapInput[0][0] === 'Projects' &&
+                siteMapInput[0][1] === 'Charts'">
+      <h2>
+        {{projectTitles[0]}}
+      </h2>
+    </div>
+    <div *ngIf="siteMapInput[0][0] === 'Projects' &&
+                siteMapInput[0][1] === 'Warehouse'">
+      <h2>
+        {{projectTitles[1]}}
+      </h2>
+    </div>
+    <div *ngIf="currentUrl.split('/').length < 3">
       <app-navigation [columnsPerSec]="navInput[2]"
                       [elements]="navInput[1]"
                       [navLevel]="navInput[0]"
@@ -16,14 +28,14 @@
     </div>
     <br>
   </header>
-  <div [ngStyle]="{'min-height': getWindowHeight() ?
-                                 (0.7 * getWindowHeight())
-                                 .toLocaleString() + 'px' :
-                                 '0px'}">
+  <div id="app-routerOutlet">
     <router-outlet>
     </router-outlet>
   </div>
-  <footer style="align-self: baseline">
+  <footer id='app-footer'
+          style="align-self: baseline">
+    <br>
+    <br>
     footer
   </footer>
 </div>
