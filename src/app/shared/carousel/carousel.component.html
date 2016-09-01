@@ -1,28 +1,20 @@
-<div class="container-fluid"
-     style="background: #d6e0f5;
-            margin-left: 5%;
-            margin-right: 5%;">
-  <div style="width: 80%;
-              margin-left: 10%;
-              padding: 10% 10%">
+<div class="container-fluid app-carousel-background">
+  <div class="app-carousel">
     <div #carousel>
-      <div>
-        <h2 style="background: white;
-                   margin-bottom: 0;
-                   text-align: center">
-          Charts
-        </h2>
-        <img src="app/shared/images/charts.jpg" alt="Chania"
-             style="width: 100%">
-      </div>
-      <div>
-        <h2 style="background: white;
-                   margin-bottom: 0;
-                   text-align: center">
-          Warehouse
-        </h2>
-        <img src="app/shared/images/charts.jpg" alt="Chania"
-             style="width: 100%">
+      <div *ngFor="let slide of slides">
+        <div class="app-slideContainer">
+          <!--<div class="app-slideTitle" (click)="onSlideClicked(slide.link)">-->
+          <div class="app-slideTitle" (click)="onResize()">
+            <h2 style="margin-bottom: -1px;
+                       text-align: center">
+              {{slide.label}}
+            </h2>
+          </div>
+          <img [src]="slide.imgUrl" [alt]="slide.label"
+               style="text-align: center;
+                      vertical-align: middle;
+                      width: 100%">
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,20 @@
+.app-carousel {
+  width: 80%;
+  margin-left: 10%;
+  padding: 10% 10%
+}
+.app-carousel-background {
+  background-color: #d6e0f5;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.app-slideContainer {
+  margin: 10% 10%;
+}
+.app-slideTitle {
+  cursor: default;
+  background-color: white;
+}
+.app-slideTitle:hover {
+  background-color: #ffb3b3;
+}

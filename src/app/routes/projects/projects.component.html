@@ -1,12 +1,5 @@
 <div>
-  <ul>
-    <li *ngFor="let project of projects"
-        (click)="onSelectedProject(project.label)">
-      <a>
-        {{project.label}}
-      </a>
-    </li>
-  </ul>
+  <app-carousel [slides]="carouselSlides"
+                (slideClickedEmitter)="onSelectedProject($event)">
+  </app-carousel>
 </div>
-
-<app-carousel></app-carousel>

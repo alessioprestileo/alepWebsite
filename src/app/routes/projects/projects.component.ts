@@ -4,7 +4,8 @@ import { Subscription } from "rxjs";
 
 import { AppRoutingService } from '../../shared/services/app-routing.service';
 import { CarouselComponent } from "../../shared/carousel/carousel.component";
-import { iNavButton } from "../../shared/models/iNavButton";
+import { CarouselSlide } from "../../shared/models/CarouselSlide";
+
 
 @Component({
   moduleId: module.id,
@@ -14,8 +15,8 @@ import { iNavButton } from "../../shared/models/iNavButton";
   directives: [CarouselComponent]
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
+  private carouselSlides: CarouselSlide[];
   private currentUrl: string;
-  private projects: iNavButton[];
   private subCurrentUrl: Subscription;
 
   constructor(@Inject('ROUTES_DICT') private ROUTES_DICT,
@@ -24,7 +25,7 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this.subCurrentUrl = this.appRoutingService.currentUrl.subscribe(
       (currentUrl: string) => this.currentUrl = currentUrl);
-    this.setProjectLabels();
+    this.setCarouselSlides();
   }
   ngOnDestroy() {
     this.cancelSubs();
@@ -33,29 +34,18 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   private cancelSubs() : void {
     this.subCurrentUrl.unsubscribe();
   }
-  public onSelectedProject(label: string) : void {
-    let link: string[] = [this.currentUrl + '/'];
+  public onSelectedProject(projectLink: string[]) : void {
+    let link: string[] = [this.currentUrl + '/' + projectLink[0]];
     this.appRoutingService.navigate(link);
-
-    let length: number = this.projects.length;
-    for (let i = 0; i < length; i++) {
-      if (label === this.projects[i].label) {
-        let link: string[] = [this.currentUrl + '/' + this.projects[i].link[0]];
-        this.appRoutingService.navigate(link);
-        return;
-      }
-    }
   }
-  private setProjectLabels() : void {
-    this.projects = [
-      {
-        label: 'Charts',
-        link: ['/' + this.ROUTES_DICT.CHARTS]
-      },
-      {
-        label: 'Warehouse',
-        link: ['/' + this.ROUTES_DICT.WAREHOUSE]
-      },
+  private setCarouselSlides() : void {
+    this.carouselSlides = [
+      new CarouselSlide('app/shared/images/charts.jpg',
+                        'Charts',
+                        ['/' + this.ROUTES_DICT.CHARTS]),
+      new CarouselSlide('app/shared/images/warehouse.jpeg',
+                        'Warehouse',
+                        ['/' + this.ROUTES_DICT.WAREHOUSE])
     ];
   }
 }
