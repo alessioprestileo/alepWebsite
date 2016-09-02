@@ -1,7 +1,7 @@
 import {Component, Input, OnInit } from '@angular/core';
 import { Observable }   from 'rxjs/Rx';
 
-import { iNavButton } from '../models/iNavButton';
+import { NavButton } from '../models/NavButton';
 import { FluidButtonsComponent } from '../fluid-buttons/fluid-buttons.component';
 import { AppRoutingService } from '../services/app-routing.service';
 
@@ -13,7 +13,7 @@ import { AppRoutingService } from '../services/app-routing.service';
   directives: [ FluidButtonsComponent ]
 })
 export class NavigationComponent implements OnInit {
-  @Input() private elements: iNavButton[];
+  @Input() private elements: NavButton[];
   @Input() private columnsPerSec: number; // Use even number!
   @Input() private navLevel: number;
   @Input() private sectionsPerRow: number;
@@ -31,7 +31,7 @@ export class NavigationComponent implements OnInit {
         let length: number = this.elements.length;
         let result: string;
         for (let i = 0; i < length; i++) {
-          let sec: iNavButton = this.elements[i];
+          let sec: NavButton = this.elements[i];
           if (sec.link[0].split('/')[this.navLevel] === currentElem) {
             result = sec.label;
           }

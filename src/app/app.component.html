@@ -1,41 +1,75 @@
 <div class="background animated fadeIn">
-  <header id="app-header">
-    <app-site-map [labels]="siteMapInput[0]"
-                  [links]="siteMapInput[1]"
-                  (navEmitter)="onSiteMapClick($event)"
-                  style="text-align: right">
-    </app-site-map>
-    <h1>{{title}}</h1>
-    <br>
-    <div *ngIf="siteMapInput[0][0] === 'Projects' &&
+  <header id="app-header"
+          style="padding-bottom: 10px">
+    <div id="app-main-routes">
+      <h1 style="margin-bottom: 10px;
+                 margin-top: 0px;
+                 padding-top: 15px;">
+        {{title}}
+      </h1>
+      <div [hidden]="currentUrl.split('/').length > 2">
+        <app-navigation [columnsPerSec]="navInput[2]"
+                        [elements]="navInput[1]"
+                        [navLevel]="navInput[0]"
+                        [sectionsPerRow]="navInput[3]">
+        </app-navigation>
+      </div>
+    </div>
+    <div id="app-projects-charts"
+         *ngIf="siteMapInput[0][0] === 'Projects' &&
                 siteMapInput[0][1] === 'Charts'">
-      <h2>
+      <h2 style="color: #999;">
         {{projectTitles[0]}}
       </h2>
+      <app-charts-nav>
+      </app-charts-nav>
     </div>
-    <div *ngIf="siteMapInput[0][0] === 'Projects' &&
+    <div id="app-projects-warehouse"
+         *ngIf="siteMapInput[0][0] === 'Projects' &&
                 siteMapInput[0][1] === 'Warehouse'">
-      <h2>
+      <h2 style="color: #999;">
         {{projectTitles[1]}}
       </h2>
     </div>
-    <div *ngIf="currentUrl.split('/').length < 3">
-      <app-navigation [columnsPerSec]="navInput[2]"
-                      [elements]="navInput[1]"
-                      [navLevel]="navInput[0]"
-                      [sectionsPerRow]="navInput[3]">
-      </app-navigation>
-    </div>
-    <br>
   </header>
-  <div id="app-routerOutlet">
-    <router-outlet>
-    </router-outlet>
+  <div id="app-body" #appBody>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div id="app-router-outlet"
+               [ngStyle]="{height: appBody.clientHeight + 'px'}"
+               style="background-color: #ebf0fa;
+                      border: 2px groove;
+                      border-radius: 32px;
+                      overflow-y: auto;
+                      padding-left: 2.5%;
+                      padding-right: 2.5%;
+                      padding-top: 10px">
+            <router-outlet>
+            </router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <footer id='app-footer'
-          style="align-self: baseline">
-    <br>
-    <br>
-    footer
+          style="margin-bottom: 0px;
+                 padding-top: 10px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-2">
+          <a (click)="onHomeButtonClicked()">
+            Home
+          </a>
+        </div>
+        <div class="col-xs-9 col-xs-offset-1">
+          <app-site-map [labels]="siteMapInput[0]"
+                        [links]="siteMapInput[1]"
+                        (navEmitter)="onSiteMapClick($event)"
+                        style="text-align: right">
+          </app-site-map>
+        </div>
+      </div>
+    </div>
   </footer>
 </div>

@@ -12,7 +12,12 @@
     {{formTitle}}
   </h2>
   <br>
-  <form [formGroup]="chartForm">
+  <form [formGroup]="chartForm"
+        style="border: 3px #d1b394;
+                    border-style: solid;
+                    border-radius: 48px;
+                    margin-bottom: 2%;
+                    padding: 2% 2%;">
     <div class="form-inline">
       <label class="app-input-box-label">
         Chart type:
@@ -21,7 +26,8 @@
            style="height: 30px;
                 width: 70%">
         <button type="button" class="btn btn-default dropdown-toggle"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false"
                 style="border-radius: 8px;
                      height: 30px;
                      width: 100%">
@@ -79,7 +85,7 @@
     <div [hidden]="collapseCollectionForms">
       <div style="padding-left: 2%;">
         <div *ngFor="let collectionInput of collectionInputs"
-             style="border: 4px #EFEEEC;
+             style="border: 2px #d1b394;
                     border-style: solid;
                     border-radius: 48px;
                     margin-bottom: 2%;
@@ -104,38 +110,38 @@
     </div>
     <br>
     <br>
-    <div>
-      <button *ngIf="!previewMode"
-              type="button" class="btn btn-default"
-              (click)="onPreviewToggleOn()"
-              style="outline: 0"
-              [disabled]="!(obChartFormValid | async)">
-        Preview chart
-      </button>
-      <div class="row">
-        <div class="col-xs-3">
-          <button *ngIf="previewMode"
-                   type="button" class="btn btn-default"
-                   style="margin-top: 15px;
+  </form>
+  <div>
+    <button *ngIf="!previewMode"
+            type="button" class="btn btn-default"
+            (click)="onPreviewToggleOn()"
+            style="outline: 0"
+            [disabled]="!(obChartFormValid | async)">
+      Preview chart
+    </button>
+    <div class="row">
+      <div class="col-xs-3">
+        <button *ngIf="previewMode"
+                type="button" class="btn btn-default"
+                style="margin-top: 15px;
                           outline: 0"
-                   (click)="onUpdatePreview()"
-                   [disabled]="!(obChartFormValid | async)">
-            Update chart preview
-          </button>
-        </div>
-        <div class="col-xs-3 col-xs-offset-6"
-             style="text-align: right">
-          <button *ngIf="previewMode"
-                   type="button" class="btn btn-default"
-                   (click)="onPreviewToggleOff()"
-                   style="margin-top: 15px;
+                (click)="onUpdatePreview()"
+                [disabled]="!(obChartFormValid | async)">
+          Update chart preview
+        </button>
+      </div>
+      <div class="col-xs-3 col-xs-offset-6"
+           style="text-align: right">
+        <button *ngIf="previewMode"
+                type="button" class="btn btn-default"
+                (click)="onPreviewToggleOff()"
+                style="margin-top: 15px;
                           outline: 0">
-            Turn off chart preview
-          </button>
-        </div>
+          Turn off chart preview
+        </button>
       </div>
     </div>
-  </form>
+  </div>
   <br>
   <br>
   <div *ngIf="previewMode">

@@ -1,10 +1,13 @@
-import { AfterViewChecked, Component, DoCheck, Inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  AfterViewChecked, Component, DoCheck, Inject, OnInit, OnDestroy
+} from '@angular/core';
 import { Location }    from '@angular/common';
 
 import { Subscription }   from 'rxjs/Rx';
 
 import { AppRoutingService } from './shared/services/app-routing.service';
-import { iNavButton } from "./shared/models/iNavButton";
+import { ChartsNavComponent } from './routes/projects/charts/shared/charts-nav.component'
+import { NavButton } from "./shared/models/NavButton";
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { SiteMapComponent } from './shared/site-map/site-map.component';
 
@@ -13,13 +16,13 @@ import { SiteMapComponent } from './shared/site-map/site-map.component';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [NavigationComponent, SiteMapComponent]
+  directives: [ChartsNavComponent, NavigationComponent, SiteMapComponent]
 })
 export class AppComponent implements AfterViewChecked, DoCheck,
                                      OnDestroy, OnInit {
   private currentUrl: string;
+  private headerMinHeight: number = 190.09;
   private navInput: any[];
-  private ngDoCheckOnResizeCalls: number = 0;
   private prevBrowserPath: string;
   private projectTitles: string[];
   private siteMapInput: any[];
@@ -31,7 +34,7 @@ export class AppComponent implements AfterViewChecked, DoCheck,
               private appRoutingService: AppRoutingService) {
   }
   ngOnInit() {
-    window.onresize = AppComponent.onResize;
+    window.onresize = this.onResize;
     this.title = 'Alessio\'s Website';
     this.projectTitles = ['Charts Project', 'Warehouse Project'];
     this.subCurrentUrl = this.appRoutingService.currentUrl.subscribe(
@@ -47,7 +50,7 @@ export class AppComponent implements AfterViewChecked, DoCheck,
   }
   ngAfterViewChecked() {
     // Call onResize to get changes in header or footer size due to routing
-    AppComponent.onResize();
+    this.onResize();
   }
   ngDoCheck() {
     // Perform checks for time travel
@@ -77,46 +80,37 @@ export class AppComponent implements AfterViewChecked, DoCheck,
       }
     }
   }
-  private static onResize() : void {
-    let header: HTMLElement;
-    let headerHeight: number;
-    let footerHeight: number;
-    let routerOutlet: HTMLElement;
-    header = document.getElementById("app-header");
-    header.style.minHeight = 0.234 * window.innerHeight + 'px';
-    headerHeight = document.getElementById("app-header")
-                                       .clientHeight;
-    footerHeight = document.getElementById("app-footer")
-                                       .clientHeight;
-    routerOutlet = document.getElementById("app-routerOutlet");
-    routerOutlet.style.minHeight = 0.98 * window.innerHeight - headerHeight -
-                                   footerHeight + 'px';
+  public onHomeButtonClicked() {
+    this.appRoutingService.navigate(['/' + this.ROUTES_DICT.HOME]);
+  }
+  private onResize() : void {
+    this.setBodyHeight();
   }
   public onSiteMapClick(link: string[]) : void {
     this.appRoutingService.navigate(link);
   }
+  private setBodyHeight() {
+    let header: HTMLElement;
+    let headerHeight: number;
+    let footerHeight: number;
+    let body: HTMLElement;
+    header = document.getElementById("app-header");
+    headerHeight = document.getElementById("app-header").clientHeight;
+    footerHeight = document.getElementById("app-footer").clientHeight;
+    body = document.getElementById("app-body");
+    body.style.height = 0.97 * window.innerHeight - headerHeight -
+                                footerHeight + 'px';
+  }
   private setNavInput() : void {
     let columnsPerSec: number;
     let navLevel: number;
-    let navSections: iNavButton[];
+    let navSections: NavButton[];
     let sectionsPerRow: number;
     navSections = [
-      {
-        label: 'Home',
-        link: ['/' + this.ROUTES_DICT.HOME]
-      },
-      {
-        label: 'Who Am I?',
-        link: ['/' + this.ROUTES_DICT.WHO_AM_I]
-      },
-      {
-        label: 'My CV',
-        link: ['/' + this.ROUTES_DICT.MY_CV]
-      },
-      {
-        label: 'Projects',
-        link: ['/' + this.ROUTES_DICT.PROJECTS]
-      }
+      new NavButton('Home', ['/' + this.ROUTES_DICT.HOME]),
+      new NavButton('Who Am I?', ['/' + this.ROUTES_DICT.WHO_AM_I]),
+      new NavButton('My CV', ['/' + this.ROUTES_DICT.MY_CV]),
+      new NavButton('Projects', ['/' + this.ROUTES_DICT.PROJECTS])
     ];
     columnsPerSec = 2;
     navLevel = 1;

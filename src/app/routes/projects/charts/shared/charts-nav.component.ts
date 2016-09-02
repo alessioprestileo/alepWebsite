@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 
 import { NavigationComponent } from "../../../../shared/navigation/navigation.component";
-import { iNavButton } from "../../../../shared/models/iNavButton";
+import { NavButton } from "../../../../shared/models/NavButton";
 
 @Component({
   moduleId: module.id,
@@ -22,28 +22,28 @@ export class ChartsNavComponent implements OnInit {
   private setNavInput() : void {
     let columnsPerSec: number;
     let navLevel: number;
-    let navSections: iNavButton[];
+    let navSections: NavButton[];
     let sectionsPerRow: number;
 
     navSections = [
-      {
-        label: 'Samples',
-        link: ['/' + this.ROUTES_DICT.PROJECTS + '/' +
+      new NavButton(
+        'Samples',
+        ['/' + this.ROUTES_DICT.PROJECTS + '/' +
                this.ROUTES_DICT.CHARTS + '/' +
                this.ROUTES_DICT.SAMPLES]
-      },
-      {
-        label: 'New Chart',
-        link: ['/' + this.ROUTES_DICT.PROJECTS + '/' +
+      ),
+      new NavButton(
+        'New Chart',
+        ['/' + this.ROUTES_DICT.PROJECTS + '/' +
                this.ROUTES_DICT.CHARTS + '/' +
                this.ROUTES_DICT.NEW_CHART]
-      },
-      {
-        label: 'Lab',
-        link: ['/' + this.ROUTES_DICT.PROJECTS + '/' +
+      ),
+      new NavButton(
+        'Lab',
+        ['/' + this.ROUTES_DICT.PROJECTS + '/' +
                this.ROUTES_DICT.CHARTS + '/' +
                this.ROUTES_DICT.LAB]
-      }
+      )
     ];
     columnsPerSec = 2;
     navLevel = 3;
