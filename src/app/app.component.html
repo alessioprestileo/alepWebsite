@@ -18,7 +18,7 @@
     <div id="app-projects-charts"
          *ngIf="siteMapInput[0][0] === 'Projects' &&
                 siteMapInput[0][1] === 'Charts'">
-      <h2 style="color: #999;">
+      <h2 style="color: #666666;">
         {{projectTitles[0]}}
       </h2>
       <app-charts-nav>
@@ -27,17 +27,16 @@
     <div id="app-projects-warehouse"
          *ngIf="siteMapInput[0][0] === 'Projects' &&
                 siteMapInput[0][1] === 'Warehouse'">
-      <h2 style="color: #999;">
+      <h2 style="color: #666666;">
         {{projectTitles[1]}}
       </h2>
     </div>
   </header>
-  <div id="app-body" #appBody>
+  <div id="app-body">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
+        <div class="col-md-8 col-md-offset-2">
           <div id="app-router-outlet"
-               [ngStyle]="{height: appBody.clientHeight + 'px'}"
                style="background-color: #ebf0fa;
                       border: 2px groove;
                       border-radius: 32px;

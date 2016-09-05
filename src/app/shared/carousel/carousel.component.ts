@@ -1,12 +1,16 @@
 import {
-  AfterViewInit, Component, DoCheck, ElementRef,
-  EventEmitter, Input, OnInit, Output, ViewChild,
+  AfterViewInit, Component, DoCheck, EventEmitter,
+  ElementRef , Input, OnDestroy, OnInit, Output, ViewChild,
 } from '@angular/core';
+
+import {Subscription, BehaviorSubject}   from 'rxjs/Rx';
 
 import { CarouselSlide } from '../models/CarouselSlide'
 import { appRound } from '../appFunctions'
 
 declare var jQuery: any;
+
+let onResizeEmitter: EventEmitter<any> = new EventEmitter();
 
 @Component({
   moduleId: module.id,
@@ -14,34 +18,47 @@ declare var jQuery: any;
   templateUrl: 'carousel.component.html',
   styleUrls: ['carousel.component.css']
 })
-export class CarouselComponent implements AfterViewInit, DoCheck, OnInit {
+export class CarouselComponent implements AfterViewInit,
+                                          DoCheck,
+                                          OnDestroy,
+                                          OnInit {
   @Input() private slides: CarouselSlide[];
   @Output() slideClickedEmitter: EventEmitter<any> = new EventEmitter();
   @ViewChild("carousel") private carousel: ElementRef;
 
-  private windowHeight: number;
-  private windowWidth: number;
+  private obMaxSlideHeight: BehaviorSubject<number>;
+  private prevMaxSlideHeight: number = 0;
+  private subMaxSlideHeight: Subscription;
+  private subOnResize: Subscription;
 
   constructor() {}
 
   ngOnInit() {
+    this.initMaxSlideHeight();
+    window.onresize = this.onResize;
+    this.subOnResize = onResizeEmitter.subscribe(
+      () => this.updateMaxSlideHeight()
+    );
+    this.subMaxSlideHeight = this.obMaxSlideHeight.subscribe(
+      (height: number) => this.alignSlidesVertically(height)
+    );
+  }
+  ngOnDestroy() {
+    this.cancelSubs();
   }
   ngAfterViewInit() {
-    this.initializeCarousel();
-    this.alignSlidesVertically();
+    this.initCarousel();
+    this.updateMaxSlideHeight();
   }
   ngDoCheck() {
-    if (window.innerHeight !== this.windowHeight ||
-        window.innerWidth !== this.windowWidth) {
-      this.windowHeight = window.innerHeight;
-      this.windowWidth = window.innerWidth;
-      this.onResize();
-    }
   }
 
-  private alignSlideVertically(index, element,
-                               maxSlideHeight, currentTransform) : boolean {
-    let alignmentFlag: boolean = false;
+  private alignSlideVertically(
+    index: number,
+    element: HTMLElement,
+    maxSlideHeight: number,
+    currentTransform: string
+  ) : void {
     let deltaHeight: number = maxSlideHeight - jQuery(element).height();
     let nextTransformY: string = appRound(
       (deltaHeight / 2), 4
@@ -55,53 +72,27 @@ export class CarouselComponent implements AfterViewInit, DoCheck, OnInit {
     }
     if (deltaHeight !== 0 && nextTransformY !== currentTransformY) {
       let transformation: string = 'translateY(' + (deltaHeight / 2) + 'px)';
-      alignmentFlag = true;
       jQuery(element).css({
         'transform': transformation
       });
     }
-    return alignmentFlag;
   }
-  private alignSlidesVertically() : void {
-    let slidesAreAligned: boolean = false;
-    let deltaTime: number = 10;
-    let elapsedTime: number = 0;
-    let alignmentInterval: number = setInterval(() => {
-      if (slidesAreAligned || elapsedTime > 500) {
-        clearInterval(alignmentInterval);
-      }
-      else {
-        let maxSlideHeight: number = this.getMaxSlideHeight();
-        let currentTransform: string;
-        let alignmentFlag: boolean = false;
-        jQuery(this.carousel.nativeElement).find('.slick-slide').each(
-          (index, element) => {
-            currentTransform = jQuery(element).css('transform');
-            alignmentFlag = this.alignSlideVertically(
-              index, element, maxSlideHeight, currentTransform
-            );
-            if (alignmentFlag) {
-              slidesAreAligned = true;
-            }
-          }
-        );
-        elapsedTime += deltaTime;
-      }
-    }, deltaTime);
-  }
-  private getMaxSlideHeight() : number {
-    let maxSlideHeight: number = 0;
-    jQuery(this.carousel.nativeElement).find('.slick-slide').each(
+  private alignSlidesVertically(maxSlideHeight: number) : void {
+    let currentTransform: string;
+    jQuery(this.carousel.nativeElement).find('.app-slideContainer').each(
       (index, element) => {
-        let height: number = jQuery(element).height();
-        if (height > maxSlideHeight) {
-          maxSlideHeight = height;
-        }
+        currentTransform = jQuery(element).css('transform');
+        this.alignSlideVertically(
+          index, element, maxSlideHeight, currentTransform
+        );
       }
     );
-    return maxSlideHeight;
   }
-  private initializeCarousel() : void {
+  private cancelSubs() : void {
+    this.subMaxSlideHeight.unsubscribe();
+    this.subOnResize.unsubscribe();
+  }
+  private initCarousel() : void {
     jQuery(this.carousel.nativeElement).slick({
       dots: true
     });
@@ -110,10 +101,44 @@ export class CarouselComponent implements AfterViewInit, DoCheck, OnInit {
       'outline', 'none'
     );
   }
+  private initMaxSlideHeight() : void {
+    let maxSlideHeight: number = 0;
+    jQuery(this.carousel.nativeElement).find('.app-slideContainer').each(
+      (index, element) => {
+        let height: number = jQuery(element).height();
+        if (height > maxSlideHeight) {
+          maxSlideHeight = height;
+        }
+      }
+    );
+    this.prevMaxSlideHeight = maxSlideHeight;
+    this.obMaxSlideHeight = new BehaviorSubject(maxSlideHeight);
+  }
   public onResize() : void {
-    this.alignSlidesVertically();
+    onResizeEmitter.emit();
   }
   public onSlideClicked(link: string[]) : void {
     this.slideClickedEmitter.emit(link);
+  }
+  private updateMaxSlideHeight() : void {
+    let maxSlideHeight: number = 0;
+    let deltaTime: number = 100;
+    let elapsedTime: number = 0;
+    let heightInterval: number = setInterval(() => {
+      jQuery(this.carousel.nativeElement).find('.app-slideContainer').each(
+        (index, element) => {
+          let height: number = jQuery(element).height();
+          if (height > maxSlideHeight) {
+            maxSlideHeight = height;
+          }
+        }
+      );
+      elapsedTime += deltaTime;
+      if (elapsedTime > 500 || maxSlideHeight !== this.prevMaxSlideHeight) {
+        this.prevMaxSlideHeight = maxSlideHeight;
+        this.obMaxSlideHeight.next(maxSlideHeight);
+        clearInterval(heightInterval);
+      }
+    }, deltaTime);
   }
 }

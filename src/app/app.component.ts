@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, Component, DoCheck, Inject, OnInit, OnDestroy
+  AfterViewChecked, Component, DoCheck, EventEmitter, Inject, OnInit, OnDestroy,
 } from '@angular/core';
 import { Location }    from '@angular/common';
 
@@ -11,6 +11,8 @@ import { NavButton } from "./shared/models/NavButton";
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { SiteMapComponent } from './shared/site-map/site-map.component';
 
+let onResizeEmitter: EventEmitter<any> = new EventEmitter();
+
 @Component({
   moduleId: module.id,
   selector: 'app-root',
@@ -21,12 +23,12 @@ import { SiteMapComponent } from './shared/site-map/site-map.component';
 export class AppComponent implements AfterViewChecked, DoCheck,
                                      OnDestroy, OnInit {
   private currentUrl: string;
-  private headerMinHeight: number = 190.09;
   private navInput: any[];
   private prevBrowserPath: string;
   private projectTitles: string[];
   private siteMapInput: any[];
   private subCurrentUrl: Subscription;
+  private subOnResize: Subscription;
   private title: string;
 
   constructor(@Inject('ROUTES_DICT') private ROUTES_DICT,
@@ -35,6 +37,7 @@ export class AppComponent implements AfterViewChecked, DoCheck,
   }
   ngOnInit() {
     window.onresize = this.onResize;
+    this.subOnResize = onResizeEmitter.subscribe(() => this.setBodyHeight());
     this.title = 'Alessio\'s Website';
     this.projectTitles = ['Charts Project', 'Warehouse Project'];
     this.subCurrentUrl = this.appRoutingService.currentUrl.subscribe(
@@ -49,8 +52,8 @@ export class AppComponent implements AfterViewChecked, DoCheck,
     this.cancelSubs();
   }
   ngAfterViewChecked() {
-    // Call onResize to get changes in header or footer size due to routing
-    this.onResize();
+    // Call setBodyHeight to get changes in header or footer size
+    this.setBodyHeight();
   }
   ngDoCheck() {
     // Perform checks for time travel
@@ -61,6 +64,7 @@ export class AppComponent implements AfterViewChecked, DoCheck,
 
   private cancelSubs() : void {
     this.subCurrentUrl.unsubscribe();
+    this.subOnResize.unsubscribe();
   }
   private checkRouteReDirect() : void {
     let browserPath: string = this.location.path();
@@ -80,19 +84,20 @@ export class AppComponent implements AfterViewChecked, DoCheck,
       }
     }
   }
-  public onHomeButtonClicked() {
+  public onHomeButtonClicked() : void {
     this.appRoutingService.navigate(['/' + this.ROUTES_DICT.HOME]);
   }
   private onResize() : void {
-    this.setBodyHeight();
+    onResizeEmitter.emit();
   }
   public onSiteMapClick(link: string[]) : void {
     this.appRoutingService.navigate(link);
   }
-  private setBodyHeight() {
+  private setBodyHeight() : void {
     let header: HTMLElement;
     let headerHeight: number;
     let footerHeight: number;
+    let routerOutlet: HTMLElement;
     let body: HTMLElement;
     header = document.getElementById("app-header");
     headerHeight = document.getElementById("app-header").clientHeight;
@@ -100,6 +105,8 @@ export class AppComponent implements AfterViewChecked, DoCheck,
     body = document.getElementById("app-body");
     body.style.height = 0.97 * window.innerHeight - headerHeight -
                                 footerHeight + 'px';
+    routerOutlet = document.getElementById("app-router-outlet");
+    routerOutlet.style.height = body.style.height;
   }
   private setNavInput() : void {
     let columnsPerSec: number;
