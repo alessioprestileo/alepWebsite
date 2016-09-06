@@ -1,5 +1,34 @@
 <div *ngIf="currentDataSet && formGroup">
-  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'"
+  <div class="container-fluid">
+    <div class="row">
+      <label class="inline"
+             style="cursor: default;
+                    font-size: 20px;
+                    font-weight: bold;
+                    height: 30px;
+                    margin-bottom: 0px;
+                    vertical-align: middle;
+                    width: 20%">
+        Data set
+      </label>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <label class="app-input-box-label">
+          Source:
+        </label>
+      </div>
+      <div class="col-sm-7">
+        <app-radio-input [inFormControl]="formGroup.controls['dataSet-radio']"
+                         [labels]="['from Ticker',
+                                      'from Field',
+                                      'from Id']">
+        </app-radio-input>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option0'"
         style="padding-left: 3%">
     <app-search-box [formControlKey]="'dataSet-Ticker'"
                     [inFormGroup]="formGroup"
@@ -41,7 +70,7 @@
       </label>
     </div>
   </div>
-  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'"
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'"
         style="padding-left: 3%">
     <app-search-box [formControlKey]="'dataSet-Field'"
                     [inFormGroup]="formGroup"
@@ -83,7 +112,7 @@
       </label>
     </div>
   </div>
-  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option3'"
+  <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'"
         style="padding-left: 3%">
     <app-search-box [formControlKey]="'dataSet-Id'"
                     [inFormGroup]="formGroup"

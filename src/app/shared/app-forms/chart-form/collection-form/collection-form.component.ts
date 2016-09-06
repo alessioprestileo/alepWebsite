@@ -14,23 +14,21 @@ import { DataSetFormComponent } from './dataset-form/dataset-form.component';
   templateUrl: 'collection-form.component.html',
   styleUrls: ['collection-form.component.css'],
   directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES,
-    DataSetFormComponent, InputBoxComponent]
+               DataSetFormComponent, InputBoxComponent]
 })
 export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentPosition: number;
   @Input() private currentCollection: AppChartCollection;
   @Input() private formGroup: FormGroup;
 
-  private subDataSetRadio: Subscription;
   private subNameControl: Subscription;
-
   private titleLabel: string;
 
   constructor() {}
 
   ngOnInit() {
     this.titleLabel = 'Collection';
-    this.addFormControls();
+    this.addFormControlsAndSubs();
   }
   ngOnDestroy() {
     this.cancelSubs();
@@ -38,14 +36,9 @@ export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   ngDoCheck() {
   }
 
-  private addFormControls() : void {
-    this.formGroup.addControl('dataSet-radio', new FormControl( 'option1'));
-    this.formGroup.addControl('name',
-      new FormControl(this.currentCollection.name,
-        Validators.required));
-    this.subDataSetRadio = this.formGroup.controls['dataSet-radio']
-                                         .valueChanges.subscribe(
-      () => this.formGroup.updateValueAndValidity()
+  private addFormControlsAndSubs() : void {
+    this.formGroup.addControl(
+      'name', new FormControl(this.currentCollection.name, Validators.required)
     );
     this.subNameControl = this.formGroup.controls['name']
                                         .valueChanges.subscribe(
@@ -56,16 +49,6 @@ export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
     );
   }
   private cancelSubs() : void {
-    this.subDataSetRadio.unsubscribe();
     this.subNameControl.unsubscribe();
-  }
-  public onClickRadioInput(selectElm: HTMLInputElement,
-                           deselectElms: HTMLInputElement[]) {
-    let length: number = deselectElms.length;
-    for (let i = 0; i < length; i++) {
-      deselectElms[i].checked = false;
-    }
-    (<FormControl>this.formGroup.controls['dataSet-radio'])
-                                .updateValue(selectElm.value);
   }
 }

@@ -1,9 +1,12 @@
 import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup } from '@angular/forms';
+import {
+  FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup
+} from '@angular/forms';
 
 import {BehaviorSubject, Observable, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../models/DataSet";
+import { RadioInputComponent } from "../../../radio-input/radio-input.component";
 import { SearchBoxComponent } from '../../../search-box/search-box.component';
 import { ServerService } from '../../../../services/server.service';
 
@@ -16,18 +19,34 @@ class DataSetFeedback {
     this.val = val;
   }
 }
-interface iDataSetInput {
+class DataSetInput {
   feedback: DataSetFeedback;
   radioSelection: string;
+
+  constructor(feedback: DataSetFeedback, radioSelection: string) {
+    this.feedback = feedback;
+    this.radioSelection = radioSelection;
+  }
 }
-interface iDataSetSearchSources {
-  Field: iSearchSource;
-  Id: iSearchSource;
-  Ticker: iSearchSource;
+class DataSetSearchSources {
+  Field: SearchSource;
+  Id: SearchSource;
+  Ticker: SearchSource;
+
+  constructor(Field: SearchSource, Id: SearchSource, Ticker: SearchSource) {
+    this.Field = Field;
+    this.Id = Id;
+    this.Ticker = Ticker;
+  }
 }
-interface iSearchSource {
+class SearchSource {
   local: string[];
   prefetch: string;
+
+  constructor(local: string[], prefetch: string) {
+    this.local = local;
+    this.prefetch = prefetch;
+  }
 }
 
 @Component({
@@ -35,13 +54,14 @@ interface iSearchSource {
   selector: 'app-dataset-form',
   templateUrl: 'dataset-form.component.html',
   styleUrls: ['dataset-form.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, SearchBoxComponent]
+  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, RadioInputComponent,
+               SearchBoxComponent]
 })
 export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentDataSet: DataSet;
   @Input() private formGroup: FormGroup;
 
-  private dataSetSearchSources: iDataSetSearchSources = {
+  private dataSetSearchSources: DataSetSearchSources = {
     'Field': {
       'local': null,
       'prefetch': 'http://localhost:4200/app/shared/' +
@@ -68,18 +88,18 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
   constructor(private serverService: ServerService) {}
 
   ngOnInit() {
+    this.addFormControls();
     this.createObsAndSubs();
   }
   ngOnDestroy() {
     this.cancelSubs();
   }
   ngDoCheck() {
-
-    // console.log('this.currentDataSet.Ticker = ', this.currentDataSet.Ticker);
-    // console.log('this.collectionObject = ', this.collectionObject);
-
   }
 
+  private addFormControls() : void {
+    this.formGroup.addControl('dataSet-radio', new FormControl( 'option0'));
+  }
   private cancelSubs() : void {
     this.subDataSetInput.unsubscribe();
     this.subRadioControl.unsubscribe();
@@ -92,6 +112,7 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
     this.subRadioControl = this.formGroup.controls['dataSet-radio']
                                .valueChanges.subscribe(
       (radioSelection: string) : void => {
+        this.formGroup.updateValueAndValidity();
         this.obRadioSelection.next(radioSelection);
         this.resetCurrentDataSet();
         this.resetPreviousDataSet();
@@ -102,16 +123,16 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
     this.obDataSetInput = this.obRadioSelection.combineLatest(
       this.obDataSetFeedback, (
         radioSelection: string, feedback: DataSetFeedback
-      ) : iDataSetInput => {
+      ) : DataSetInput => {
 
         return {'radioSelection': radioSelection, 'feedback': feedback};
       }
     );
     this.subDataSetInput = this.obDataSetInput.subscribe(
-      (dataSetInput: iDataSetInput) => this.processDataSetInput(dataSetInput)
+      (dataSetInput: DataSetInput) => this.processDataSetInput(dataSetInput)
     );
   }
-  private static dataSetFeedbackWasReset(feedback : DataSetFeedback) : boolean {
+  private dataSetFeedbackWasReset(feedback : DataSetFeedback) : boolean {
     if (feedback.prop === 'reset') {
       return true;
     }
@@ -119,10 +140,12 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
       return false;
     }
   }
-  private getDataSetFromTickerField(tickerValue: string,
-                                    fieldValue: string) : Promise<DataSet> {
-    return this.serverService.getFilteredDataSetsEquals('Ticker',
-      tickerValue).then(
+  private getDataSetFromTickerField(
+    tickerValue: string, fieldValue: string
+  ) : Promise<DataSet> {
+    return this.serverService.getFilteredDataSetsEquals(
+      'Ticker', tickerValue
+    ).then(
       (dataSets: DataSet[]) : DataSet => {
         return dataSets.filter(dataSet => dataSet.Field === fieldValue)[0];
       }
@@ -152,21 +175,21 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
       this.obDataSetFeedback.next(feedback);
     }
   }
-  private processDataSetInput(dataSetInput : iDataSetInput) : void {
+  private processDataSetInput(dataSetInput : DataSetInput) : void {
     let promise : Promise<any> = new Promise(
       (resolve, reject) => resolve(dataSetInput)
     );
-    promise.then((dataSetInput: iDataSetInput) =>  {
+    promise.then((dataSetInput: DataSetInput) =>  {
       let radioSelection: string = dataSetInput.radioSelection;
       let property: string = dataSetInput.feedback.prop;
       let value: string = dataSetInput.feedback.val;
-      if (DataSetFormComponent.dataSetFeedbackWasReset(dataSetInput.feedback)) {
+      if (this.dataSetFeedbackWasReset(dataSetInput.feedback)) {
         this.resetCurrentDataSet();
         this.resetDataSetSearchSources();
       }
       let switcher: string = radioSelection;
       switch (switcher) {
-        case 'option1':
+        case 'option0':
           switch (property) {
             case 'Ticker':
               this.resetCurrentDataSet();
@@ -191,7 +214,7 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
               break;
           }
           break;
-        case 'option2':
+        case 'option1':
           switch (property) {
             case 'Field':
               this.resetCurrentDataSet();
@@ -216,7 +239,7 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
               break;
           }
           break;
-        case 'option3':
+        case 'option2':
           this.resetCurrentDataSet();
           this.resetDataSetSearchSources();
           if (property === 'Id' && value) {
@@ -255,9 +278,9 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
     this.dataSetSearchSources.Field.local = null;
     this.dataSetSearchSources.Ticker.local = null;
   }
-  private setLocalDataSetSearchSource(target: string,
-                                      filterName: string,
-                                      filterValue: string) {
+  private setLocalDataSetSearchSource(
+    target: string, filterName: string, filterValue: string
+  ) {
     this.serverService.getFilteredDataSetsEquals(filterName, filterValue).then(
       (dataSets: DataSet[]) : void => {
         this.dataSetSearchSources[target].local = [];
@@ -266,6 +289,7 @@ export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
           this.dataSetSearchSources[target]
             .local.push(dataSets[i][target]);
         }
-      });
+      }
+    );
   }
 }

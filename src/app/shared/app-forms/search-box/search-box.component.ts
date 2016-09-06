@@ -37,21 +37,39 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.inFormGroup.addControl(this.formControlKey,
-                                new FormControl(null, Validators.required));
-    this.inFormGroup.addControl(this.formControlKey + '-typeahead',
-                                new FormControl(null, this.typeaheadValidator));
-    this.boxFormControl = (<FormControl>this.inFormGroup
-                                            .controls[this.formControlKey]);
-    this.typeaheadFormControl = (<FormControl>this.inFormGroup
-                                                  .controls[this.formControlKey +
-                                                            '-typeahead']);
+    this.addFormControlsAndSubs();
+    this.buildSuggestions();
+  }
+  ngOnDestroy() {
+    this.removeFormControls();
+  }
+
+  private addFormControlsAndSubs() {
+    this.inFormGroup.addControl(
+      this.formControlKey,
+      new FormControl(null, Validators.required)
+    );
+    this.inFormGroup.addControl(
+      this.formControlKey + '-typeahead',
+      new FormControl(null, this.typeaheadValidator)
+    );
+    this.boxFormControl = (
+      <FormControl>this.inFormGroup.controls[this.formControlKey]
+    );
+    this.typeaheadFormControl = (
+      <FormControl>this.inFormGroup.controls[
+        this.formControlKey + '-typeahead'
+      ]
+    );
     this.boxFormControl.valueChanges.subscribe(
       () : void => this.inFormGroup.updateValueAndValidity()
     );
     this.typeaheadFormControl.valueChanges.subscribe(
       () : void => this.inFormGroup.updateValueAndValidity()
     );
+  }
+
+  private buildSuggestions() {
     let switcher: string = this.method;
     switch (switcher) {
       case 'local':
@@ -74,21 +92,22 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
               source: this.suggestionsEngine
             }
           );
-        this.suggestions.on("typeahead:selected " +
-                            "typeahead:autocompleted", (e, args) => {
-          this.lastSelection = args;
-          this.hasSelection = true;
-        });
+        this.suggestions.on(
+          "typeahead:selected " + "typeahead:autocompleted",
+          (e, args) => {
+            this.lastSelection = args;
+            this.hasSelection = true;
+          }
+        );
         break;
       case 'prefetch':
         // constructs the suggestion engine
         this.suggestionsEngine = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers
-                                    .obj.whitespace(this.targetProperty),
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+            this.targetProperty
+          ),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
-          prefetch: {
-            url: this.source
-          }
+          prefetch: {url: this.source}
         });
         // constructs the suggestions
         this.suggestions = jQuery(this.searchBox.nativeElement)
@@ -104,19 +123,16 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
               source: this.suggestionsEngine.ttAdapter()
             }
           );
-        this.suggestions.on("typeahead:selected " +
-                            "typeahead:autocompleted", (e, args) => {
-          this.lastSelection = args[this.targetProperty];
-          this.hasSelection = true;
-        });
+        this.suggestions.on(
+          "typeahead:selected " + "typeahead:autocompleted",
+          (e, args) => {
+            this.lastSelection = args[this.targetProperty];
+            this.hasSelection = true;
+          }
+        );
         break;
     }
   }
-  ngOnDestroy() {
-    this.inFormGroup.removeControl(this.formControlKey);
-    this.inFormGroup.removeControl(this.formControlKey + '-typeahead');
-  }
-
   public hasError(reference: FormControlDirective) : boolean {
     let result : boolean;
     let hasFocus = jQuery(this.box.nativeElement).is(":focus");
@@ -143,7 +159,7 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
     if (this.hasSelection === true) {
       result = true;
       this.box.nativeElement.value = this.lastSelection;
-      this.boxFormControl.updateValue(this.lastSelection);
+      this.boxFormControl.setValue(this.lastSelection);
       this.hasSelection = false;
     }
     else {
@@ -156,14 +172,19 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
         'value': this.lastSelection
       };
       this.hasSuccessEmitter.emit(info);
-      this.typeaheadFormControl.updateValue('typeaheadSuccess');
+      this.typeaheadFormControl.setValue('typeaheadSuccess');
     }
     else {
       this.hasNotSuccessEmitter.emit(this.targetProperty);
-      this.typeaheadFormControl.updateValue('typeaheadNotSuccess');
+      this.typeaheadFormControl.setValue('typeaheadNotSuccess');
     }
     return result;
   }
+  private removeFormControls() {
+    this.inFormGroup.removeControl(this.formControlKey);
+    this.inFormGroup.removeControl(this.formControlKey + '-typeahead');
+
+}
   private typeaheadValidator(control: FormControl) :
                                                 {[errorProp: string]: boolean} {
     if (control.value === 'typeaheadNotSuccess') {

@@ -40,10 +40,10 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   }
   private setCarouselSlides() : void {
     this.carouselSlides = [
-      new CarouselSlide('app/shared/images/charts.jpg',
+      new CarouselSlide('app/shared/assets/charts.jpg',
                         'Charts',
                         ['/' + this.ROUTES_DICT.CHARTS]),
-      new CarouselSlide('app/shared/images/warehouse.jpeg',
+      new CarouselSlide('app/shared/assets/warehouse.jpeg',
                         'Warehouse',
                         ['/' + this.ROUTES_DICT.WAREHOUSE])
     ];
