@@ -1,6 +1,6 @@
 import {
   Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
-  ViewChild, DoCheck
+  ViewChild
 } from '@angular/core';
 import {
   REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, FormControlDirective,
@@ -17,7 +17,7 @@ declare var Bloodhound: any;
   styleUrls: ['search-box.component.css'],
   directives: [REACTIVE_FORM_DIRECTIVES]
 })
-export class SearchBoxComponent implements OnDestroy, OnInit, DoCheck {
+export class SearchBoxComponent implements OnDestroy, OnInit {
   @Input() private formControlKey: string;
   @Input() private inFormGroup: FormGroup;
   @Input() private label: string;
@@ -46,12 +46,6 @@ export class SearchBoxComponent implements OnDestroy, OnInit, DoCheck {
   }
   ngOnDestroy() {
     this.removeFormControls();
-  }
-  ngDoCheck() {
-
-    console.log('suggestionsEngine = ', this.suggestionsEngine);
-    console.log('suggestions = ', this.suggestions);
-
   }
 
   private addFormControlsAndSubs() {
