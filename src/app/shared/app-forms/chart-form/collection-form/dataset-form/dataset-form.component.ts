@@ -1,13 +1,15 @@
 import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup
+  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup
 } from '@angular/forms';
 
 import {BehaviorSubject, Observable, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../models/DataSet";
+import { FromFieldComponent } from "./source-server/from-field/from-field.component";
+import { FromIdComponent } from "./source-server/from-id/from-id.component";
+import { FromTickerComponent } from "./source-server/from-ticker/from-ticker.component";
 import { RadioInputComponent } from "../../../radio-input/radio-input.component";
-import { SearchBoxComponent } from '../../../search-box/search-box.component';
 import { ServerService } from '../../../../services/server.service';
 
 class DataSetFeedback {
@@ -54,13 +56,16 @@ class SearchSource {
   selector: 'app-dataset-form',
   templateUrl: 'dataset-form.component.html',
   styleUrls: ['dataset-form.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, RadioInputComponent,
-               SearchBoxComponent]
+  directives: [
+    FromFieldComponent, FromIdComponent, FromTickerComponent,
+    REACTIVE_FORM_DIRECTIVES, RadioInputComponent
+  ]
 })
 export class DataSetFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentDataSet: DataSet;
   @Input() private formGroup: FormGroup;
 
+  private collapseDataSetForm: boolean = false;
   private dataSetSearchSources: DataSetSearchSources = {
     'Field': {
       'local': null,

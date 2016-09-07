@@ -18,11 +18,10 @@
   </div>
   <br>
   <form [formGroup]="chartForm"
-        style="border: 3px #d1b394;
-                    border-style: solid;
-                    border-radius: 48px;
-                    margin-bottom: 2%;
-                    padding: 2% 4%;">
+        style="border: 3px solid #d1b394;
+               border-radius: 48px;
+               margin-bottom: 2%;
+               padding: 2% 4%;">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4">
@@ -60,28 +59,27 @@
         </div>
       </div>
       <br>
-      <app-input-box [label]="'Title:'"
-                     [inFormControl]="chartForm.controls['title']">
-      </app-input-box>
+      <div class="row">
+        <app-input-box [label]="'Title:'"
+                       [inFormControl]="chartForm.controls['title']">
+        </app-input-box>
+      </div>
       <br>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-xs-6">
           <span [ngClass]="collapseCollectionForms ?
                             'glyphicon glyphicon-chevron-right' :
                             'glyphicon glyphicon-chevron-down'"
-                (click)="collapseCollectionForms = !collapseCollectionForms">
+                (click)="collapseCollectionForms = !collapseCollectionForms"
+                style="vertical-align: middle">
           </span>
-          <label style="font-size: 20px;
-                        font-weight: normal;
-                        height: 30px;
-                        margin-bottom: 0px;
-                        padding-left: 1.7%;
-                        vertical-align: middle;
-                        width: 20%">
+          <label class="app-input-box-label"
+                 style="padding-left: 7px;
+                        text-decoration: underline">
             Collections:
           </label>
         </div>
-        <div class="col-xs-3 col-xs-offset-6"
+        <div class="col-xs-6"
              style="text-align: right">
           <button type="button" class="btn btn-default"
                   style="border-radius: 16px;
@@ -93,13 +91,12 @@
       </div>
       <br>
       <div [hidden]="collapseCollectionForms">
-        <div style="padding-left: 2%;">
+        <div style="padding-left: 20px;">
           <div *ngFor="let collectionInput of collectionInputs"
-               style="border: 2px #d1b394;
-                      border-style: solid;
+               style="border: 2px solid #d1b394;
                       border-radius: 48px;
-                      margin-bottom: 2%;
-                      padding: 2% 2%;">
+                      margin-bottom: 15px;
+                      padding: 15px 15px;">
             <app-collection-form [currentCollection]=
                                                 "collectionInput.collectionObject"
                                  [currentPosition]="collectionInput.position"
@@ -119,8 +116,6 @@
         </div>
       </div>
     </div>
-    <br>
-    <br>
   </form>
   <div>
     <button *ngIf="!previewMode"
@@ -135,7 +130,7 @@
         <button *ngIf="previewMode"
                 type="button" class="btn btn-default"
                 style="margin-top: 15px;
-                          outline: 0"
+                       outline: 0"
                 (click)="onUpdatePreview()"
                 [disabled]="!(obChartFormValid | async)">
           Update chart preview

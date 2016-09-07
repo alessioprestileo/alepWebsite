@@ -1,6 +1,7 @@
 import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup,
-  Validators } from '@angular/forms';
+import {
+  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators
+} from '@angular/forms';
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 
@@ -36,8 +37,8 @@ class CollectionInput {
   selector: 'app-chart-form',
   templateUrl: 'chart-form.component.html',
   styleUrls: ['chart-form.component.css'],
-  directives: [CollectionFormComponent, FORM_DIRECTIVES,
-    REACTIVE_FORM_DIRECTIVES, InputBoxComponent, ShowChartComponent]
+  directives: [CollectionFormComponent, REACTIVE_FORM_DIRECTIVES,
+               InputBoxComponent, ShowChartComponent]
 })
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private inputChart: AppChart;

@@ -1,6 +1,4 @@
-<div class="container-fluid"
-     style="padding-left: 0;
-            padding-right: 0">
+<div class="container-fluid">
   <div class="row">
     <div class="col-sm-4">
       <label [ngClass]="labelCssClass ? labelCssClass : labelDefaultCssClass">
@@ -12,7 +10,8 @@
            [ngClass]="{'has-error': hasError(boxControl),
                        'has-success': hasSuccess(boxControl),
                        'has-feedback': hasError(boxControl) ||
-                                       hasSuccess(boxControl)}">
+                                       hasSuccess(boxControl)}"
+           style="margin-bottom: 0">
         <input #box #boxControl="ngForm" [formControl]="inFormControl"
                type="text" class="form-control"
                style="border-radius: 8px;

@@ -1,23 +1,29 @@
 <div *ngIf="formGroup">
   <form [formGroup]="formGroup">
-    <label style="font-size: 20px;
-                  font-weight: bold;
-                  height: 30px;
-                  margin-bottom: 0px;
-                  vertical-align: middle;
-                  width: 20%">
-      {{titleLabel}}&nbsp;{{currentPosition}}
-    </label>
-    <br>
-    <br>
-    <div style="padding-left: 3%">
-      <app-input-box [label]="'Name:'"
-                     [inFormControl]="formGroup.controls['name']">
-      </app-input-box>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <label class="app-input-box-label"
+                 style="font-weight: bold">
+            {{titleLabel}}&nbsp;{{currentPosition}}
+          </label>
+        </div>
+      </div>
       <br>
-      <app-dataset-form [currentDataSet]="currentCollection.dataSet"
-                        [formGroup]="formGroup">
-      </app-dataset-form>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-input-box [label]="'Name:'"
+                         [inFormControl]="formGroup.controls['name']">
+          </app-input-box>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-dataset-form [currentDataSet]="currentCollection.dataSet"
+                            [formGroup]="formGroup">
+          </app-dataset-form>
+        </div>
+      </div>
     </div>
   </form>
 </div>

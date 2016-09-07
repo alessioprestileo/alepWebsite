@@ -1,5 +1,5 @@
 import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl,
+import { REACTIVE_FORM_DIRECTIVES, FormControl,
   FormGroup, Validators } from '@angular/forms';
 
 import { Subscription }   from 'rxjs/Rx';
@@ -13,14 +13,15 @@ import { DataSetFormComponent } from './dataset-form/dataset-form.component';
   selector: 'app-collection-form',
   templateUrl: 'collection-form.component.html',
   styleUrls: ['collection-form.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES,
-               DataSetFormComponent, InputBoxComponent]
+  directives: [REACTIVE_FORM_DIRECTIVES, DataSetFormComponent,
+               InputBoxComponent]
 })
 export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentPosition: number;
   @Input() private currentCollection: AppChartCollection;
   @Input() private formGroup: FormGroup;
 
+  // private collapseDataSetForm: boolean = false;
   private subNameControl: Subscription;
   private titleLabel: string;
 

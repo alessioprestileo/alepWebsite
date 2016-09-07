@@ -1,6 +1,7 @@
 import { Component, DoCheck, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl,
-  FormControlDirective } from '@angular/forms';
+import {
+  REACTIVE_FORM_DIRECTIVES, FormControl, FormControlDirective
+} from '@angular/forms';
 
 declare var jQuery: any;
 
@@ -9,7 +10,7 @@ declare var jQuery: any;
   selector: 'app-input-box',
   templateUrl: 'input-box.component.html',
   styleUrls: ['input-box.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
 export class InputBoxComponent implements DoCheck, OnInit {
   @Input() private inFormControl: FormControl;

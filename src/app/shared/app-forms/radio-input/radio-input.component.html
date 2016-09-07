@@ -1,9 +1,8 @@
 <div #radioInput>
-  <label *ngFor="let label of labels; let index=index"
+  <label *ngFor="let label of labels; let first=first; let index=index"
          class="radio-inline"
-         style="margin-left: 5%;
-                margin-right: 5%;
-                margin-top: 5px">
+         [ngStyle]="{'margin-left': first ? '0' : '30px'}"
+         style="margin-top: 5px">
     <input class="app-radio-option" value="option{{index}}"
            type="radio"
            [checked]="index === 0 ? 'checked': null"

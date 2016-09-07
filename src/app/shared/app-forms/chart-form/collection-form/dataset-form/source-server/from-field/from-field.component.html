@@ -1,0 +1,43 @@
+<div class="container-fluid"
+     style="padding-left: 0;
+            padding-right: 0">
+  <div class="row">
+    <app-search-box
+      [formControlKey]="'dataSet-Field'"
+      [inFormGroup]="inFormGroup"
+      [method]="'prefetch'"
+      [source]="dataSetSearchSources.Field.prefetch"
+      [targetProperty]="'Field'"
+      (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+      (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    </app-search-box>
+  </div>
+  <div *ngIf="currentDataSet.Field &&
+                  dataSetSearchSources.Ticker.local">
+    <div class="row">
+      <app-search-box
+        [formControlKey]="'dataSet-Ticker'"
+        [inFormGroup]="inFormGroup"
+        [method]="'local'"
+        [source]="dataSetSearchSources.Ticker.local"
+        [targetProperty]="'Ticker'"
+        (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+        (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+      </app-search-box>
+    </div>
+  </div>
+  <div *ngIf="currentDataSet.Id">
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="app-input-box-label">
+          Id:
+        </label>
+      </div>
+      <div class="col-sm-8">
+        <label class="app-input-box-label">
+          {{currentDataSet.Id}}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
