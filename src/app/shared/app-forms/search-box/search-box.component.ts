@@ -1,7 +1,11 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
-        ViewChild } from '@angular/core';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup,
-  FormControlDirective, Validators } from '@angular/forms';
+import {
+  Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
+  ViewChild, DoCheck
+} from '@angular/core';
+import {
+  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, FormControlDirective,
+  Validators
+} from '@angular/forms';
 
 declare var jQuery: any;
 declare var Bloodhound: any;
@@ -11,9 +15,9 @@ declare var Bloodhound: any;
   selector: 'app-search-box',
   templateUrl: 'search-box.component.html',
   styleUrls: ['search-box.component.css'],
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
-export class SearchBoxComponent implements OnDestroy, OnInit {
+export class SearchBoxComponent implements OnDestroy, OnInit, DoCheck {
   @Input() private formControlKey: string;
   @Input() private inFormGroup: FormGroup;
   @Input() private label: string;
@@ -42,6 +46,12 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
   }
   ngOnDestroy() {
     this.removeFormControls();
+  }
+  ngDoCheck() {
+
+    console.log('suggestionsEngine = ', this.suggestionsEngine);
+    console.log('suggestions = ', this.suggestions);
+
   }
 
   private addFormControlsAndSubs() {
@@ -80,8 +90,9 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
           local: this.source
         });
         // constructs the suggestions
-        this.suggestions = jQuery(this.searchBox.nativeElement)
-          .find('.typeahead').typeahead({
+        this.suggestions = jQuery(this.searchBox.nativeElement).find(
+          '.typeahead'
+        ).typeahead({
               hint: true,
               highlight: true,
               minLength: 1
@@ -110,8 +121,9 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
           prefetch: {url: this.source}
         });
         // constructs the suggestions
-        this.suggestions = jQuery(this.searchBox.nativeElement)
-          .find('.typeahead').typeahead({
+        this.suggestions = jQuery(this.searchBox.nativeElement).find(
+          '.typeahead'
+        ).typeahead({
               hint: true,
               highlight: true,
               minLength: 1
@@ -163,8 +175,9 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
       this.hasSelection = false;
     }
     else {
-      result = (this.box.nativeElement.value === this.lastSelection) ?
-          true : false;
+      result = (
+        this.box.nativeElement.value === this.lastSelection
+      ) ? true : false;
     }
     if (result === true) {
       let info: Object = {
@@ -185,8 +198,9 @@ export class SearchBoxComponent implements OnDestroy, OnInit {
     this.inFormGroup.removeControl(this.formControlKey + '-typeahead');
 
 }
-  private typeaheadValidator(control: FormControl) :
-                                                {[errorProp: string]: boolean} {
+  private typeaheadValidator(
+    control: FormControl
+  ) : {[errorProp: string]: boolean} {
     if (control.value === 'typeaheadNotSuccess') {
       return {typeaheadError: true};
     }

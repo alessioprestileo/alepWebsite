@@ -6,7 +6,6 @@ import { ServerData }               	 from './shared/utils/server-data';
 // Angular modules
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { HttpModule }     from '@angular/http';
 
 // App imports
@@ -15,23 +14,11 @@ import { AppRoutingService } from './shared/services/app-routing.service';
 import { ROUTING, ROUTES_DICT }        from './app.routing';
 import { ServerService } from './shared/services/server.service';
 
-import { LabComponent } from './routes/projects/charts/lab/lab.component'
-import { NewChartComponent } from './routes/projects/charts/new-chart/new-chart.component'
-import { SamplesComponent } from './routes/projects/charts/samples/samples.component'
-import { CHART_DIRECTIVES } from 'ng2-charts/ng2-charts';
-
 @NgModule({
   imports: [
     BrowserModule,
-    // FormsModule,
-    // ReactiveFormsModule,
     ROUTING,
     HttpModule,
-
-    // NavigationModule,
-    // RoutesModule,
-    // SharedModule,
-    // ShowChartModule
   ],
   declarations: [
     AppComponent

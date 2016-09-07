@@ -35,7 +35,6 @@ module.exports = function(defaults) {
       'slick-carousel/slick/slick.css',
       'slick-carousel/slick/slick-theme.css',
       'slick-carousel/slick/fonts/slick.woff',
-      // 'slick-carousel/**/**/**.**',
       'typeahead.js/dist/typeahead.bundle.min.js'
     ]
   });

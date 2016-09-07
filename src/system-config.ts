@@ -41,7 +41,6 @@ const barrels: string[] = [
   'typeahead.js',
   // App specific barrels.
   'app',
-  'app/radio-input',
   /** @cli-barrel */
 ];
 

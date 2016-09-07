@@ -2,7 +2,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import * as ROUTING_LABELS from './app.routing-labels'
 
-import { ChartsNavComponent } from './routes/projects/charts/shared/charts-nav.component';
 import { HomeComponent } from './routes/home/home.component';
 import { LabComponent } from './routes/projects/charts/lab/lab.component';
 import { MyCvComponent } from './routes/my-cv/my-cv.component';
