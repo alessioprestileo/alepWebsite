@@ -6,7 +6,7 @@ import { Location }    from '@angular/common';
 import { Subscription }   from 'rxjs/Rx';
 
 import { AppRoutingService } from './shared/services/app-routing.service';
-import { ChartsNavComponent } from './routes/projects/charts/shared/charts-nav.component'
+import { ChartsNavComponent } from './routes/projects/charts/charts-nav/charts-nav.component'
 import { NavButton } from "./shared/models/NavButton";
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { SiteMapComponent } from './shared/site-map/site-map.component';

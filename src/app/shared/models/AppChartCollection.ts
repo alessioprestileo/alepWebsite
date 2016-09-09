@@ -2,6 +2,7 @@ import { DataSet } from './DataSet'
 
 export class AppChartCollection {
   public dataSet: DataSet;
+  public id: number = null;
 	public name: string;
 
 	constructor(name: string = null, dataSet: DataSet = new DataSet()) {

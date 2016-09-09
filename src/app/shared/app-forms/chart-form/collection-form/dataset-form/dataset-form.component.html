@@ -1,9 +1,8 @@
-<div *ngIf="currentDataSet && formGroup">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-4"
-           (click)="collapseDataSetForm = !collapseDataSetForm"
-           style="cursor: pointer;
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4"
+         (click)="collapseDataSetForm = !collapseDataSetForm"
+         style="cursor: pointer;
                   margin-bottom: 5px;
                   margin-top: 10px">
           <span [ngClass]="collapseDataSetForm ?
@@ -12,77 +11,58 @@
                 style="vertical-align: middle;
                         width: 20px">
           </span>
-        <label class="app-input-box-label"
-               style="cursor: pointer;
+      <label class="app-input-box-label"
+             style="cursor: pointer;
                       text-decoration: underline">
-          Data set
+        Data set
+      </label>
+    </div>
+  </div>
+  <div class="container-fluid"
+       [hidden]="collapseDataSetForm"
+       style="padding-left: 23px;
+              padding-right: 0">
+
+    <div class="row"
+         style="margin-bottom: 10px">
+      <div class="col-sm-4">
+        <label class="app-input-box-label">
+          Source:
         </label>
       </div>
-    </div>
-    <div class="row"
-         [hidden]="collapseDataSetForm">
-      <div class="col-xs-12">
-        <div class="container-fluid"
-             style="padding-left: 24px;
-                    padding-right: 0">
-          <div class="row"
-               style="margin-bottom: 5px">
-            <div class="col-sm-4">
-              <label class="app-input-box-label">
-                Source:
-              </label>
-            </div>
-            <div class="col-sm-8">
-              <label class="app-input-box-label">
-                server
-              </label>
-            </div>
-          </div>
-          <div class="row"
-               style="margin-bottom: 10px">
-            <div class="col-sm-4">
-              <label class="app-input-box-label">
-                Method:
-              </label>
-            </div>
-            <div class="col-sm-8">
-              <app-radio-input
-                [inFormControl]="formGroup.controls['dataSet-radio']"
-                [labels]="['from Ticker',
-                           'from Field',
-                           'from Id']">
-              </app-radio-input>
-            </div>
-          </div>
-          <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option0'">
-            <app-from-ticker
-              [currentDataSet]="currentDataSet"
-              [dataSetSearchSources]="dataSetSearchSources"
-              [inFormGroup]="formGroup"
-              (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-              (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
-            </app-from-ticker>
-          </div>
-          <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'">
-            <app-from-field
-              [currentDataSet]="currentDataSet"
-              [dataSetSearchSources]="dataSetSearchSources"
-              [inFormGroup]="formGroup"
-              (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-              (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
-            </app-from-field>
-          </div>
-          <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'">
-            <app-from-id
-              [currentDataSet]="currentDataSet"
-              [dataSetSearchSources]="dataSetSearchSources"
-              [inFormGroup]="formGroup"
-              (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-              (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
-            </app-from-id>
-          </div>
+      <div class="col-sm-8">
+        <div class="btn-group"
+             style="height: 30px;
+                    width: 100%">
+          <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false"
+                  style="border-radius: 8px;
+                             height: 30px;
+                             width: 100%">
+            {{formGroup.controls['source'].value ?
+            sourcesMap[formGroup.controls['source'].value] :
+            'select'}}&nbsp;
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu"
+              style="text-align: center;
+                         width: 100%">
+            <li *ngFor="let value of sourcesValues; let index = index"
+                (click)="onSourceSelected(index)">
+              <a>
+                {{sourcesMap[value]}}
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
+    <app-from-external
+      *ngIf="(obDataSetSource | async) === sourcesValues[0]"
+      [currentDataSet]="currentDataSet"
+      [formGroup]="formGroup">
+    </app-from-external>
   </div>
 </div>

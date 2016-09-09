@@ -2,17 +2,19 @@ import { Routes, RouterModule } from '@angular/router';
 
 import * as ROUTING_LABELS from './app.routing-labels'
 
+import { DashboardComponent } from './routes/projects/charts/routes/dashboard/dashboard.component';
 import { HomeComponent } from './routes/home/home.component';
-import { LabComponent } from './routes/projects/charts/lab/lab.component';
+import { LabComponent } from './routes/projects/charts/routes/lab/lab.component';
 import { MyCvComponent } from './routes/my-cv/my-cv.component';
-import { NewChartComponent } from './routes/projects/charts/new-chart/new-chart.component';
+import { NewChartComponent } from './routes/projects/charts/routes/new-chart/new-chart.component';
 import { ProjectsComponent } from './routes/projects/projects.component';
-import { SamplesComponent } from './routes/projects/charts/samples/samples.component';
+import { SamplesComponent } from './routes/projects/charts/routes/samples/samples.component';
 import { WarehouseComponent } from './routes/projects/warehouse/warehouse.component';
 import { WhoAmIComponent } from './routes/who-am-i/who-am-i.component';
 
 export const ROUTES_DICT: {[name: string] : string} = {
   CHARTS: ROUTING_LABELS.CHARTS,
+  DASHBOARD: ROUTING_LABELS.DASHBOARD,
   HOME: ROUTING_LABELS.HOME,
   LAB: ROUTING_LABELS.LAB,
   MY_CV: ROUTING_LABELS.MY_CV,
@@ -50,8 +52,12 @@ export const APP_ROUTES: Routes = [
         children: [
           {
             path: '',
-            redirectTo: ROUTING_LABELS.SAMPLES,
+            redirectTo: ROUTING_LABELS.DASHBOARD,
             pathMatch: 'full',
+          },
+          {
+            path: ROUTING_LABELS.DASHBOARD,
+            component: DashboardComponent,
           },
           {
             path: ROUTING_LABELS.LAB,

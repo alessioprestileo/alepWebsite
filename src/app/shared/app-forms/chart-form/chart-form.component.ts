@@ -1,6 +1,6 @@
 import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators
+  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators, ValidatorFn
 } from '@angular/forms';
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
@@ -8,6 +8,7 @@ import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { AppChart } from '../../models/AppChart';
 import { AppChartCollection } from '../../models/AppChartCollection';
 import { CollectionFormComponent } from './collection-form/collection-form.component';
+import { formGroupValidator } from '../formGroup.validator';
 import { InputBoxComponent } from '../input-box/input-box.component';
 import { ShowChartComponent } from '../../show-chart/show-chart.component';
 
@@ -17,16 +18,16 @@ enum ArrayTypes {
 }
 class CollectionInput {
   public collectionObject: AppChartCollection;
-  public form: FormGroup;
+  public formGroup: FormGroup;
   public label: string;
   public position: number;
 
   constructor(collectionObject: AppChartCollection = null,
-              form: FormGroup = null,
+              formGroup: FormGroup = null,
               label: string = null,
               position: number = null) {
     this.collectionObject = collectionObject;
-    this.form = form;
+    this.formGroup = formGroup;
     this.label = label;
     this.position = position;
   }
@@ -43,20 +44,31 @@ class CollectionInput {
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private inputChart: AppChart;
 
-  private chartForm: FormGroup;
-  private chartTypeLabels: string[];
-  private chartTypeDict: {[label: string] : string};
+  private chartFormGroup: FormGroup;
+  private chartTypeValues: string[] =  [
+    'bar', 'doughnut', 'line', 'pie', 'polarArea', 'radar'
+  ];
+  private chartTypeMap: {[value: string] : string} = {
+    'bar': 'bar',
+    'doughnut': 'doughnut',
+    'line': 'line',
+    'pie': 'pie',
+    'polarArea': 'polar area',
+    'radar': 'radar'
+  };
   private collapseCollectionForms: boolean = false;
   private collectionInputs: CollectionInput[] = [];
   private collectionsCount: number = 0;
   private collectionsLabel: string = 'collection';
   private currentChart: AppChart;
+  private formGroupValidator: ValidatorFn = formGroupValidator;
   private formTitle: string = 'Enter data for the new chart:';
   private nextCollectionId: number = 0;
   private obChartFormValid: BehaviorSubject<boolean>;
   private obUpdateChartPreview: BehaviorSubject<boolean>;
   private previewMode: boolean = false;
-  private subChartForm: Subscription;
+  private subChartFormGroup: Subscription;
+  private subNameControl: Subscription;
   private subTitleControl: Subscription;
   private subTypeControl: Subscription;
 
@@ -69,23 +81,17 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     if (this.inputChart.collections.length === 0) {
       this.inputChart.collections.push(new AppChartCollection());
     };
-    this.chartTypeLabels =  ['bar', 'doughnut', 'line', 'pie',
-                             'polar area', 'radar'];
-    this.chartTypeDict = {'bar': 'bar',
-                          'doughnut': 'doughnut',
-                          'line': 'line',
-                          'pie': 'pie',
-                          'polar area': 'polarArea',
-                          'radar': 'radar'};
     this.obChartFormValid = new BehaviorSubject(false);
     if (this.inputChart) {
       this.currentChart = this.inputChart.createCopy();
-      this.buildChartForm();
+      this.buildChartFormGroup();
+      this.addControlsAndSubs();
       this.initializeCollectionInputs();
     }
     else {
       this.currentChart = new AppChart();
-      this.buildChartForm();
+      this.buildChartFormGroup();
+      this.addControlsAndSubs();
     }
   }
   ngOnDestroy() {
@@ -94,8 +100,38 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   ngDoCheck() {
   }
 
-  private arrayPopAt(array: any[],
-                     arrayType: ArrayTypes, index: number) : any[] {
+  private addControlsAndSubs() : void {
+    this.chartFormGroup.addControl('name', new FormControl(
+      this.currentChart.name, Validators.required
+    ));
+    this.subNameControl = this.chartFormGroup.controls[
+      'name'
+      ].valueChanges.subscribe((value: string) : void => {
+        this.currentChart.name = value;
+      }
+    );
+    this.chartFormGroup.addControl('title', new FormControl(
+      this.currentChart.title, Validators.required
+    ));
+    this.subTitleControl = this.chartFormGroup.controls[
+      'title'
+      ].valueChanges.subscribe((value: string) : void => {
+        this.currentChart.title = value;
+      }
+    );
+    this.chartFormGroup.addControl('type', new FormControl(
+      this.currentChart.type, Validators.required
+    ));
+    this.subTypeControl = this.chartFormGroup.controls['type']
+      .valueChanges.subscribe(
+        (value: string) : void => {
+          this.currentChart.type = value;
+        }
+      );
+  }
+  private arrayPopAt(
+    array: any[], arrayType: ArrayTypes, index: number
+  ) : any[] {
     let newArray;
     let type: ArrayTypes = arrayType;
     switch (type) {
@@ -123,53 +159,39 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     }
     return newArray;
   }
-  private buildChartForm() : void {
-    this.chartForm = new FormGroup({}, null, this.formGroupValidator);
-    this.subChartForm = this.chartForm.valueChanges.subscribe(
-      () => this.obChartFormValid.next(this.chartForm.valid)
-    );
-    this.chartForm.addControl('type', new FormControl(this.currentChart.type,
-                                                      Validators.required));
-    this.subTypeControl = this.chartForm.controls['type']
-                                        .valueChanges.subscribe(
-        (value: string) : void => {
-          this.currentChart.type = value;
-        }
-      );
-    this.chartForm.addControl('title', new FormControl(this.currentChart.title,
-                                                       Validators.required));
-    this.subTitleControl = this.chartForm.controls['title']
-                                         .valueChanges.subscribe(
-      (value: string) : void => {
-        this.currentChart.title = value;
-      }
+  private buildChartFormGroup() : void {
+    this.chartFormGroup = new FormGroup({}, null, this.formGroupValidator);
+    this.subChartFormGroup = this.chartFormGroup.valueChanges.subscribe(
+      () => this.obChartFormValid.next(this.chartFormGroup.valid)
     );
   }
   private cancelSubs() : void {
-    this.subChartForm.unsubscribe();
+    this.subChartFormGroup.unsubscribe();
+    this.subNameControl.unsubscribe();
     this.subTitleControl.unsubscribe();
     this.subTypeControl.unsubscribe();
   }
   public collectionAdd(target: string, index?: number) : void {
     let collectionInput = new CollectionInput();
-    if (target === 'component+show-chart' ||
+    if (target === 'component+chart' ||
       ((target === 'component') && (index != null))) {
       this.collectionsCount += 1;
       this.nextCollectionId += 1;
       let label: string = this.collectionsLabel + ' ' +
         this.nextCollectionId.toLocaleString();
-      if (target === 'component+show-chart') {
+      if (target === 'component+chart') {
         this.currentChart.collections.push(new AppChartCollection());
         let length: number = this.currentChart.collections.length;
-        collectionInput.collectionObject = this.currentChart.
-                                                collections[length - 1];
+        collectionInput.collectionObject = this.currentChart.collections[
+          length - 1
+        ];
       }
       else {
         collectionInput.collectionObject = this.currentChart.collections[index];
       }
       collectionInput.position = this.collectionsCount;
       collectionInput.label = label;
-      collectionInput.form = this.collectionFormAdd(label);
+      collectionInput.formGroup = this.collectionFormGroupAdd(label);
     }
     else {
       console.log('ERROR: INVALID INPUT from collectionAdd method in ' +
@@ -178,41 +200,25 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     }
     this.collectionInputs.push(collectionInput);
   }
-  private collectionFormAdd(key: string) : FormGroup {
-    this.chartForm.addControl(key, new FormGroup({}, null,
-      this.formGroupValidator));
-    return (<FormGroup>this.chartForm.controls[key]);
+  private collectionFormGroupAdd(key: string) : FormGroup {
+    this.chartFormGroup.addControl(
+      key, new FormGroup({}, null, this.formGroupValidator)
+    );
+    return (<FormGroup>this.chartFormGroup.controls[key]);
   }
   private collectionFormRemoveByKey(key: string) : void {
-    this.chartForm.removeControl(key);
+    this.chartFormGroup.removeControl(key);
   }
   public collectionRemove(position: number, label: string) : void {
     let index: number = position - 1;
-    this.collectionInputs = this.arrayPopAt(this.collectionInputs,
-                                            ArrayTypes.CollectionInput, index);
+    this.collectionInputs = this.arrayPopAt(
+      this.collectionInputs, ArrayTypes.CollectionInput, index
+    );
     this.collectionFormRemoveByKey(label);
     this.currentChart.collections = this.arrayPopAt(
-      this.currentChart.collections,
-      ArrayTypes.AppChartCollection,
-      index
+      this.currentChart.collections, ArrayTypes.AppChartCollection, index
     );
     this.collectionsCount -= 1;
-  }
-  private formGroupValidator(formGroup: FormGroup) :
-                             {[errorProp: string]: boolean} {
-    let foundInvalid: boolean = false;
-    for (let control in formGroup.controls) {
-      if (formGroup.controls[control] && !formGroup.controls[control].valid) {
-        foundInvalid = true;
-        break;
-      }
-    }
-    if (foundInvalid === true) {
-      return {foundInvalidControl: true};
-    }
-    else {
-      return null;
-    }
   }
   public goBack() : void {
     window.history.back();
@@ -224,12 +230,12 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     }
   }
   public onChartTypeSelected(index: number) {
-    (<FormControl>this.chartForm.controls['type']).updateValue(
-      this.chartTypeDict[this.chartTypeLabels[index]]
+    (<FormControl>this.chartFormGroup.controls['type']).setValue(
+      this.chartTypeValues[index]
     );
   }
   public onCollectionAdd() : void {
-    this.collectionAdd('component+show-chart');
+    this.collectionAdd('component+chart');
   }
   public onCollectionRemove(position: number, label: string) : void {
     this.collectionRemove(position, label);

@@ -17,16 +17,22 @@
     </div>
   </div>
   <br>
-  <form [formGroup]="chartForm"
+  <form [formGroup]="chartFormGroup"
         style="border: 3px solid #d1b394;
                border-radius: 48px;
                margin-bottom: 2%;
                padding: 2% 4%;">
     <div class="container-fluid">
       <div class="row">
+        <app-input-box [label]="'Name:'"
+                       [inFormControl]="chartFormGroup.controls['name']">
+        </app-input-box>
+      </div>
+      <br>
+      <div class="row">
         <div class="col-sm-4">
           <label class="app-input-box-label">
-            Chart type:
+            Type:
           </label>
         </div>
         <div class="col-sm-8">
@@ -39,8 +45,8 @@
                     style="border-radius: 8px;
                          height: 30px;
                          width: 100%">
-              {{chartForm.controls['type'].value ?
-                  chartForm.controls['type'].value :
+              {{chartFormGroup.controls['type'].value ?
+              chartTypeMap[chartFormGroup.controls['type'].value] :
                   'select'}}&nbsp;
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
@@ -48,10 +54,10 @@
             <ul class="dropdown-menu"
                 style="text-align: center;
                      width: 100%">
-              <li *ngFor="let label of chartTypeLabels; let index = index"
+              <li *ngFor="let value of chartTypeValues; let index = index"
                   (click)="onChartTypeSelected(index)">
                 <a>
-                  {{label}}
+                  {{chartTypeMap[value]}}
                 </a>
               </li>
             </ul>
@@ -61,7 +67,7 @@
       <br>
       <div class="row">
         <app-input-box [label]="'Title:'"
-                       [inFormControl]="chartForm.controls['title']">
+                       [inFormControl]="chartFormGroup.controls['title']">
         </app-input-box>
       </div>
       <br>
@@ -100,7 +106,7 @@
             <app-collection-form [currentCollection]=
                                                 "collectionInput.collectionObject"
                                  [currentPosition]="collectionInput.position"
-                                 [formGroup]="collectionInput.form">
+                                 [formGroup]="collectionInput.formGroup">
             </app-collection-form>
             <div style="text-align: right">
               <button *ngIf="collectionInputs.length > 1"

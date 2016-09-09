@@ -1,4 +1,5 @@
 export const CHARTS: string = 'Charts';
+export const DASHBOARD: string = 'Dashboard';
 export const HOME: string = 'Home';
 export const LAB: string = 'Lab';
 export const MY_CV: string = 'My_CV';

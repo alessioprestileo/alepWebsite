@@ -2,12 +2,17 @@ import { AppChartCollection } from './AppChartCollection'
 
 export class AppChart {
   public collections: AppChartCollection[];
-	public title: string;
+  public id: number = null;
+  public name: string;
+  public title: string;
   public type: string;
 
-	constructor(type: string = null, title: string = null,
-              collections: AppChartCollection[] = []) {
+	constructor(
+	  name: string = null, type: string = null, title: string = null,
+    collections: AppChartCollection[] = []
+  ) {
 	  this.collections = collections;
+    this.name = name;
 		this.title = title;
     this.type = type;
 	}
@@ -19,6 +24,7 @@ export class AppChart {
     for (let i = 0; i < length; i++) {
       copy.collections.push(originalCollections[i].createCopy());
     }
+    copy.name = this.name;
     copy.title = this.title;
     copy.type = this.type;
     return copy;
