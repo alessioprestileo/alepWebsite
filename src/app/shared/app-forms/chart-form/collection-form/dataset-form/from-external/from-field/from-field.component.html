@@ -2,31 +2,31 @@
      style="padding-left: 0;
             padding-right: 0">
   <div class="row">
-    <app-search-box *ngIf="dataSetBloodhoundSources.Field.defaultSource"
-      [formControlKey]="'dataSet-Field'"
-      [inFormGroup]="inFormGroup"
-      [method]="'local'"
-      [source]="dataSetBloodhoundSources.Field.defaultSource"
-      [targetProperty]="'Field'"
-      (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
-      (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    <app-search-box *ngIf="dataSetSrcBloodhoundSrcs.Field.defaultSource"
+                    [formControlKey]="'dataSet-Field'"
+                    [inFormGroup]="inFormGroup"
+                    [method]="'local'"
+                    [source]="dataSetSrcBloodhoundSrcs.Field.defaultSource"
+                    [targetProperty]="'Field'"
+                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
     </app-search-box>
   </div>
   <div *ngIf="currentDataSet.Field &&
-                  dataSetBloodhoundSources.Ticker.filteredSource">
+                  dataSetSrcBloodhoundSrcs.Ticker.filteredSource">
     <div class="row">
       <app-search-box
         [formControlKey]="'dataSet-Ticker'"
         [inFormGroup]="inFormGroup"
         [method]="'local'"
-        [source]="dataSetBloodhoundSources.Ticker.filteredSource"
+        [source]="dataSetSrcBloodhoundSrcs.Ticker.filteredSource"
         [targetProperty]="'Ticker'"
         (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
         (hasSuccessEmitter)="onSearchBoxSuccess($event)">
       </app-search-box>
     </div>
   </div>
-  <div *ngIf="currentDataSet.Id">
+  <div *ngIf="currentDataSetSrcId">
     <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
@@ -35,7 +35,7 @@
       </div>
       <div class="col-sm-8">
         <label class="app-input-box-label">
-          {{currentDataSet.Id}}
+          {{currentDataSetSrcId}}
         </label>
       </div>
     </div>

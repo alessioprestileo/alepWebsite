@@ -3,7 +3,7 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { DataSet } from '../models/DataSet';
+import { DataSetSrc } from '../models/DataSetSrc';
 
 @Injectable()
 export class ExternalService {
@@ -11,51 +11,53 @@ export class ExternalService {
 
   constructor(private http: Http) { }
 
-  // Delete data set
-  public deleteDataSet(dataSet: DataSet) : Promise<any> {
+  // Delete dataset source
+  public deleteDataSetSrc(dataSetSrc: DataSetSrc) : Promise<any> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    let url = `${this.itemsUrl}/${dataSet.Id}`;
+    let url = `${this.itemsUrl}/${dataSetSrc.Id}`;
     return this.http
       .delete(url, headers)
       .toPromise()
       .catch(ExternalService.handleError);
   }
-  // Get data set
-  public getDataSet(id: string) : Promise<DataSet> {
-    return this.getDataSets()
-      .then(dataSet => dataSet.filter(
-        dataSet => dataSet.Id === id)[0]);
+  // Get dataset source
+  public getDataSetSrc(id: string) : Promise<DataSetSrc> {
+    return this.getDataSetSrcs()
+      .then(dataSetSrc => dataSetSrc.filter(
+        dataSetSrc => dataSetSrc.Id === id)[0]);
   }
-  // Get all data sets
-  private getDataSets() : Promise<DataSet[]> {
+  // Get all dataset sources
+  private getDataSetSrcs() : Promise<DataSetSrc[]> {
     return this.http.get(this.itemsUrl)
       .toPromise()
       .then(response => response.json().data)
       .catch(ExternalService.handleError);
   }
-  // Get filtered data sets for which "filterBy" property equals "value"
-  public getFilteredDataSetsEquals(
+  // Get filtered dataset sources for which "filterBy" property equals "value"
+  public getFilteredDataSetSrcsEquals(
     filterBy: string, value: string
-  ) : Promise<DataSet[]> {
-    return this.getDataSets().then(
-      (dataSets: DataSet[]) : DataSet[] => {
-        if (filterBy in dataSets[0]) {
-          return dataSets.filter(dataSet => dataSet[filterBy] === value);
+  ) : Promise<DataSetSrc[]> {
+    return this.getDataSetSrcs().then(
+      (dataSetSrcs: DataSetSrc[]) : DataSetSrc[] => {
+        if (filterBy in dataSetSrcs[0]) {
+          return dataSetSrcs.filter(
+            dataSetSrc => dataSetSrc[filterBy] === value
+          );
         }
         else {
           return null;
         }
       });
   }
-  // Get filtered data sets for which "filterBy" property contains "value"
-  public getFilteredDataSetsContains(
+  // Get filtered dataset sources for which "filterBy" property contains "value"
+  public getFilteredDataSetSrcsContains(
     filterBy: string, value: string
-  ) : Promise<DataSet[]> {
-    return this.getDataSets().then(
-      (dataSets: DataSet[]) : DataSet[] => {
-        if (filterBy in dataSets[0]) {
-          return dataSets.filter(dataSet => dataSet[filterBy]
+  ) : Promise<DataSetSrc[]> {
+    return this.getDataSetSrcs().then(
+      (dataSetSrcs: DataSetSrc[]) : DataSetSrc[] => {
+        if (filterBy in dataSetSrcs[0]) {
+          return dataSetSrcs.filter(dataSetSrc => dataSetSrc[filterBy]
             .toLocaleLowerCase()
             .includes(value.toLocaleLowerCase()));
         }
@@ -65,12 +67,12 @@ export class ExternalService {
       });
   }
   public getUniquePropertyValues(propKey: string) : Promise<string[]> {
-    return this.getDataSets().then((dataSets: DataSet[]) : string[] => {
+    return this.getDataSetSrcs().then((dataSetSrcs: DataSetSrc[]) : string[] => {
       let uniqueValues: string[] = [];
-      let length: number = dataSets.length;
+      let length: number = dataSetSrcs.length;
       for (let i = 0; i < length; i++) {
-        if (uniqueValues.indexOf(dataSets[i][propKey]) === -1) {
-          uniqueValues.push(dataSets[i][propKey]);
+        if (uniqueValues.indexOf(dataSetSrcs[i][propKey]) === -1) {
+          uniqueValues.push(dataSetSrcs[i][propKey]);
         }
       }
       return uniqueValues;
@@ -84,33 +86,33 @@ export class ExternalService {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
-  // Add new data set
-  private post(dataSet: DataSet) : Promise<DataSet> {
+  // Add new data set source
+  private post(dataSetSrc: DataSetSrc) : Promise<DataSetSrc> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
     return this.http
-      .post(this.itemsUrl, JSON.stringify(dataSet), { headers: headers })
+      .post(this.itemsUrl, JSON.stringify(dataSetSrc), { headers: headers })
       .toPromise()
       .then(res => res.json().data)
       .catch(ExternalService.handleError);
   }
-  // Update existing data set
-  private put(dataSet: DataSet) : Promise<DataSet> {
+  // Update existing data set source
+  private put(dataSetSrc: DataSetSrc) : Promise<DataSetSrc> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    let url = `${this.itemsUrl}/${dataSet.Id}`;
+    let url = `${this.itemsUrl}/${dataSetSrc.Id}`;
     return this.http
-      .put(url, JSON.stringify(dataSet), { headers: headers })
+      .put(url, JSON.stringify(dataSetSrc), { headers: headers })
       .toPromise()
-      .then(() => dataSet)
+      .then(() => dataSetSrc)
       .catch(ExternalService.handleError);
   }
-  // Save data set
-  public saveDataSet(dataSet: DataSet) : Promise<DataSet> {
-    if (dataSet.Id) {
-      return this.put(dataSet);
+  // Save data set source
+  public saveDataSetSrc(dataSetSrc: DataSetSrc) : Promise<DataSetSrc> {
+    if (dataSetSrc.Id) {
+      return this.put(dataSetSrc);
     }
-    return this.post(dataSet);
+    return this.post(dataSetSrc);
   }
 }

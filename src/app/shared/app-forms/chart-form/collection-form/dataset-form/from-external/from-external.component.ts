@@ -8,7 +8,7 @@ import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 import { DataSet } from "../../../../../models/DataSet";
 import { DataSetBasicHandler } from "./../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../models/DataSetFeedback";
-import { DataSetBloodhoundSources } from "../../../../../models/DataSetBloodhoundSources";
+import { DataSetSrcBloodhoundSrcs } from "../../../../../models/DataSetSrcBloodhoundSrcs";
 import { ExternalService } from '../../../../../services/external.service';
 import { FromFieldComponent } from "./from-field/from-field.component";
 import { FromIdComponent } from "./from-id/from-id.component";
@@ -32,7 +32,7 @@ implements DoCheck, OnDestroy, OnInit {
   @Input() private formGroup: FormGroup;
 
   private collapseDataSetForm: boolean = false;
-  protected dataSetBloodhoundSources: DataSetBloodhoundSources = {
+  protected dataSetSrcBloodhoundSrcs: DataSetSrcBloodhoundSrcs = {
     'Field': {
       'defaultSource': null,
       'filteredSource': null,
@@ -56,7 +56,7 @@ implements DoCheck, OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.setDefaultDataSetBloodhoundSources();
+    this.setDefaultDataSetSrcBloodhoundSrcs();
     this.addFormControls();
     this.createObsAndSubs();
   }
@@ -64,6 +64,9 @@ implements DoCheck, OnDestroy, OnInit {
     this.cancelSubs();
   }
   ngDoCheck() {
+
+    console.log('this.currentDataSet external = ', this.currentDataSet);
+
   }
 
   private addFormControls() : void {
@@ -82,9 +85,11 @@ implements DoCheck, OnDestroy, OnInit {
         (radioSelection: string) : void => {
           this.formGroup.updateValueAndValidity();
           this.obRadioSelection.next(radioSelection);
-          this.currentDataSet.reset();
-          this.previousDatSet.reset();
-          this.resetFilteredDataSetBloodhoundSource();
+          // this.currentDataSet.resetProps();
+          this.currentDataSet = new DataSet();
+          // this.previousDatSet.resetProps();
+          this.previousDatSet = new DataSet();
+          this.resetDataSetSrcBloodhoundSrc();
           this.resetDataSetFeedback();
         }
       );
@@ -114,6 +119,6 @@ implements DoCheck, OnDestroy, OnInit {
     }
   }
   private resetDataSetFeedback() : void {
-    this.obDataSetFeedback.next(new DataSetFeedback('reset', 'reset'));
+    this.obDataSetFeedback.next(new DataSetFeedback('resetProps', 'resetProps'));
   }
 }

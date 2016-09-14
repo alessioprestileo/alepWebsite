@@ -13,17 +13,9 @@ import { UserDataService } from '../../../../../shared/services/user-data.servic
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private userDataService: UserDataService) {}
+  constructor() {}
 
   ngOnInit() {
-
-    this.userDataService.getAll('collections').then(
-      collections => {
-        console.log('collections = ', collections);
-        console.log('collection1.name = ', (<AppChartCollection>collections[0]).name);
-      }
-    );
-
   }
 
 }

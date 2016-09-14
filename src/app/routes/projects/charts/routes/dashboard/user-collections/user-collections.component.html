@@ -1,3 +1,33 @@
-<p>
-  user-collections works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-10">
+      <span [ngClass]="collapseTable ?
+                  'glyphicon glyphicon-chevron-right' :
+                  'glyphicon glyphicon-chevron-down'"
+            (click)="collapseTable = !collapseTable"
+            style="vertical-align: middle">
+      </span>
+      <label class="app-input-box-label"
+             style="font-weight: bold;
+                  padding-left: 7px">
+        Your collections
+      </label>
+    </div>
+    <div class="col-sm-2"
+         style="text-align: right">
+      <button type="button" class="btn btn-default"
+              style="outline: 0;
+                     vertical-align: middle"
+              (click)="onNewCollection()">
+        New collection
+      </button>
+    </div>
+  </div>
+  <br>
+  <app-data-table *ngIf="tableInput"
+                  [hidden]="collapseTable"
+                  [tableInput]="tableInput"
+                  (editEmitter)="onTableEdit($event)"
+                  (removeEmitter)="onTableRemove($event)">
+  </app-data-table>
+</div>

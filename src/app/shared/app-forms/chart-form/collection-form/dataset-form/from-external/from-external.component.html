@@ -24,7 +24,7 @@
     <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option0'">
       <app-from-ticker
         [currentDataSet]="currentDataSet"
-        [dataSetBloodhoundSources]="dataSetBloodhoundSources"
+        [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
         (hasSuccessEmitter)="onSearchBoxSuccess($event)"
@@ -34,7 +34,7 @@
     <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'">
       <app-from-field
         [currentDataSet]="currentDataSet"
-        [dataSetBloodhoundSources]="dataSetBloodhoundSources"
+        [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
         (hasSuccessEmitter)="onSearchBoxSuccess($event)"
@@ -44,7 +44,7 @@
     <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'">
       <app-from-id
         [currentDataSet]="currentDataSet"
-        [dataSetBloodhoundSources]="dataSetBloodhoundSources"
+        [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
         (hasSuccessEmitter)="onSearchBoxSuccess($event)"

@@ -1,0 +1,31 @@
+<div *ngIf="collection">
+  <form [formGroup]="formGroup">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <label class="app-input-box-label"
+                 style="font-weight: bold">
+            {{title}}
+          </label>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-input-box [label]="'Name:'"
+                         [inFormControl]="formGroup.controls['name']">
+          </app-input-box>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-dataset-form [currentDataSet]="collection.dataSet"
+                            [formGroup]="formGroup"
+                            [newDataSet]="collIdKeyword === 'New'">
+          </app-dataset-form>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

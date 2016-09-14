@@ -117,7 +117,7 @@ export class UserDataService {
       .catch(UserDataService.handleError);
   }
   // Save item. If the item is new (id === null),
-  // an id is assigned by the server
+  // id is assigned by the server
   public saveItem(target: string, item: Item) : Promise<Item> {
     if (item.id) {
       return this.put(target, item);

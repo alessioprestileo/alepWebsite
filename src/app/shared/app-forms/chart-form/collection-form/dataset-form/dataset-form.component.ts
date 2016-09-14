@@ -16,11 +16,14 @@ import { FromExternalComponent } from './from-external/from-external.component'
   directives: [REACTIVE_FORM_DIRECTIVES, FromExternalComponent]
 })
 export class DataSetFormComponent
-    implements DoCheck, OnDestroy, OnInit {
+implements DoCheck, OnDestroy, OnInit {
   @Input() protected currentDataSet: DataSet;
   @Input() private formGroup: FormGroup;
+  @Input() private newDataSet: boolean = false;
 
   private collapseDataSetForm: boolean = false;
+  private editDataSet: boolean;
+
   private obDataSetSource: BehaviorSubject<string> = new BehaviorSubject('');
   private sourcesValues: string[] =  [
     'external_source', 'user_data'
@@ -34,6 +37,12 @@ export class DataSetFormComponent
   constructor() {}
 
   ngOnInit() {
+    this.initEditDataSet();
+
+
+    console.log('this.formGroup =', this.formGroup);
+    console.log('this.currentDataSet =', this.currentDataSet);
+
     this.addControlsAndSubs();
   }
   ngOnDestroy() {
@@ -44,7 +53,7 @@ export class DataSetFormComponent
 
   private addControlsAndSubs() : void {
     this.formGroup.addControl('source', new FormControl(
-      null, Validators.required
+      '', Validators.required
     ));
     this.subDataSetSource = this.formGroup.controls['source']
       .valueChanges.subscribe(
@@ -55,6 +64,9 @@ export class DataSetFormComponent
   }
   private cancelSubs() : void {
     this.subDataSetSource.unsubscribe();
+  }
+  private initEditDataSet() : void {
+    this.editDataSet = this.newDataSet ? true: false;
   }
   public onSourceSelected(index: number) {
     (<FormControl>this.formGroup.controls['source']).setValue(

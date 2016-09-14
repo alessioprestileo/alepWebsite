@@ -2,31 +2,31 @@
      style="padding-left: 0;
             padding-right: 0">
   <div class="row">
-    <app-search-box *ngIf="dataSetBloodhoundSources.Ticker.defaultSource"
-      [formControlKey]="'dataSet-Ticker'"
-      [inFormGroup]="inFormGroup"
-      [method]="'local'"
-      [source]="dataSetBloodhoundSources.Ticker.defaultSource"
-      [targetProperty]="'Ticker'"
-      (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
-      (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+    <app-search-box *ngIf="dataSetSrcBloodhoundSrcs.Ticker.defaultSource"
+                    [formControlKey]="'dataSet-Ticker'"
+                    [inFormGroup]="inFormGroup"
+                    [method]="'local'"
+                    [source]="dataSetSrcBloodhoundSrcs.Ticker.defaultSource"
+                    [targetProperty]="'Ticker'"
+                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
+                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
     </app-search-box>
   </div>
   <div *ngIf="currentDataSet.Ticker &&
-                          dataSetBloodhoundSources.Field.filteredSource">
+                          dataSetSrcBloodhoundSrcs.Field.filteredSource">
     <div class="row">
       <app-search-box
         [formControlKey]="'dataSet-Field'"
         [inFormGroup]="inFormGroup"
         [method]="'local'"
-        [source]="dataSetBloodhoundSources.Field.filteredSource"
+        [source]="dataSetSrcBloodhoundSrcs.Field.filteredSource"
         [targetProperty]="'Field'"
         (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
         (hasSuccessEmitter)="onSearchBoxSuccess($event)">
       </app-search-box>
     </div>
   </div>
-  <div *ngIf="currentDataSet.Id">
+  <div *ngIf="currentDataSetSrcId">
     <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
@@ -35,7 +35,7 @@
       </div>
       <div class="col-sm-8">
         <label class="app-input-box-label">
-          {{currentDataSet.Id}}
+          {{currentDataSetSrcId}}
         </label>
       </div>
     </div>

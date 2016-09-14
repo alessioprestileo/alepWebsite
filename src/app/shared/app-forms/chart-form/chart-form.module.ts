@@ -1,5 +1,5 @@
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA}           from '@angular/core';
+import {NgModule}           from '@angular/core';
 
 import { ChartFormComponent } from "./chart-form.component";
 import { CollectionFormModule } from "./collection-form/collection-form.module";
@@ -13,7 +13,7 @@ import { ShowChartModule } from "../../show-chart/show-chart.module";
     // FormsModule,
     // InputBoxModule,
     // ReactiveFormsModule,
-                  SharedModule,
+    SharedModule,
     ShowChartModule
   ],
   declarations: [ ChartFormComponent ],

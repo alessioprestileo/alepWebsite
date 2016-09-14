@@ -6,6 +6,7 @@ import { FormGroup } from "@angular/forms";
 import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../../../models/DataSet";
+import { DataSetSrc } from "../../../../../../models/DataSetSrc";
 import { DataSetBasicHandler } from "../../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../../models/DataSetFeedback";
 import { ExternalService } from "../../../../../../services/external.service";
@@ -19,15 +20,16 @@ import { SearchBoxComponent } from '../../../../../search-box/search-box.compone
   directives: [SearchBoxComponent]
 })
 export class FromTickerComponent
-  extends DataSetBasicHandler
-  implements OnInit, OnDestroy {
+extends DataSetBasicHandler
+implements OnInit, OnDestroy {
   @Input() protected currentDataSet: DataSet;
-  @Input() protected dataSetBloodhoundSources: any;
+  @Input() protected dataSetSrcBloodhoundSrcs: any;
   @Input() private inFormGroup: FormGroup;
   @Input() protected obDataSetFeedback: BehaviorSubject<DataSetFeedback>;
   @Output() private hasNotSuccessEmitter = new EventEmitter();
   @Output() private hasSuccessEmitter = new EventEmitter();
 
+  private currentDataSetSrcId: string;
   private subDataSetFeedback: Subscription;
 
   constructor(protected externalService: ExternalService) {
@@ -62,27 +64,29 @@ export class FromTickerComponent
       let property: string = dataSetFeedback.prop;
       let value: string = dataSetFeedback.val;
       if (this.dataSetFeedbackWasReset(dataSetFeedback)) {
-        this.currentDataSet.reset();
-        this.resetFilteredDataSetBloodhoundSource();
+        // this.currentDataSet.resetProps();
+        this.currentDataSet = new DataSet();
+        this.resetDataSetSrcBloodhoundSrc();
       }
       switch (property) {
         case 'Ticker':
-          this.currentDataSet.reset();
-          this.resetFilteredDataSetBloodhoundSource();
+          // this.currentDataSet.resetProps();
+          this.resetDataSetSrcBloodhoundSrc();
+          this.currentDataSet = new DataSet();
           if (value) {
-            this.setFilteredDataSetBloodhoundSource('Field', 'Ticker', value);
+            this.setFilteredDataSetSrcBloodhoundSrc('Field', 'Ticker', value);
             this.currentDataSet.Ticker = value;
           }
           break;
         case 'Field':
-          this.currentDataSet.Id = null;
+          this.currentDataSetSrcId = null;
           let tickerValue: string = this.currentDataSet.Ticker;
           if (tickerValue && value) {
             this.currentDataSet.Field = value;
-            this.getDataSetFromTickerField(tickerValue, value).then(
-              (dataSet: DataSet): void => {
-                this.currentDataSet.DataPoints = dataSet.DataPoints;
-                this.currentDataSet.Id = dataSet.Id;
+            this.getDataSetSrcFromTickerField(tickerValue, value).then(
+              (dataSetSrc: DataSetSrc): void => {
+                this.currentDataSet.DataPoints = dataSetSrc.DataPoints;
+                this.currentDataSetSrcId = dataSetSrc.Id;
               }
             );
           }

@@ -1,42 +1,45 @@
-import { DataSet } from "../../../../models/DataSet";
+import { DataSetSrc } from "../../../../models/DataSetSrc";
 import { DataSetFeedback } from "../../../../models/DataSetFeedback";
-import { DataSetBloodhoundSources } from "../../../../models/DataSetBloodhoundSources";
+import { DataSetSrcBloodhoundSrcs } from "../../../../models/DataSetSrcBloodhoundSrcs";
 import { ExternalService } from '../../../../services/external.service';
 
 export class DataSetBasicHandler {
-  protected dataSetBloodhoundSources: DataSetBloodhoundSources;
+  protected dataSetSrcBloodhoundSrcs: DataSetSrcBloodhoundSrcs;
 
-  constructor(protected externalService: ExternalService) {}
+  constructor(protected externalService: ExternalService) {
+  }
 
   protected dataSetFeedbackWasReset(feedback : DataSetFeedback) : boolean {
-    if (feedback.prop === 'reset') {
+    if (feedback.prop === 'resetProps') {
       return true;
     }
     else {
       return false;
     }
   }
-  protected getDataSetFromTickerField(
+  protected getDataSetSrcFromTickerField(
     tickerValue: string, fieldValue: string
-  ) : Promise<DataSet> {
-    return this.externalService.getFilteredDataSetsEquals(
+  ) : Promise<DataSetSrc> {
+    return this.externalService.getFilteredDataSetSrcsEquals(
       'Ticker', tickerValue
     ).then(
-      (dataSets: DataSet[]) : DataSet => {
-        return dataSets.filter(dataSet => dataSet.Field === fieldValue)[0];
+      (dataSetSrcs: DataSetSrc[]) : DataSetSrc => {
+        return dataSetSrcs.filter(
+          dataSetSrc => dataSetSrc.Field === fieldValue
+        )[0];
       }
     );
   }
-  protected setDefaultDataSetBloodhoundSources() : Promise<void> {
+  protected setDefaultDataSetSrcBloodhoundSrcs() : Promise<void> {
     return this.externalService.getUniquePropertyValues('Ticker').then(
       (uniqueTickers: string[]) : Promise<void> => {
-        this.dataSetBloodhoundSources.Ticker.defaultSource = uniqueTickers;
+        this.dataSetSrcBloodhoundSrcs.Ticker.defaultSource = uniqueTickers;
         return this.externalService.getUniquePropertyValues('Field').then(
           (uniqueFields: string[]) : Promise<void> => {
-            this.dataSetBloodhoundSources.Field.defaultSource = uniqueFields;
+            this.dataSetSrcBloodhoundSrcs.Field.defaultSource = uniqueFields;
             return this.externalService.getUniquePropertyValues('Id').then(
               (uniqueIds: string[]) => {
-                this.dataSetBloodhoundSources.Id.defaultSource = uniqueIds;
+                this.dataSetSrcBloodhoundSrcs.Id.defaultSource = uniqueIds;
               }
             );
           }
@@ -44,20 +47,24 @@ export class DataSetBasicHandler {
       }
     );
   }
-  protected resetFilteredDataSetBloodhoundSource() : void {
-    this.dataSetBloodhoundSources.Field.filteredSource = null;
-    this.dataSetBloodhoundSources.Id.filteredSource = null;
-    this.dataSetBloodhoundSources.Ticker.filteredSource = null;
+  protected resetDataSetSrcBloodhoundSrc() : void {
+    this.dataSetSrcBloodhoundSrcs.Field.filteredSource = null;
+    this.dataSetSrcBloodhoundSrcs.Id.filteredSource = null;
+    this.dataSetSrcBloodhoundSrcs.Ticker.filteredSource = null;
   }
-  protected setFilteredDataSetBloodhoundSource(
+  protected setFilteredDataSetSrcBloodhoundSrc(
     target: string, filterName: string, filterValue: string
   ) : void {
-    this.externalService.getFilteredDataSetsEquals(filterName, filterValue).then(
-      (dataSets: DataSet[]) : void => {
-        this.dataSetBloodhoundSources[target].filteredSource = [];
-        let length: number = dataSets.length;
+    this.externalService.getFilteredDataSetSrcsEquals(
+      filterName, filterValue
+    ).then(
+      (dataSetSrcs: DataSetSrc[]) : void => {
+        this.dataSetSrcBloodhoundSrcs[target].filteredSource = [];
+        let length: number = dataSetSrcs.length;
         for (let i = 0; i < length; i++) {
-          this.dataSetBloodhoundSources[target].filteredSource.push(dataSets[i][target]);
+          this.dataSetSrcBloodhoundSrcs[target].filteredSource.push(
+            dataSetSrcs[i][target]
+          );
         }
       }
     );

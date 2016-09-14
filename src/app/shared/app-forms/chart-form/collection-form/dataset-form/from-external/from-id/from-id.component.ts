@@ -6,6 +6,7 @@ import { FormGroup } from "@angular/forms";
 import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../../../models/DataSet";
+import { DataSetSrc } from "../../../../../../models/DataSetSrc";
 import { DataSetFeedback } from "../../../../../../models/DataSetFeedback";
 import { DataSetBasicHandler } from "../../DataSetBasicHandler";
 import { ExternalService } from "../../../../../../services/external.service";
@@ -22,12 +23,13 @@ export class FromIdComponent
 extends DataSetBasicHandler
 implements OnInit, OnDestroy {
   @Input() protected currentDataSet: DataSet;
-  @Input() protected dataSetBloodhoundSources: any;
+  @Input() protected dataSetSrcBloodhoundSrcs: any;
   @Input() private inFormGroup: FormGroup;
   @Input() protected obDataSetFeedback: BehaviorSubject<DataSetFeedback>;
   @Output() private hasNotSuccessEmitter = new EventEmitter();
   @Output() private hasSuccessEmitter = new EventEmitter();
 
+  private currentDataSetSrcId: string;
   private subDataSetFeedback: Subscription;
 
   constructor(protected externalService: ExternalService) {
@@ -62,18 +64,20 @@ implements OnInit, OnDestroy {
       let property: string = dataSetFeedback.prop;
       let value: string = dataSetFeedback.val;
       if (this.dataSetFeedbackWasReset(dataSetFeedback)) {
-        this.currentDataSet.reset();
-        this.resetFilteredDataSetBloodhoundSource();
+        // this.currentDataSet.resetProps();
+        this.currentDataSet = new DataSet();
+        this.resetDataSetSrcBloodhoundSrc();
       }
-      this.currentDataSet.reset();
-      this.resetFilteredDataSetBloodhoundSource();
+      // this.currentDataSet.resetProps();
+      this.currentDataSet = new DataSet();
+      this.resetDataSetSrcBloodhoundSrc();
       if (property === 'Id' && value) {
-        this.externalService.getDataSet(value).then(
-          (dataSet: DataSet) : void => {
-            this.currentDataSet.DataPoints = dataSet.DataPoints;
-            this.currentDataSet.Field = dataSet.Field;
-            this.currentDataSet.Id = dataSet.Id;
-            this.currentDataSet.Ticker = dataSet.Ticker;
+        this.externalService.getDataSetSrc(value).then(
+          (dataSetSrc: DataSetSrc) : void => {
+            this.currentDataSet.DataPoints = dataSetSrc.DataPoints;
+            this.currentDataSet.Field = dataSetSrc.Field;
+            this.currentDataSetSrcId = dataSetSrc.Id;
+            this.currentDataSet.Ticker = dataSetSrc.Ticker;
           }
         );
       }

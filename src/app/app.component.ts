@@ -1,5 +1,6 @@
 import {
   AfterViewChecked, Component, DoCheck, EventEmitter, Inject, OnInit, OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { Location }    from '@angular/common';
 
@@ -11,8 +12,6 @@ import { NavButton } from "./shared/models/NavButton";
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { SiteMapComponent } from './shared/site-map/site-map.component';
 
-let onResizeEmitter: EventEmitter<any> = new EventEmitter();
-
 @Component({
   moduleId: module.id,
   selector: 'app-root',
@@ -20,10 +19,15 @@ let onResizeEmitter: EventEmitter<any> = new EventEmitter();
   styleUrls: ['app.component.css'],
   directives: [ChartsNavComponent, NavigationComponent, SiteMapComponent]
 })
-export class AppComponent implements AfterViewChecked, DoCheck,
-                                     OnDestroy, OnInit {
+export class AppComponent
+implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
+  @HostListener('window:resize', ['$event'])
+  private onResize(event: any) {
+    this.onResizeEmitter.emit();
+  }
   private currentUrl: string;
   private navInput: any[];
+  private onResizeEmitter: EventEmitter<any> = new EventEmitter();
   private prevBrowserPath: string;
   private projectTitles: string[];
   private siteMapInput: any[];
@@ -36,8 +40,7 @@ export class AppComponent implements AfterViewChecked, DoCheck,
               private appRoutingService: AppRoutingService) {
   }
   ngOnInit() {
-    window.onresize = this.onResize;
-    this.subOnResize = onResizeEmitter.subscribe(() => this.setBodyHeight());
+    this.subOnResize = this.onResizeEmitter.subscribe(() => this.setBodyHeight());
     this.title = 'Alessio\'s Website';
     this.projectTitles = ['Charts Project', 'Warehouse Project'];
     this.subCurrentUrl = this.appRoutingService.currentUrl.subscribe(
@@ -86,9 +89,6 @@ export class AppComponent implements AfterViewChecked, DoCheck,
   }
   public onHomeButtonClicked() : void {
     this.appRoutingService.navigate(['/' + this.ROUTES_DICT.HOME]);
-  }
-  private onResize() : void {
-    onResizeEmitter.emit();
   }
   public onSiteMapClick(link: string[]) : void {
     this.appRoutingService.navigate(link);

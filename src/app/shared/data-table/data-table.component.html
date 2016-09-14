@@ -1,0 +1,51 @@
+<div class="container-fluid animated fadeIn">
+	<div class="panel panel-default">
+    <div class="panel-heading"></div>
+    <table class="table table-striped"
+           [mfData]="tableInput.items"
+           #mf="mfDataTable" [mfRowsOnPage]="10">
+      <thead>
+        <tr>
+          <th style="width: 5%"></th>
+          <th style="width: 15%" *ngFor="let header of tableInput.headers">
+            <mfDefaultSorter [by]="header.propName">
+              {{header.headerLabel}}
+            </mfDefaultSorter>
+          </th>
+          <th style="width: 5%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of mf.data">
+          <td>
+            <button class="btn btn-xs btn-danger" title="remove"
+                    (click)="removeItem(item)"
+                    style="outline: 0">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </td>
+          <td *ngFor="let header of tableInput.headers"
+              style="font-size: 0.9em" >
+            {{getPropertyValue(item, header.propName)}}
+          </td>
+          <td>
+            <button type="button" class="btn btn-xs"
+              style="font-size: 0.7em;
+                     font-weight: bold;
+                     outline: 0"
+              (click)="editItem(item)">Details
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">
+            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15,1000]">
+            </mfBootstrapPaginator>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
