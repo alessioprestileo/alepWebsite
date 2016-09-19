@@ -8,11 +8,11 @@
                     [method]="'local'"
                     [source]="dataSetSrcBloodhoundSrcs.Field.defaultSource"
                     [targetProperty]="'Field'"
-                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
-                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+                    (emHasNotSuccess)="onSearchBoxNotSuccess($event)"
+                    (emHasSuccess)="onSearchBoxSuccess($event)">
     </app-search-box>
   </div>
-  <div *ngIf="currentDataSet.Field &&
+  <div *ngIf="currentDataSet.field &&
                   dataSetSrcBloodhoundSrcs.Ticker.filteredSource">
     <div class="row">
       <app-search-box
@@ -21,8 +21,8 @@
         [method]="'local'"
         [source]="dataSetSrcBloodhoundSrcs.Ticker.filteredSource"
         [targetProperty]="'Ticker'"
-        (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
-        (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+        (emHasNotSuccess)="onSearchBoxNotSuccess($event)"
+        (emHasSuccess)="onSearchBoxSuccess($event)">
       </app-search-box>
     </div>
   </div>

@@ -4,7 +4,7 @@ import { REACTIVE_FORM_DIRECTIVES, FormControl,
 
 import { Subscription }   from 'rxjs/Rx';
 
-import { AppChartCollection } from "../../../models/AppChartCollection";
+import { ChartColl } from "../../../models/ChartColl";
 import { InputBoxComponent } from '../../input-box/input-box.component';
 import { DataSetFormComponent } from './dataset-form/dataset-form.component';
 
@@ -18,7 +18,7 @@ import { DataSetFormComponent } from './dataset-form/dataset-form.component';
 })
 export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentPosition: number;
-  @Input() private currentCollection: AppChartCollection;
+  @Input() private currentCollection: ChartColl;
   @Input() private formGroup: FormGroup;
 
   private subNameControl: Subscription;

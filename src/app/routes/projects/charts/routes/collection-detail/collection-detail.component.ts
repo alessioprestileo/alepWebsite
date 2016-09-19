@@ -8,7 +8,7 @@ import {
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 
-import { AppChartCollection } from "../../../../../shared/models/AppChartCollection";
+import { ChartColl } from "../../../../../shared/models/ChartColl";
 import { AppRoutingService } from "../../../../../shared/services/app-routing.service";
 import { CollectionFormComponent } from "../../../../../shared/app-forms/chart-form/collection-form/collection-form.component";
 import { DataSetFormComponent } from "../../../../../shared/app-forms/chart-form/collection-form/dataset-form/dataset-form.component";
@@ -27,7 +27,7 @@ import { UserDataService } from "../../../../../shared/services/user-data.servic
   ]
 })
 export class CollectionDetailComponent implements OnDestroy, OnInit, DoCheck {
-  private collection: AppChartCollection;
+  private collection: ChartColl;
   private collIdKeyword: string;
   private formGroup: FormGroup;
   private formGroupValidator: ValidatorFn = formGroupValidator;
@@ -101,13 +101,13 @@ export class CollectionDetailComponent implements OnDestroy, OnInit, DoCheck {
         (resolve, reject) => resolve()
       );
       return promise.then(() => {
-        this.collection = new AppChartCollection();
+        this.collection = new ChartColl();
       });
     }
     else {
       return this.userDataService
         .getItem('collections', +this.collIdKeyword).then(coll => {
-          this.collection = (<AppChartCollection>coll)
+          this.collection = (<ChartColl>coll)
         });
     }
   }

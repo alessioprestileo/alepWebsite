@@ -1,0 +1,16 @@
+.collSrc {
+  border: 2px solid lightgray;
+  background-color: white;
+  height: 30px;
+  padding-top: 5px;
+  text-align: center;
+}
+.collSrc:hover {
+  background-color: #eeeeee;
+}
+.collSrc-selected {
+  background-color: lightblue;
+}
+.collSrc-selected:hover {
+  background-color: lightblue;
+}

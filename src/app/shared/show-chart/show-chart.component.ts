@@ -2,8 +2,8 @@ import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable, Subscription }   from 'rxjs/Rx';
 
-import {AppChart} from "../models/AppChart";
-import {AppChartCollection} from "../models/AppChartCollection";
+import {Chart} from "../models/Chart";
+import {ChartColl} from "../models/ChartColl";
 import {DataSet} from "../models/DataSet";
 
 @Component({
@@ -13,9 +13,8 @@ import {DataSet} from "../models/DataSet";
   styleUrls: ['show-chart.component.css']
 })
 export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
-  @Input() chart: AppChart;
+  @Input() chart: Chart;
   @Input() obUpdateFlag: Observable<boolean>;
-
   private chartOptions: any;
   private chartLabels: string[];
   private chartType: string;
@@ -48,17 +47,16 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
   }
   private getDataSets() : DataSet[] {
     let result: DataSet[] = [];
-    let collections: AppChartCollection[] = this.chart.collections;
+    let collections: ChartColl[] = this.chart.collections;
     let length: number = collections.length;
     for (let i = 0; i < length; i++) {
       result.push(collections[i].dataSet);
     }
     return result;
   }
-  private static isValidChart(chart: AppChart): boolean {
+  private hasValidType() : boolean {
     let result: boolean = false;
-
-    let switcher: string = chart.type;
+    let switcher: string = this.chart.type;
     switch (switcher) {
       case 'bar':
         result = true;
@@ -81,6 +79,13 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
     }
     return result;
   }
+  private isValidChart(): boolean {
+    let result: boolean = false;
+    if (this.hasValidType()) {
+      result = true;
+    }
+    return result;
+  }
   private setChartData(dataSets: DataSet[]) : void {
     this.chartLabels = [];
     this.chartData = [];
@@ -91,7 +96,7 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
       if (firstDataSet) {
         labels = [];
       }
-      let dataPoints: Object = dataSets[i].DataPoints;
+      let dataPoints: Object = dataSets[i].dataPoints;
       let data: number[] = [];
       for (let label in dataPoints){
         if (firstDataSet) {
@@ -119,7 +124,7 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
     this.chartLegend = state;
   }
   private updateChart() : void {
-    if (ShowChartComponent.isValidChart(this.chart)) {
+    if (this.isValidChart()) {
       this.title = this.chart.title;
       this.dataSets = this.getDataSets();
       this.setChartOptions();

@@ -27,8 +27,8 @@
         [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
-        (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-        (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
+        (emHasSuccess)="onSearchBoxSuccess($event)"
+        (emHasNotSuccess)="onSearchBoxNotSuccess($event)">
       </app-from-ticker>
     </div>
     <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option1'">
@@ -37,8 +37,8 @@
         [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
-        (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-        (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
+        (emHasSuccess)="onSearchBoxSuccess($event)"
+        (emHasNotSuccess)="onSearchBoxNotSuccess($event)">
       </app-from-field>
     </div>
     <div *ngIf="formGroup.controls['dataSet-radio'].value === 'option2'">
@@ -47,8 +47,8 @@
         [dataSetSrcBloodhoundSrcs]="dataSetSrcBloodhoundSrcs"
         [inFormGroup]="formGroup"
         [obDataSetFeedback]="obDataSetFeedback"
-        (hasSuccessEmitter)="onSearchBoxSuccess($event)"
-        (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)">
+        (emHasSuccess)="onSearchBoxSuccess($event)"
+        (emHasNotSuccess)="onSearchBoxNotSuccess($event)">
       </app-from-id>
     </div>
   </div>

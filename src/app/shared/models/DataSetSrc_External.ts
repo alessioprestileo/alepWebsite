@@ -1,4 +1,4 @@
-export class DataSetSrc {
+export class DataSetSrc_External {
   DataPoints: {[label: string] : number};
   Field: string;
   Id: string;
@@ -15,8 +15,8 @@ export class DataSetSrc {
     this.Ticker = Ticker;
   }
 
-  public createCopy() : DataSetSrc {
-    let copy : DataSetSrc = new DataSetSrc();
+  public createCopy() : DataSetSrc_External {
+    let copy : DataSetSrc_External = new DataSetSrc_External();
     let originalDataPoints: {[label: string] : number} = this.DataPoints;
     for (let label in originalDataPoints) {
       copy.DataPoints[label] = originalDataPoints[label];
@@ -25,16 +25,5 @@ export class DataSetSrc {
     copy.Id = this.Id;
     copy.Ticker = this.Ticker;
     return copy;
-  }
-  public reset() : void {
-    for (let prop in this) {
-      if (typeof this[prop] === 'function') {
-        continue;
-      }
-      else {
-        this[prop] = null;
-      }
-    }
-    this.DataPoints = {};
   }
 }

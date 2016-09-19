@@ -5,8 +5,8 @@ import {
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 
-import { AppChart } from '../../models/AppChart';
-import { AppChartCollection } from '../../models/AppChartCollection';
+import { Chart } from '../../models/Chart';
+import { ChartColl } from '../../models/ChartColl';
 import { CollectionFormComponent } from './collection-form/collection-form.component';
 import { formGroupValidator } from '../formGroup.validator';
 import { InputBoxComponent } from '../input-box/input-box.component';
@@ -17,12 +17,12 @@ enum ArrayTypes {
   CollectionInput
 }
 class CollectionInput {
-  public collectionObject: AppChartCollection;
+  public collectionObject: ChartColl;
   public formGroup: FormGroup;
   public label: string;
   public position: number;
 
-  constructor(collectionObject: AppChartCollection = null,
+  constructor(collectionObject: ChartColl = null,
               formGroup: FormGroup = null,
               label: string = null,
               position: number = null) {
@@ -42,7 +42,7 @@ class CollectionInput {
                InputBoxComponent, ShowChartComponent]
 })
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
-  @Input() private inputChart: AppChart;
+  @Input() private inputChart: Chart;
 
   private chartFormGroup: FormGroup;
   private chartTypeValues: string[] =  [
@@ -60,7 +60,7 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   private collectionInputs: CollectionInput[] = [];
   private collectionsCount: number = 0;
   private collectionsLabel: string = 'collection';
-  private currentChart: AppChart;
+  private currentChart: Chart;
   private formGroupValidator: ValidatorFn = formGroupValidator;
   private formTitle: string = 'Enter data for the new chart:';
   private nextCollectionId: number = 0;
@@ -76,10 +76,10 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
 
   ngOnInit() {
 
-    this.inputChart = new AppChart();
+    this.inputChart = new Chart();
 
     if (this.inputChart.collections.length === 0) {
-      this.inputChart.collections.push(new AppChartCollection());
+      this.inputChart.collections.push(new ChartColl());
     };
     this.obChartFormValid = new BehaviorSubject(false);
     if (this.inputChart) {
@@ -89,7 +89,7 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
       this.initializeCollectionInputs();
     }
     else {
-      this.currentChart = new AppChart();
+      this.currentChart = new Chart();
       this.buildChartFormGroup();
       this.addControlsAndSubs();
     }
@@ -139,7 +139,7 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
         newArray = new Array<CollectionInput>();
         break;
       case ArrayTypes.AppChartCollection:
-        newArray = new Array<AppChartCollection>();
+        newArray = new Array<ChartColl>();
         break;
     }
     let length: number = array.length;
@@ -180,7 +180,7 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
       let label: string = this.collectionsLabel + ' ' +
         this.nextCollectionId.toLocaleString();
       if (target === 'component+chart') {
-        this.currentChart.collections.push(new AppChartCollection());
+        this.currentChart.collections.push(new ChartColl());
         let length: number = this.currentChart.collections.length;
         collectionInput.collectionObject = this.currentChart.collections[
           length - 1

@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import * as ROUTING_LABELS from './app.routing-labels'
 
+import { ChartDetailComponent } from "./routes/projects/charts/routes/chart-detail/chart-detail.component";
 import { CollectionDetailComponent } from "./routes/projects/charts/routes/collection-detail/collection-detail.component";
 import { DashboardComponent } from './routes/projects/charts/routes/dashboard/dashboard.component';
 import { HomeComponent } from './routes/home/home.component';
@@ -15,6 +16,7 @@ import { WhoAmIComponent } from './routes/who-am-i/who-am-i.component';
 
 export const ROUTES_DICT: {[name: string] : string} = {
   CHARTS: ROUTING_LABELS.CHARTS,
+  CHARTS_DETAIL: ROUTING_LABELS.CHARTS_DETAIL,
   COLLECTIONS_DETAIL: ROUTING_LABELS.COLLECTIONS_DETAIL,
   DASHBOARD: ROUTING_LABELS.DASHBOARD,
   HOME: ROUTING_LABELS.HOME,
@@ -72,6 +74,24 @@ export const APP_ROUTES: Routes = [
           {
             path: ROUTING_LABELS.NEW_CHART,
             component: NewChartComponent,
+          },
+          {
+            path: ROUTING_LABELS.CHARTS_DETAIL,
+            children: [
+              {
+                path: '',
+                redirectTo: 'New',
+                pathMatch: 'full',
+              },
+              {
+                path: 'New',
+                component: ChartDetailComponent,
+              },
+              {
+                path: ':id',
+                component: ChartDetailComponent,
+              },
+            ]
           },
           {
             path: ROUTING_LABELS.COLLECTIONS_DETAIL,

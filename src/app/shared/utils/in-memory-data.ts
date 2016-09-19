@@ -93,14 +93,34 @@ export class InMemoryData {
       {"Id":"60c0e5e3-616a-48ac-b2a9-0bf25ba03e9f","Ticker":"COMPANY 5","Field":"SOC_COSTS","DataPoints":{"2013-12-31T00:00:00":2.733}},
       {"Id":"e44a73fa-e47a-4b48-8409-005737b134e5","Ticker":"COMPANY 5","Field":"ADMIN_COSTS","DataPoints":{"2013-12-31T00:00:00":11.755,"2014-03-31T00:00:00":2.62,"2014-06-30T00:00:00":5.623}}
     ];
+    let userData_charts = [
+      {
+        id: 1,
+        collectionsIds: [
+          1, 2
+        ],
+        name: 'Chart1',
+        title: 'Title1',
+        type: 'bar'
+      },
+      {
+        id: 2,
+        collectionsIds: [
+          1, 2
+        ],
+        name: 'Chart2',
+        title: 'Title1',
+        type: 'line'
+      },
+    ];
     let userData_collections = [
       {
         id: 1,
         dataSet: {
-          "Id":"abc",
-          "Ticker": "ALESSIO",
-          "Field": "Field1",
-          "DataPoints": {
+          "id": 1,
+          "ticker": "ALESSIO",
+          "field": "Field1",
+          "dataPoints": {
             "Monday": 1,
             "Tuesday": 2,
             "Wednesday": 3,
@@ -111,18 +131,18 @@ export class InMemoryData {
       {
         id: 2,
         dataSet: {
-          "Id":"def",
-          "Ticker": "ALESSIO",
-          "Field": "Field2",
-          "DataPoints": {
-            "Thursday": 4,
-            "Friday": 5,
-            "Saturday": 6,
+          "id": 2,
+          "ticker": "ALESSIO",
+          "field": "Field2",
+          "dataPoints": {
+            "Monday": 4,
+            "Tuesday": 3,
+            "Wednesday": 2,
           }
         },
         name: 'Collection2'
       }
     ];
-    return {external, userData_collections};
+    return {external, userData_charts, userData_collections};
   }
 }

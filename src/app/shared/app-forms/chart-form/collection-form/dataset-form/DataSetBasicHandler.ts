@@ -1,10 +1,10 @@
-import { DataSetSrc } from "../../../../models/DataSetSrc";
+import { DataSetSrc_External } from "../../../../models/DataSetSrc_External";
 import { DataSetFeedback } from "../../../../models/DataSetFeedback";
-import { DataSetSrcBloodhoundSrcs } from "../../../../models/DataSetSrcBloodhoundSrcs";
+import { BHSrcsDataSetSrc_External } from "../../../../models/BHSrcsDataSetSrc_External";
 import { ExternalService } from '../../../../services/external.service';
 
 export class DataSetBasicHandler {
-  protected dataSetSrcBloodhoundSrcs: DataSetSrcBloodhoundSrcs;
+  protected dataSetSrcBloodhoundSrcs: BHSrcsDataSetSrc_External;
 
   constructor(protected externalService: ExternalService) {
   }
@@ -19,11 +19,11 @@ export class DataSetBasicHandler {
   }
   protected getDataSetSrcFromTickerField(
     tickerValue: string, fieldValue: string
-  ) : Promise<DataSetSrc> {
+  ) : Promise<DataSetSrc_External> {
     return this.externalService.getFilteredDataSetSrcsEquals(
       'Ticker', tickerValue
     ).then(
-      (dataSetSrcs: DataSetSrc[]) : DataSetSrc => {
+      (dataSetSrcs: DataSetSrc_External[]) : DataSetSrc_External => {
         return dataSetSrcs.filter(
           dataSetSrc => dataSetSrc.Field === fieldValue
         )[0];
@@ -58,7 +58,7 @@ export class DataSetBasicHandler {
     this.externalService.getFilteredDataSetSrcsEquals(
       filterName, filterValue
     ).then(
-      (dataSetSrcs: DataSetSrc[]) : void => {
+      (dataSetSrcs: DataSetSrc_External[]) : void => {
         this.dataSetSrcBloodhoundSrcs[target].filteredSource = [];
         let length: number = dataSetSrcs.length;
         for (let i = 0; i < length; i++) {

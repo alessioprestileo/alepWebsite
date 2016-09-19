@@ -6,7 +6,7 @@ import { FormGroup } from "@angular/forms";
 import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../../../models/DataSet";
-import { DataSetSrc } from "../../../../../../models/DataSetSrc";
+import { DataSetSrc_External } from "../../../../../../models/DataSetSrc_External";
 import { DataSetBasicHandler } from "../../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../../models/DataSetFeedback";
 import { ExternalService } from "../../../../../../services/external.service";
@@ -26,9 +26,8 @@ implements OnInit, OnDestroy {
   @Input() protected dataSetSrcBloodhoundSrcs: any;
   @Input() private inFormGroup: FormGroup;
   @Input() protected obDataSetFeedback: BehaviorSubject<DataSetFeedback>;
-  @Output() private hasNotSuccessEmitter = new EventEmitter();
-  @Output() private hasSuccessEmitter = new EventEmitter();
-
+  @Output() private emHasNotSuccess = new EventEmitter();
+  @Output() private emHasSuccess = new EventEmitter();
   private currentDataSetSrcId: string;
   private subDataSetFeedback: Subscription;
 
@@ -51,10 +50,10 @@ implements OnInit, OnDestroy {
     this.subDataSetFeedback.unsubscribe();
   }
   public onSearchBoxNotSuccess(prop: string) : void {
-    this.hasNotSuccessEmitter.emit(prop);
+    this.emHasNotSuccess.emit(prop);
   }
   public onSearchBoxSuccess(info: Object) : void {
-    this.hasSuccessEmitter.emit(info);
+    this.emHasSuccess.emit(info);
   }
   private processDataSetFeedback(dataSetFeedback : DataSetFeedback) : void {
     let promise : Promise<any> = new Promise(
@@ -64,28 +63,26 @@ implements OnInit, OnDestroy {
       let property: string = dataSetFeedback.prop;
       let value: string = dataSetFeedback.val;
       if (this.dataSetFeedbackWasReset(dataSetFeedback)) {
-        // this.currentDataSet.resetProps();
-        this.currentDataSet = new DataSet();
+        this.currentDataSet.resetProps();
         this.resetDataSetSrcBloodhoundSrc();
       }
       switch (property) {
         case 'Field':
-          // this.currentDataSet.resetProps();
-          this.currentDataSet = new DataSet();
+          this.currentDataSet.resetProps();
           this.resetDataSetSrcBloodhoundSrc();
           if (value) {
             this.setFilteredDataSetSrcBloodhoundSrc('Ticker', 'Field', value);
-            this.currentDataSet.Field = value;
+            this.currentDataSet.field = value;
           }
           break;
         case 'Ticker':
           this.currentDataSetSrcId = null;
-          let fieldValue: string = this.currentDataSet.Field;
+          let fieldValue: string = this.currentDataSet.field;
           if (fieldValue && value) {
-            this.currentDataSet.Ticker = value;
+            this.currentDataSet.ticker = value;
             this.getDataSetSrcFromTickerField(value, fieldValue).then(
-              (dataSetSrc: DataSetSrc): void => {
-                this.currentDataSet.DataPoints = dataSetSrc.DataPoints;
+              (dataSetSrc: DataSetSrc_External): void => {
+                this.currentDataSet.dataPoints = dataSetSrc.DataPoints;
                 this.currentDataSetSrcId = dataSetSrc.Id;
               }
             );
@@ -95,3 +92,4 @@ implements OnInit, OnDestroy {
     });
   }
 }
+

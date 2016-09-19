@@ -1,4 +1,4 @@
-<div *ngIf="collection">
+<div *ngIf="chartIsReady">
   <form [formGroup]="formGroup">
     <div class="container-fluid">
       <div class="row">
@@ -13,12 +13,11 @@
                border-radius: 48px;
                margin-bottom: 2%;
                padding: 2% 4%;">
-        <app-collection-form
-          [currentCollection]="collection"
-          [currentPosition]="null"
-          [detachedCollection]="true"
-          [formGroup]="formGroup">
-        </app-collection-form>
+        <app-chart-form
+          [chartFormGroup]="formGroup"
+          [currentChart]="chart"
+          [newChart]="newChart">
+        </app-chart-form>
         <br>
         <div class="container-fluid">
           <div class="container-fluid">

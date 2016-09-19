@@ -8,11 +8,11 @@
                     [method]="'local'"
                     [source]="dataSetSrcBloodhoundSrcs.Id.defaultSource"
                     [targetProperty]="'Id'"
-                    (hasNotSuccessEmitter)="onSearchBoxNotSuccess($event)"
-                    (hasSuccessEmitter)="onSearchBoxSuccess($event)">
+                    (emHasNotSuccess)="onSearchBoxNotSuccess($event)"
+                    (emHasSuccess)="onSearchBoxSuccess($event)">
     </app-search-box>
   </div>
-  <div *ngIf="currentDataSet.Ticker">
+  <div *ngIf="currentDataSet.ticker">
     <div class="row" style="margin-bottom: 10px">
       <div class="col-sm-4">
         <label class="app-input-box-label">
@@ -21,12 +21,12 @@
       </div>
       <div class="col-sm-8">
         <label class="app-input-box-label">
-          {{currentDataSet.Ticker}}
+          {{currentDataSet.ticker}}
         </label>
       </div>
     </div>
   </div>
-  <div *ngIf="currentDataSet.Field">
+  <div *ngIf="currentDataSet.field">
     <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
@@ -35,7 +35,7 @@
       </div>
       <div class="col-sm-8">
         <label class="app-input-box-label">
-          {{currentDataSet.Field}}
+          {{currentDataSet.field}}
         </label>
       </div>
     </div>

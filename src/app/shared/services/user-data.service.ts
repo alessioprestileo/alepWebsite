@@ -36,12 +36,6 @@ export class UserDataService {
       response => response.json().data
     ).catch(UserDataService.handleError);
   }
-  // Get item from the targeted collection
-  public getItem(target: string, id: number) : Promise<Item> {
-    return this.getAll(target).then(
-      (items: Item[]) => items.filter(item => item.id === id)[0]
-    );
-  }
   // Get filtered items from the targeted collection
   // for which "filterBy" property equals "value"
   public getFilteredItemsPropEquals(
@@ -72,6 +66,18 @@ export class UserDataService {
           return null;
         }
       });
+  }
+  // Get item from the targeted collection
+  public getItem(target: string, id: number) : Promise<Item> {
+    return this.getAll(target).then(
+      (items: Item[]) => items.filter(item => item.id === id)[0]
+    );
+  }
+  // Get latest id used to save an item
+  public getLastUsedId(target: string) : Promise<number> {
+    return this.getAll(target).then(
+      (items: Item[]) => {return items.length}
+    );
   }
   // Get all unique values for an item property in the targeted collection
   public getUniquePropValues(target: string, propKey: string) : Promise<string[]> {

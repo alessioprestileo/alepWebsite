@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AppChartCollection } from '../../../../../shared/models/AppChartCollection'
+import { ChartColl } from '../../../../../shared/models/ChartColl'
 import { UserCollectionsComponent } from './user-collections/user-collections.component'
 import { UserDataService } from '../../../../../shared/services/user-data.service'
 

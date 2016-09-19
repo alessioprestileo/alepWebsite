@@ -8,7 +8,7 @@ import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 import { DataSet } from "../../../../../models/DataSet";
 import { DataSetBasicHandler } from "./../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../models/DataSetFeedback";
-import { DataSetSrcBloodhoundSrcs } from "../../../../../models/DataSetSrcBloodhoundSrcs";
+import { BHSrcsDataSetSrc_External } from "../../../../../models/BHSrcsDataSetSrc_External";
 import { ExternalService } from '../../../../../services/external.service';
 import { FromFieldComponent } from "./from-field/from-field.component";
 import { FromIdComponent } from "./from-id/from-id.component";
@@ -32,7 +32,7 @@ implements DoCheck, OnDestroy, OnInit {
   @Input() private formGroup: FormGroup;
 
   private collapseDataSetForm: boolean = false;
-  protected dataSetSrcBloodhoundSrcs: DataSetSrcBloodhoundSrcs = {
+  protected dataSetSrcBloodhoundSrcs: BHSrcsDataSetSrc_External = {
     'Field': {
       'defaultSource': null,
       'filteredSource': null,

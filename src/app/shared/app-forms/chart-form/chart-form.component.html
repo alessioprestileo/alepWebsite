@@ -1,28 +1,8 @@
-<div class="container-fluid"
-     style="padding-left: 3%;
-            padding-right: 3%;">
-  <div class="row">
-    <div class="col-sm-offset-2 col-sm-8">
-      <h2>
-        {{formTitle}}
-      </h2>
-    </div>
-    <div class="col-sm-2"
-         style="text-align: right">
-      <button type="button" class="btn btn-default"
-              style="outline: 0"
-              (click)="goBack()">
-        Go back
-      </button>
-    </div>
-  </div>
-  <br>
-  <form [formGroup]="chartFormGroup"
-        style="border: 3px solid #d1b394;
-               border-radius: 48px;
-               margin-bottom: 2%;
-               padding: 2% 4%;">
-    <div class="container-fluid">
+<div class="container-fluid">
+  <form [formGroup]="chartFormGroup">
+    <div class="container-fluid"
+         style="padding-left: 0;
+                padding-right: 0">
       <div class="row">
         <app-input-box [label]="'Name:'"
                        [inFormControl]="chartFormGroup.controls['name']">
@@ -47,7 +27,7 @@
                          width: 100%">
               {{chartFormGroup.controls['type'].value ?
               chartTypeMap[chartFormGroup.controls['type'].value] :
-                  'select'}}&nbsp;
+              'select'}}&nbsp;
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
@@ -103,18 +83,20 @@
                       border-radius: 48px;
                       margin-bottom: 15px;
                       padding: 15px 15px;">
-            <app-collection-form [currentCollection]=
-                                                "collectionInput.collectionObject"
-                                 [currentPosition]="collectionInput.position"
-                                 [formGroup]="collectionInput.formGroup">
+            <app-collection-form
+              [currentCollection]="collectionInput.collectionObject"
+              [currentPosition]="collectionInput.position"
+              [formGroup]="collectionInput.formGroup">
             </app-collection-form>
             <div style="text-align: right">
-              <button *ngIf="collectionInputs.length > 1"
-                      type="button" class="btn btn-default"
-                      style="border-radius: 16px;
-                             outline: 0;"
-                      (click)="onCollectionRemove(collectionInput.position,
-                                                  collectionInput.label)">
+              <button
+                *ngIf="collectionInputs.length > 1"
+                type="button" class="btn btn-default"
+                (click)="onCollectionRemove(
+                  collectionInput.position, collectionInput.label
+                )"
+                style="border-radius: 16px;
+                             outline: 0;">
                 Remove {{collectionsLabel}}
               </button>
             </div>
