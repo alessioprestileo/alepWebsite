@@ -4,8 +4,8 @@ import {
 } from '@angular/forms';
 
 import { DataSet } from "../../../../models/DataSet";
-import { FromExternalComponent } from './from-external/from-external.component'
 import { FromUserDataComponent } from './from-user-data/from-user-data.component'
+import { FromWeatherDataComponent } from "./from-weather-data/from-weather-data.component";
 
 @Component({
   moduleId: module.id,
@@ -13,7 +13,7 @@ import { FromUserDataComponent } from './from-user-data/from-user-data.component
   templateUrl: 'dataset-form.component.html',
   styleUrls: ['dataset-form.component.css'],
   directives: [
-    FromExternalComponent, FromUserDataComponent, REACTIVE_FORM_DIRECTIVES
+    FromUserDataComponent, FromWeatherDataComponent, REACTIVE_FORM_DIRECTIVES
   ]
 })
 export class DataSetFormComponent
@@ -24,10 +24,10 @@ implements DoCheck, OnDestroy, OnInit {
   private collapseDataSetForm: boolean = false;
   private editDataSet: boolean;
   private sourcesValues: string[] =  [
-    'external_source', 'user_data'
+    'weather_data', 'user_data'
   ];
   private sourcesMap: {[label: string] : string} = {
-    'external_source': 'external source',
+    'weather_data': 'weather data',
     'user_data': 'your collections'
   };
 

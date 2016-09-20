@@ -14,6 +14,7 @@ import { AppRoutingService } from './shared/services/app-routing.service';
 import { ExternalService } from './shared/services/external.service';
 import { ROUTING, ROUTES_DICT }        from './app.routing';
 import { UserDataService } from './shared/services/user-data.service';
+import { WeatherService } from './shared/services/weather.service';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { UserDataService } from './shared/services/user-data.service';
     AppRoutingService,
     ExternalService,
     UserDataService,
+    WeatherService,
     {provide: 'ROUTES_DICT', useValue: ROUTES_DICT},
     { provide: XHRBackend, useClass: InMemoryBackendService }, // in-mem server
     { provide: SEED_DATA,  useClass: InMemoryData }     // in-mem server data

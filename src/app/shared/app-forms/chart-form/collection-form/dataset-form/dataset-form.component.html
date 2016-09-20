@@ -118,11 +118,11 @@
         </div>
       </div>
     </div>
-    <app-from-external
+    <app-from-weather-data
       *ngIf="formGroup.controls['source'].value === sourcesValues[0]"
       [currentDataSet]="currentDataSet"
       [formGroup]="formGroup">
-    </app-from-external>
+    </app-from-weather-data>
     <app-from-user-data
       *ngIf="formGroup.controls['source'].value === sourcesValues[1]"
       [currentDataSet]="currentDataSet"

@@ -10,7 +10,7 @@ import { ChartCollSrc_UserData } from "../../../../../../shared/models/ChartColl
 import { ChartSrc_UserData } from "../../../../../../shared/models/ChartSrc_UserData";
 import { AppRoutingService } from '../../../../../../shared/services/app-routing.service'
 import { DataTableComponent } from "../../../../../../shared/data-table/data-table.component";
-import { HeaderEntry, TableInput } from '../../../../../../shared/models/table-input'
+import { HeaderEntry, TableInput } from '../../../../../../shared/models/table-input-classes'
 import { UserDataService } from '../../../../../../shared/services/user-data.service'
 
 @Component({
@@ -76,6 +76,8 @@ export class UserChartsComponent implements OnDestroy, OnInit {
   }
   public onNewChart() {
     let link: string[] = [
+      '/' + this.ROUTES_DICT.PROJECTS +
+      '/' + this.ROUTES_DICT.CHARTS +
       '/' + this.ROUTES_DICT.CHARTS_DETAIL,
       'New'
     ];
@@ -84,6 +86,8 @@ export class UserChartsComponent implements OnDestroy, OnInit {
   public onTableEdit(chart: Chart) : void {
     let id: string = chart.id.toString();
     let link: string[] = [
+      '/' + this.ROUTES_DICT.PROJECTS +
+      '/' + this.ROUTES_DICT.CHARTS +
       '/' + this.ROUTES_DICT.CHARTS_DETAIL,
       id
     ];

@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { DataTableDirectives } from 'angular2-datatable/datatable';
-import { TableInput } from "../models/table-input";
+import { TableInput } from "../models/table-input-classes";
 
 @Component({
   moduleId: module.id,

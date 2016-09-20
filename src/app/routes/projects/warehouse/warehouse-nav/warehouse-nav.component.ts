@@ -5,9 +5,9 @@ import { NavButton } from "../../../../shared/models/NavButton";
 
 @Component({
   moduleId: module.id,
-  selector: 'app-charts-nav',
-  templateUrl: 'charts-nav.component.html',
-  styleUrls: ['charts-nav.component.css'],
+  selector: 'app-warehouse-nav',
+  templateUrl: 'warehouse-nav.component.html',
+  styleUrls: ['warehouse-nav.component.css'],
   directives: [NavigationComponent]
 })
 export class ChartsNavComponent implements OnInit {
@@ -27,16 +27,16 @@ export class ChartsNavComponent implements OnInit {
 
     navSections = [
       new NavButton(
-        'Dashboard',
+        'Products',
         ['/' + this.ROUTES_DICT.PROJECTS + '/' +
         this.ROUTES_DICT.CHARTS + '/' +
         this.ROUTES_DICT.DASHBOARD]
       ),
       new NavButton(
-        'Samples',
+        'Departments',
         ['/' + this.ROUTES_DICT.PROJECTS + '/' +
-               this.ROUTES_DICT.CHARTS + '/' +
-               this.ROUTES_DICT.SAMPLES]
+        this.ROUTES_DICT.CHARTS + '/' +
+        this.ROUTES_DICT.SAMPLES]
       )
     ];
     columnsPerSec = 2;

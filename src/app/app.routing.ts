@@ -5,10 +5,11 @@ import * as ROUTING_LABELS from './app.routing-labels'
 import { ChartDetailComponent } from "./routes/projects/charts/routes/chart-detail/chart-detail.component";
 import { CollectionDetailComponent } from "./routes/projects/charts/routes/collection-detail/collection-detail.component";
 import { DashboardComponent } from './routes/projects/charts/routes/dashboard/dashboard.component';
+import { DepartmentsComponent } from './routes/projects/warehouse/routes/departments/departments.component';
 import { HomeComponent } from './routes/home/home.component';
-import { LabComponent } from './routes/projects/charts/routes/lab/lab.component';
 import { MyCvComponent } from './routes/my-cv/my-cv.component';
-import { NewChartComponent } from './routes/projects/charts/routes/new-chart/new-chart.component';
+import { ProductsComponent } from './routes/projects/warehouse/routes/products/products.component';
+import { ProductDetailComponent } from './routes/projects/warehouse/routes/product-detail/product-detail.component';
 import { ProjectsComponent } from './routes/projects/projects.component';
 import { SamplesComponent } from './routes/projects/charts/routes/samples/samples.component';
 import { WarehouseComponent } from './routes/projects/warehouse/warehouse.component';
@@ -18,11 +19,14 @@ export const ROUTES_DICT: {[name: string] : string} = {
   CHARTS: ROUTING_LABELS.CHARTS,
   CHARTS_DETAIL: ROUTING_LABELS.CHARTS_DETAIL,
   COLLECTIONS_DETAIL: ROUTING_LABELS.COLLECTIONS_DETAIL,
+  DEPARTMENTS: ROUTING_LABELS.DEPARTMENTS,
   DASHBOARD: ROUTING_LABELS.DASHBOARD,
   HOME: ROUTING_LABELS.HOME,
   LAB: ROUTING_LABELS.LAB,
   MY_CV: ROUTING_LABELS.MY_CV,
   NEW_CHART: ROUTING_LABELS.NEW_CHART,
+  PRODUCTS: ROUTING_LABELS.PRODUCTS,
+  PRODUCTS_DETAIL: ROUTING_LABELS.PRODUCTS_DETAIL,
   PROJECTS: ROUTING_LABELS.PROJECTS,
   SAMPLES: ROUTING_LABELS.SAMPLES,
   WAREHOUSE: ROUTING_LABELS.WAREHOUSE,
@@ -64,16 +68,8 @@ export const APP_ROUTES: Routes = [
             component: DashboardComponent,
           },
           {
-            path: ROUTING_LABELS.LAB,
-            component: LabComponent,
-          },
-          {
             path: ROUTING_LABELS.SAMPLES,
             component: SamplesComponent,
-          },
-          {
-            path: ROUTING_LABELS.NEW_CHART,
-            component: NewChartComponent,
           },
           {
             path: ROUTING_LABELS.CHARTS_DETAIL,
@@ -115,7 +111,44 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: ROUTING_LABELS.WAREHOUSE,
-        component: WarehouseComponent
+        children: [
+          {
+            path: '',
+            redirectTo: ROUTING_LABELS.PRODUCTS,
+            pathMatch: 'full',
+          },
+          {
+            path: ROUTING_LABELS.DEPARTMENTS,
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                component: DepartmentsComponent
+              },
+              {
+                path: ':depId',
+                component: ProductsComponent
+              }
+            ]
+          },
+          {
+            path: ROUTING_LABELS.PRODUCTS,
+            component: ProductsComponent,
+          },
+          {
+            path: ROUTING_LABELS.PRODUCTS_DETAIL,
+            children: [
+              {
+                path: 'New',
+                component: ProductDetailComponent,
+              },
+              {
+                path: ':prodId',
+                component: ProductDetailComponent,
+              }
+            ]
+          }
+        ]
       }
     ]
   },

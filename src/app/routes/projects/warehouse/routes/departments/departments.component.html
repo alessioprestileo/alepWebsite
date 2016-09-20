@@ -1,0 +1,11 @@
+<div class="animated fadeIn">
+  <h2>{{title}}</h2>
+  <app-fluid-buttons *ngIf="depsLabels" [buttonType]="'departments'"
+    [btnsPerRow]="depsPerRow" [columnsPerBtn]="columnsPerDep"
+    [inLabels]="depsLabels" [selectedLabel]="depId$"
+    (selectedEmitter)="onSelectedDep($event)">
+  </app-fluid-buttons>
+	<div>
+		<router-outlet></router-outlet>
+	</div>
+</div>

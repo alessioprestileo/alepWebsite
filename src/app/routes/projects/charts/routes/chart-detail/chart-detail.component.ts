@@ -81,6 +81,8 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
   }
   public onBackToDashboard() : void {
     let link: string[] = [
+      '/' + this.ROUTES_DICT.PROJECTS +
+      '/' + this.ROUTES_DICT.CHARTS +
       '/' + this.ROUTES_DICT.DASHBOARD
     ];
     this.appRoutingService.navigate(link);

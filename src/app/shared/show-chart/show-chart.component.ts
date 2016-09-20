@@ -110,7 +110,7 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
       }
       let dataPoint: Object = {
         data: data,
-        label: this.chart.collections[i].name
+        label: this.chart.collections[i].dataSet.field
       };
       this.chartData.push(dataPoint);
     }

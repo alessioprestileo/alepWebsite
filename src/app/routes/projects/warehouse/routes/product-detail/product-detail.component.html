@@ -1,0 +1,42 @@
+<div class="animated fadeIn" *ngIf="product">
+	<div class="container">
+    <h2>{{title}}</h2>
+    <form [formGroup]="myForm" (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" required
+          id="name" placeholder="Insert name"  #name="ngForm"
+          [formControl]="myForm.controls['name']">
+        <div class="alert alert-danger"
+          [hidden]="name.control.valid || name.control.pristine">
+          Required field
+        </div>
+        <label for="department">Department</label>
+        <input type="text" class="form-control" required
+          id="department" placeholder="Insert department"  #department="ngForm"
+          [formControl]="myForm.controls['department']">
+        <div class="alert alert-danger"
+          [hidden]="department.control.valid || department.control.pristine">
+          Required field
+        </div>
+        <label for="price">Price</label>
+        <input type="text" class="form-control" required
+          id="price" placeholder="Insert price"  #price="ngForm"
+          [formControl]="myForm.controls['price']">
+        <div class="alert alert-danger"
+          [hidden]="!price.control.hasError('required') || price.control.pristine">
+          Required field
+        </div>
+        <div class="alert alert-danger"
+          [hidden]="!price.control.hasError('invalidPrice') ||
+          price.control.pristine || price.control.hasError('required')">
+          Insert integer part and 2 decimals
+        </div>
+      </div>
+      <button type="button" class="btn btn-default" (click)=
+        "goBack()">Back</button>
+      <button type="submit" class="btn btn-default" [disabled]=
+        "!myForm.valid">Save</button>
+    </form>
+	</div>
+</div>
