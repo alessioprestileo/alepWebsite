@@ -11,7 +11,6 @@ import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { AppRoutingService } from "../../../../../shared/services/app-routing.service";
 import { Chart } from "../../../../../shared/models/Chart";
 import { ChartColl } from "../../../../../shared/models/ChartColl";
-import { ChartCollSrc_UserData } from "../../../../../shared/models/ChartCollSrc_UserData";
 import { ChartFormComponent } from "../../../../../shared/app-forms/chart-form/chart-form.component";
 import { ChartSrc_UserData } from "../../../../../shared/models/ChartSrc_UserData";
 import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.validator';
@@ -140,20 +139,9 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
         .getItem('charts', +this.chartIdKeyword).then(chart => {
           let chartSrc: ChartSrc_UserData = <ChartSrc_UserData>chart;
           this.chart = new Chart();
-          this.chart.importPropsFromSrc_UserData(chartSrc);
-          let collectionsLength: number = chartSrc.collectionsIds.length;
-          for (let j = 0; j < collectionsLength; j++) {
-            this.userDataService
-              .getItem('collections', chartSrc.collectionsIds[j])
-              .then(collection => {
-                let collSrc: ChartCollSrc_UserData =
-                  <ChartCollSrc_UserData>collection;
-                let newColl: ChartColl = new ChartColl();
-                newColl.importPropsFromSrc_UserData(collSrc);
-                this.chart.collections.push(newColl);
-                this.chartIsReady = (j === collectionsLength - 1);
-              });
-          }
+          this.chart.importPropsFromSrc_UserData(
+            chartSrc, this.userDataService
+          ).then(() => this.chartIsReady = true);
         });
     }
   }

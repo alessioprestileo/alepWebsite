@@ -12,21 +12,21 @@ import { ProductsComponent } from './routes/projects/warehouse/routes/products/p
 import { ProductDetailComponent } from './routes/projects/warehouse/routes/product-detail/product-detail.component';
 import { ProjectsComponent } from './routes/projects/projects.component';
 import { SamplesComponent } from './routes/projects/charts/routes/samples/samples.component';
-import { WarehouseComponent } from './routes/projects/warehouse/warehouse.component';
 import { WhoAmIComponent } from './routes/who-am-i/who-am-i.component';
 
 export const ROUTES_DICT: {[name: string] : string} = {
   CHARTS: ROUTING_LABELS.CHARTS,
-  CHARTS_DETAIL: ROUTING_LABELS.CHARTS_DETAIL,
-  COLLECTIONS_DETAIL: ROUTING_LABELS.COLLECTIONS_DETAIL,
+  CHARTS_DETAIL: ROUTING_LABELS.CHART_DETAIL,
+  COLLECTIONS_DETAIL: ROUTING_LABELS.COLLECTION_DETAIL,
   DEPARTMENTS: ROUTING_LABELS.DEPARTMENTS,
+  DEPARTMENTS_DETAIL: ROUTING_LABELS.DEPARTMENT_DETAIL,
   DASHBOARD: ROUTING_LABELS.DASHBOARD,
   HOME: ROUTING_LABELS.HOME,
   LAB: ROUTING_LABELS.LAB,
   MY_CV: ROUTING_LABELS.MY_CV,
   NEW_CHART: ROUTING_LABELS.NEW_CHART,
   PRODUCTS: ROUTING_LABELS.PRODUCTS,
-  PRODUCTS_DETAIL: ROUTING_LABELS.PRODUCTS_DETAIL,
+  PRODUCTS_DETAIL: ROUTING_LABELS.PRODUCT_DETAIL,
   PROJECTS: ROUTING_LABELS.PROJECTS,
   SAMPLES: ROUTING_LABELS.SAMPLES,
   WAREHOUSE: ROUTING_LABELS.WAREHOUSE,
@@ -72,7 +72,7 @@ export const APP_ROUTES: Routes = [
             component: SamplesComponent,
           },
           {
-            path: ROUTING_LABELS.CHARTS_DETAIL,
+            path: ROUTING_LABELS.CHART_DETAIL,
             children: [
               {
                 path: '',
@@ -90,7 +90,7 @@ export const APP_ROUTES: Routes = [
             ]
           },
           {
-            path: ROUTING_LABELS.COLLECTIONS_DETAIL,
+            path: ROUTING_LABELS.COLLECTION_DETAIL,
             children: [
               {
                 path: '',
@@ -114,19 +114,23 @@ export const APP_ROUTES: Routes = [
         children: [
           {
             path: '',
-            redirectTo: ROUTING_LABELS.PRODUCTS,
+            redirectTo: ROUTING_LABELS.DEPARTMENTS,
             pathMatch: 'full',
           },
           {
             path: ROUTING_LABELS.DEPARTMENTS,
+            component: DepartmentsComponent
+          },
+          {
+            path: ROUTING_LABELS.DEPARTMENT_DETAIL,
             children: [
               {
                 path: '',
+                redirectTo: ROUTING_LABELS.DEPARTMENTS,
                 pathMatch: 'full',
-                component: DepartmentsComponent
               },
               {
-                path: ':depId',
+                path: ':depPath',
                 component: ProductsComponent
               }
             ]
@@ -136,7 +140,7 @@ export const APP_ROUTES: Routes = [
             component: ProductsComponent,
           },
           {
-            path: ROUTING_LABELS.PRODUCTS_DETAIL,
+            path: ROUTING_LABELS.PRODUCT_DETAIL,
             children: [
               {
                 path: 'New',

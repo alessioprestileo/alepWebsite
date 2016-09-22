@@ -11,13 +11,17 @@ import { ChartsNavComponent } from './routes/projects/charts/charts-nav/charts-n
 import { NavButton } from "./shared/models/NavButton";
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { SiteMapComponent } from './shared/site-map/site-map.component';
+import { WarehouseNavComponent } from './routes/projects/warehouse/warehouse-nav/warehouse-nav.component'
 
 @Component({
   moduleId: module.id,
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [ChartsNavComponent, NavigationComponent, SiteMapComponent]
+  directives: [
+    ChartsNavComponent, NavigationComponent, SiteMapComponent,
+    WarehouseNavComponent
+  ]
 })
 export class AppComponent
 implements AfterViewChecked, DoCheck, OnDestroy, OnInit {

@@ -1,6 +1,12 @@
 .background {
   background-color: #b8cbe0;
 }
+.backgroundDark {
+  background-color: #191919;
+}
+.backgroundLight {
+  background-color: #ebf0fa;
+}
 .app-input-box-label {
   font-size: 20px;
   font-weight: normal;

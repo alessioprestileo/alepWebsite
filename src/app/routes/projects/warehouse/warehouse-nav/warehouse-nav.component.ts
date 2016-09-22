@@ -10,7 +10,7 @@ import { NavButton } from "../../../../shared/models/NavButton";
   styleUrls: ['warehouse-nav.component.css'],
   directives: [NavigationComponent]
 })
-export class ChartsNavComponent implements OnInit {
+export class WarehouseNavComponent implements OnInit {
   private navInput: any[];
 
   constructor(@Inject('ROUTES_DICT') private ROUTES_DICT) {}
@@ -28,15 +28,19 @@ export class ChartsNavComponent implements OnInit {
     navSections = [
       new NavButton(
         'Products',
-        ['/' + this.ROUTES_DICT.PROJECTS + '/' +
-        this.ROUTES_DICT.CHARTS + '/' +
-        this.ROUTES_DICT.DASHBOARD]
+        [
+          '/' + this.ROUTES_DICT.PROJECTS +
+          '/' + this.ROUTES_DICT.WAREHOUSE +
+          '/' + this.ROUTES_DICT.PRODUCTS
+        ]
       ),
       new NavButton(
         'Departments',
-        ['/' + this.ROUTES_DICT.PROJECTS + '/' +
-        this.ROUTES_DICT.CHARTS + '/' +
-        this.ROUTES_DICT.SAMPLES]
+        [
+          '/' + this.ROUTES_DICT.PROJECTS +
+          '/' + this.ROUTES_DICT.WAREHOUSE +
+          '/' + this.ROUTES_DICT.DEPARTMENTS
+        ]
       )
     ];
     columnsPerSec = 2;

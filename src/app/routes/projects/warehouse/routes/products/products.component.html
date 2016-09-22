@@ -1,17 +1,13 @@
-<div class="animated fadeIn" *ngIf="isInDOM"
-(window:resize)="onResize($event)">
+<div class="animated fadeIn">
 	<h2>{{title}}</h2>
 		<div	class="myButton text-center"
 		(click)="addProduct()">Add New Product</div>
 	<div>
-	  <app-data-table *ngIf="tableInput"
-	  [headers]="tableInput.headers" [items]="tableInput.objects"
-	  (editEmitter)="editProduct($event)"
-	  (removeEmitter)="removeProduct($event)">
+	  <app-data-table
+      *ngIf="tableInput"
+      [tableInput]="tableInput"
+      (editEmitter)="editProduct($event)"
+      (removeEmitter)="removeProduct($event)">
 	  </app-data-table>
 	</div>
-</div>
-
-<div>
-  <h2>{{prova}}</h2>
 </div>

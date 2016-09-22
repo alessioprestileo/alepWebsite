@@ -5,8 +5,6 @@ import {
 import { Subscription }   from 'rxjs/Rx';
 
 import { Chart } from '../../../../../../shared/models/Chart'
-import { ChartColl } from "../../../../../../shared/models/ChartColl";
-import { ChartCollSrc_UserData } from "../../../../../../shared/models/ChartCollSrc_UserData";
 import { ChartSrc_UserData } from "../../../../../../shared/models/ChartSrc_UserData";
 import { AppRoutingService } from '../../../../../../shared/services/app-routing.service'
 import { DataTableComponent } from "../../../../../../shared/data-table/data-table.component";
@@ -23,13 +21,13 @@ import { UserDataService } from '../../../../../../shared/services/user-data.ser
 export class UserChartsComponent implements OnDestroy, OnInit {
   @HostListener('window:resize', ['$event'])
   private onResize(event: any) {
-    this.onResizeEmitter.emit();
+    this.emOnResize.emit();
   }
   private collapseTable: boolean = false;
   private charts: Chart[];
   private isMobile: boolean;
   private subOnResize: Subscription;
-  private onResizeEmitter: EventEmitter<any> = new EventEmitter();
+  private emOnResize: EventEmitter<any> = new EventEmitter();
   private tableInput: TableInput;
   private wasMobile: boolean;
 
@@ -41,7 +39,7 @@ export class UserChartsComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.subOnResize = this.onResizeEmitter.subscribe(
+    this.subOnResize = this.emOnResize.subscribe(
       () => this.checkMobileAndBuildTableInput()
     );
     this.setCharts();
@@ -112,21 +110,9 @@ export class UserChartsComponent implements OnDestroy, OnInit {
         let chartsLength: number = src.length;
         for (let i = 0; i < chartsLength; i++) {
           let chart: Chart = new Chart();
-          let chartSrc: ChartSrc_UserData = src[i];
-          chart.importPropsFromSrc_UserData(chartSrc);
-          let collectionsLength: number = chartSrc.collectionsIds.length;
-          for (let j = 0; j < collectionsLength; j++) {
-            this.userDataService
-              .getItem('collections', chartSrc.collectionsIds[j])
-              .then(collection => {
-                let collSrc: ChartCollSrc_UserData =
-                  <ChartCollSrc_UserData>collection;
-                let newColl: ChartColl = new ChartColl();
-                newColl.importPropsFromSrc_UserData(collSrc);
-                chart.collections.push(newColl);
-              });
-          }
           this.charts.push(chart);
+          let chartSrc: ChartSrc_UserData = src[i];
+          chart.importPropsFromSrc_UserData(chartSrc, this.userDataService);
         }
         this.checkMobileAndBuildTableInput();
       }

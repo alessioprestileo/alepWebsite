@@ -1,5 +1,7 @@
 import { ChartColl } from './ChartColl'
+import { ChartCollSrc_UserData } from "./ChartCollSrc_UserData";
 import { ChartSrc_UserData } from "./ChartSrc_UserData";
+import { UserDataService } from "../services/user-data.service";
 
 export class Chart {
   public collections: ChartColl[];
@@ -30,11 +32,33 @@ export class Chart {
     copy.type = this.type;
     return copy;
   }
-  public importPropsFromSrc_UserData(src: ChartSrc_UserData) : void {
+  public importPropsFromSrc_UserData(
+    src: ChartSrc_UserData,
+    service: UserDataService
+  ) : Promise<void> {
     this.id = src.id;
     this.name = src.name;
     this.title = src.title;
     this.type = src.type;
+    return service.getAll('collections').then(collections => {
+      let collsToAdd: ChartCollSrc_UserData[] =
+        <ChartCollSrc_UserData[]>collections.filter(coll => {
+        let result: boolean = false;
+        let ids: number[] = src.collectionsIds;
+        let length: number = ids.length;
+        for (let i = 0; i < length; i++) {
+          if (coll.id === ids[i]) {
+            result = true;
+          }
+        }
+        return result;
+      });
+      let lengthToAdd: number = collsToAdd.length;
+      for (let i = 0; i < lengthToAdd; i++) {
+        let coll: ChartColl = new ChartColl();
+        coll.importPropsFromSrc_UserData(collsToAdd[i]);
+      }
+    });
   }
   public toChartSrc_UserData() : ChartSrc_UserData {
     let src: ChartSrc_UserData = new ChartSrc_UserData();

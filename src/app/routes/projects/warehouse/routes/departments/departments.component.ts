@@ -1,10 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 
-import { Observable }   from 'rxjs/Rx';
-
-import { AppRoutingService } from "../../../../../shared/services/app-routing.service";
-import { Department } from '../../../../../shared/models/department';
-import { ServerService } from '../shared/services/server.service';
+import { NavButton } from "../../../../../shared/models/NavButton";
+import { WarehouseDepSrc } from "../../../../../shared/models/WarehouseDepSrc";
+import { WarehouseService } from '../../../../../shared/services/warehouse.service';
 
 @Component({
   moduleId: module.id,
@@ -15,50 +13,63 @@ import { ServerService } from '../shared/services/server.service';
 })
 
 export class DepartmentsComponent implements OnInit {
-  private depId$: Observable<string>;
+  private depsSrcs: WarehouseDepSrc[];
+  private navInput: any[];
   private title: string;
-  private departments: Department[];
-  private depsPerRow: number;
-  private columnsPerDep: number;
-  private depsLabels: string[];
 
 	constructor(
-      @Inject('ROUTES_DICT') private ROUTES_DICT,
-			private serverService: ServerService,
-      private appRoutingService: AppRoutingService) {}
+    @Inject('ROUTES_DICT') private ROUTES_DICT,
+    private warehouseService: WarehouseService
+  ) {}
 
 	ngOnInit() {
-	  this.depId$ = this.appRoutingService.currentUrlLevel2;
-	  this.depsPerRow = 3;
-    this.columnsPerDep = 4;
-    this.getDeps().then(deps => {
-      this.departments = deps;
-      this.title = DepartmentsComponent.getTitle(deps);
-      this.depsLabels = DepartmentsComponent.getLabels(deps);
+    this.setDepsSrcs().then(() => {
+      this.title = this.setTitle();
+      this.setNavInput();
     });
 	}
 
-	private getDeps() : Promise<Department[]> {
-		return this.serverService.getDepartments();
-	}
-	private static getLabels(deps: Department[]) : string[] {
-    let depsLabels: string[]  = [];
-	  for (let i = 0; i < deps.length; i++) {
-      depsLabels[i] = deps[i].name;
-    }
-    return depsLabels;
+  private setDepsSrcs() : Promise<void> {
+    return this.warehouseService.getAll('departments').then(
+      departments =>  {
+        let depsSrcs: WarehouseDepSrc[] = <WarehouseDepSrc[]>departments;
+        this.depsSrcs = depsSrcs;
+      }
+    );
   }
-	private static getTitle(deps: Department[]) : string {
-	  let title: string;
-    if (deps.length > 0) {
-      title = "Explore our departments";
+  private setNavInput() : void {
+    let columnsPerSec: number;
+    let navLevel: number;
+    let navSections: NavButton[] = [];
+    let sectionsPerRow: number;
+
+    let depSrcs: WarehouseDepSrc[] = this.depsSrcs;
+    let length: number = depSrcs.length;
+    for (let i = 0; i < length; i++) {
+      navSections.push(
+        new NavButton(
+          depSrcs[i].name,
+          [
+            '/' + this.ROUTES_DICT.PROJECTS +
+            '/' + this.ROUTES_DICT.WAREHOUSE +
+            '/' + this.ROUTES_DICT.DEPARTMENTS_DETAIL,
+            depSrcs[i].path
+          ]
+        )
+      );
+    }
+    columnsPerSec = 4;
+    navLevel = 3;
+    sectionsPerRow = 3;
+    this.navInput = [navLevel, navSections, columnsPerSec, sectionsPerRow];
+  }
+  private setTitle() : string {
+    let title: string;
+    if (this.depsSrcs.length > 0) {
+      title = "Departments explorer";
     } else {
       title = "No departments to show";
     }
     return title;
-	}
-  public onSelectedDep(depId: string) : void {
-    let link: string[] = [this.ROUTES_DICT.departments, depId];
-    this.appRoutingService.navigate(link);
   }
 }

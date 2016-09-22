@@ -143,6 +143,168 @@ export class InMemoryData {
         name: 'Collection2'
       }
     ];
+    let warehouse_departments = [
+      {
+        id: 1,
+        name: 'Fashion',
+        path: 'Fashion',
+        productIds: [
+          5, 6
+        ]
+      },
+      {
+        id: 2,
+        name: 'Music',
+        path: 'Music',
+        productIds: [
+          2, 3
+        ]
+      },
+      {
+        id: 3,
+        name: 'Sport',
+        path: 'Sport',
+        productIds: [
+          7, 8
+        ]
+      },
+      {
+        id: 4,
+        name: 'Technology',
+        path: 'Technology',
+        productIds: [
+          1, 4
+        ]
+      }
+    ];
+    let warehouse_products = [
+      {
+        id: 1,
+        extraFields: {
+          size: '5"'
+        },
+        hierarchy: [
+          [
+            4
+          ]
+        ],
+        imgSrc: 'app/shared/assets/smartphone.jpg',
+        name: 'Smartphone',
+        price: 300,
+        quantity: 103
+      },
+      {
+        id: 2,
+        extraFields: {
+          color: 'black',
+          type: 'electric'
+        },
+        hierarchy: [
+          [
+            2
+          ]
+        ],
+        imgSrc: 'app/shared/assets/guitar.png',
+        name: 'Guitar',
+        price: 1000,
+        quantity: 201
+      },
+      {
+        id: 3,
+        extraFields: {
+          color: 'black',
+          type: 'grand piano'
+        },
+        hierarchy: [
+          [
+            2
+          ]
+        ],
+        imgSrc: 'app/shared/assets/piano.jpg',
+        name: 'Piano',
+        price: 12000,
+        quantity: 24
+      },
+      {
+        id: 4,
+        extraFields: {
+          ram: '8 GB',
+          size: '15"'
+        },
+        hierarchy: [
+          [
+            4
+          ]
+        ],
+        imgSrc: 'app/shared/assets/laptop.jpg',
+        name: 'Laptop',
+        price: 1100,
+        quantity: 209
+      },
+      {
+        id: 5,
+        extraFields: {
+          color: 'blue',
+          size: 'S'
+        },
+        hierarchy: [
+          [
+            1
+          ]
+        ],
+        imgSrc: 'app/shared/assets/jacket.jpg',
+        name: 'Jacket',
+        price: 400,
+        quantity: 207
+      },
+      {
+        id: 6,
+        extraFields: {
+          material: 'cotton',
+          size: 'M'
+        },
+        hierarchy: [
+          [
+            1
+          ]
+        ],
+        imgSrc: 'app/shared/assets/suit.jpg',
+        name: 'Suit',
+        price: 600,
+        quantity: 63
+      },
+      {
+        id: 7,
+        extraFields: {
+          type: 'beach'
+        },
+        hierarchy: [
+          [
+            3
+          ]
+        ],
+        imgSrc: 'app/shared/assets/ball.jpg',
+        name: 'Ball',
+        price: 30,
+        quantity: 156
+      },
+      {
+        id: 8,
+        extraFields: {
+          color: 'red',
+          gears: 24
+        },
+        hierarchy: [
+          [
+            3
+          ]
+        ],
+        imgSrc: 'app/shared/assets/bicycle.png',
+        name: 'Bicycle',
+        price: 1500,
+        quantity: 124
+      }
+    ];
     let weather = [
       {
         "location": {
@@ -5836,6 +5998,9 @@ export class InMemoryData {
         }
       }
     ];
-    return {external, userData_charts, userData_collections, weather};
+    return {
+      external, userData_charts, userData_collections, warehouse_departments,
+      warehouse_products, weather
+    };
   }
 }
