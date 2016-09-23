@@ -36,7 +36,7 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
   private newChart: boolean = false;
   private obFormGroupValid: BehaviorSubject<boolean>;
   private prevBrowserPath: string;
-  private subFormGroup: Subscription;
+  private subFormGroupValid: Subscription;
   private title: string;
 
   constructor(
@@ -49,7 +49,7 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
 
   ngOnInit() {
     this.createFormGroup();
-    this.obFormGroupValid = new BehaviorSubject(null);
+    this.createObsAndSubs();
   }
   ngOnDestroy() {
     this.cancelSubs();
@@ -70,11 +70,17 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
   }
 
   private cancelSubs() : void {
-    this.subFormGroup.unsubscribe();
+    this.subFormGroupValid.unsubscribe();
   }
   private createFormGroup() : void {
     this.formGroup = new FormGroup({}, null, this.formGroupValidator);
-    this.subFormGroup = this.formGroup.valueChanges.subscribe(
+    this.subFormGroupValid = this.formGroup.valueChanges.subscribe(
+      () => this.obFormGroupValid.next(this.formGroup.valid)
+    );
+  }
+  private createObsAndSubs() : void {
+    this.obFormGroupValid = new BehaviorSubject(false);
+    this.subFormGroupValid = this.formGroup.valueChanges.subscribe(
       () => this.obFormGroupValid.next(this.formGroup.valid)
     );
   }
@@ -158,6 +164,6 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
   private setTitle() : void {
     this.title = (this.chartIdKeyword === 'New') ?
       'Insert data for the new chart' :
-    'Edit data for the chart "' + this.chart.name + '"';
+      'Edit data for the chart "' + this.chart.name + '"';
   }
 }

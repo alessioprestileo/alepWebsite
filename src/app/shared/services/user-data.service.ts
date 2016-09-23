@@ -73,7 +73,7 @@ export class UserDataService {
       (items: Item[]) => items.filter(item => item.id === id)[0]
     );
   }
-  // Get latest id used to save an item
+  // Get latest id used to onSave an item
   public getLastUsedId(target: string) : Promise<number> {
     return this.getAll(target).then(
       (items: Item[]) => {return items.length}

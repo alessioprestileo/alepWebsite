@@ -63,7 +63,6 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   private collectionsCount: number = 0;
   private collectionsLabel: string = 'collection';
   private formGroupValidator: ValidatorFn = formGroupValidator;
-  private formTitle: string = 'Enter data for the new chart:';
   private nextCollectionId: number = 0;
   private obChartFormValid: BehaviorSubject<boolean>;
   private obUpdateChartPreview: BehaviorSubject<boolean>;
@@ -196,12 +195,6 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     );
     this.collectionsCount -= 1;
   }
-  private createObsAndSubs() : void {
-    this.obChartFormValid = new BehaviorSubject(false);
-    this.subChartFormValid = this.chartFormGroup.valueChanges.subscribe(
-      () => this.obChartFormValid.next(this.chartFormGroup.valid)
-    );
-  }
   private createControlsSubs() : void {
     this.subNameControl = this.chartFormGroup.controls[
       'name'
@@ -221,6 +214,12 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
           this.currentChart.type = value;
         }
       );
+  }
+  private createObsAndSubs() : void {
+    this.obChartFormValid = new BehaviorSubject(false);
+    this.subChartFormValid = this.chartFormGroup.valueChanges.subscribe(
+      () => this.obChartFormValid.next(this.chartFormGroup.valid)
+    );
   }
   private initializeCollectionInputs() : void {
     let length: number = this.currentChart.collections.length;

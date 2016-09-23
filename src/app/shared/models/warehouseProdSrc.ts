@@ -1,5 +1,5 @@
 export class WarehouseProdSrc {
-  extraFields: {[field: string]: any};
+  extraFields: {[field: string]: string};
   hierarchy: number[][];
   id: number;
   imgSrc: string;
@@ -8,7 +8,7 @@ export class WarehouseProdSrc {
   quantity: number;
 
   constructor(
-    extraFields: {[field: string]: any} = {},
+    extraFields: {[field: string]: string} = {},
     hierarchy: number[][] = [],
     id: number = null,
     imgSrc: string = null,

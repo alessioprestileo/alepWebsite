@@ -1,8 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { NavButton } from "../../../../../shared/models/NavButton";
 import { WarehouseDepSrc } from "../../../../../shared/models/WarehouseDepSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
+
+declare var jQuery: any;
 
 @Component({
   moduleId: module.id,
@@ -12,7 +14,7 @@ import { WarehouseService } from '../../../../../shared/services/warehouse.servi
 	directives: []
 })
 
-export class DepartmentsComponent implements OnInit {
+export class DepartmentsComponent implements OnDestroy, OnInit {
   private depsSrcs: WarehouseDepSrc[];
   private navInput: any[];
   private title: string;
@@ -23,12 +25,24 @@ export class DepartmentsComponent implements OnInit {
   ) {}
 
 	ngOnInit() {
+	  this.setDarkBackground();
     this.setDepsSrcs().then(() => {
       this.title = this.setTitle();
       this.setNavInput();
     });
 	}
+	ngOnDestroy() {
+	  this.removeDarkBackground();
+  }
 
+  private removeDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundLight");
+    jQuery("#app-router-outlet").removeClass("backgroundDark");
+  }
+  private setDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundDark");
+    jQuery("#app-router-outlet").removeClass("backgroundLight");
+  }
   private setDepsSrcs() : Promise<void> {
     return this.warehouseService.getAll('departments').then(
       departments =>  {

@@ -14,6 +14,8 @@ import { WarehouseProd } from '../../../../../shared/models/WarehouseProd';
 import { WarehouseProdSrc } from "../../../../../shared/models/warehouseProdSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
 
+declare var jQuery: any;
+
 @Component({
   moduleId: module.id,
   selector: 'app-products',
@@ -52,6 +54,7 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.cancelSubs();
+    this.removeDarkBackground();
   }
   ngAfterViewChecked() {
     let browserPath: string = this.location.path();
@@ -129,6 +132,10 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     ];
     this.appRoutingService.navigate(link);
   }
+  private removeDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundLight");
+    jQuery("#app-router-outlet").removeClass("backgroundDark");
+  }
   public removeProduct(product: WarehouseProd) : void {
     this.warehouseService.deleteItem('products', product.id).then(
       () => {
@@ -138,9 +145,8 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     );
   }
   private setDarkBackground() {
-    document.getElementById('app-router-outlet').setAttribute(
-      'class', 'backgroundDark'
-    );
+    jQuery("#app-router-outlet").addClass("backgroundDark");
+    jQuery("#app-router-outlet").removeClass("backgroundLight");
   }
   private setPathKeywords(url: string) : void {
     let split: string[] = url.split('/');

@@ -1,46 +1,80 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
-  FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder,
-  FormControl, Validators
+  AfterViewChecked, Component, Inject, OnInit, OnDestroy
+} from '@angular/core';
+import { Location }    from '@angular/common';
+import {
+  REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl, ValidatorFn
 } from '@angular/forms';
 
+import { BehaviorSubject, Subscription } from 'rxjs/Rx';
+
+import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.validator';
+import { InputBoxComponent } from "../../../../../shared/app-forms/input-box/input-box.component";
+import { ProductFormComponent } from "../../../../../shared/app-forms/product-form/product-form.component";
 import { WarehouseProd }        from '../../../../../shared/models/WarehouseProd';
+import { WarehouseProdSrc } from "../../../../../shared/models/warehouseProdSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
-import { AppRoutingService } from '../../../../../shared/services/app-routing.service';
 
 @Component({
   moduleId: module.id,
   selector: 'app-product-detail',
   templateUrl: 'product-detail.component.html',
   styleUrls: ['product-detail.component.css'],
-  directives: [
-    FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES
-  ]
+  directives: [InputBoxComponent, ProductFormComponent, REACTIVE_FORM_DIRECTIVES]
 })
-export class ProductDetailComponent implements OnInit {
-  private myForm: FormGroup;
+export class ProductDetailComponent implements AfterViewChecked, OnDestroy, OnInit {
+  private formGroup: FormGroup;
+  private formGroupValidator: ValidatorFn = formGroupValidator;
+  private newProd: boolean = false;
+  private obFormGroupValid: BehaviorSubject<boolean>;
+  private prodIdKeyword: string;
+  private prevBrowserPath: string;
+  private prodIsReady: boolean;
   private product: WarehouseProd;
+  private subFormGroupValid: Subscription;
   private title: string;
 
   constructor(
-    private warehouseService: WarehouseService,
-    private appRoutingService: AppRoutingService,
-    private fb: FormBuilder) {
+    @Inject('ROUTES_DICT') private ROUTES_DICT,
+    private location: Location,
+    private warehouseService: WarehouseService
+  ) {
   }
-  ngOnInit() {
 
+  ngOnInit() {
+    this.createFormGroup();
+    this.createObsAndSubs();
   }
   ngOnDestroy() {
-    // prevent memory leak when component destroyed
+    this.cancelSubs();
+  }
+  ngAfterViewChecked() {
+    let browserPath: string = this.location.path();
+    if (browserPath && browserPath !== this.prevBrowserPath) {
+      this.prevBrowserPath = browserPath;
+      this.setIdKeyword(browserPath);
+      if (this.prodIdKeyword) {
+        this.setProd().then(() => {
+          this.setTitle();
+        });
+      }
+    }
   }
 
-  private buildForm(product: WarehouseProd) : void {
-    this.myForm = this.fb.group({
-      'name': [product.name, Validators.required],
-      // 'department': [product.department, Validators.required],
-      'price': [product.price.toFixed(2), Validators.compose([
-        Validators.required, this.priceValidator])]
-    });
+  private cancelSubs() : void {
+    this.subFormGroupValid.unsubscribe();
+  }
+  private createFormGroup() : void {
+    this.formGroup = new FormGroup({}, null, this.formGroupValidator);
+  }
+  private createObsAndSubs() : void {
+    this.obFormGroupValid = new BehaviorSubject(false);
+    this.subFormGroupValid = this.formGroup.valueChanges.subscribe(
+      () => this.obFormGroupValid.next(this.formGroup.valid)
+    );
+  }
+  private onGoBack() : void {
+    window.history.back();
   }
   private priceValidator(control: FormControl) :
       {[s: string]: boolean} {
@@ -48,16 +82,42 @@ export class ProductDetailComponent implements OnInit {
       return {invalidPrice: true};
     }
   }
-  public save() : void {
-    this.product.name = this.myForm.controls['name'].value;
-    // this.product.department = this.myForm.controls['department'].value;
-    this.product.price = +this.myForm.controls['price'].value;
+  public onSave() : void {
     this.warehouseService
-      // save product, id given by the server
+      // onSave product, id given by the server
       .saveItem('products', this.product)
-      .then(() => this.goBack());
+      .then(() => this.onGoBack());
   }
-  private goBack() : void {
-    window.history.back();
+  private setIdKeyword(url: string) : void {
+    let split: string[] = url.split('/');
+    this.prodIdKeyword = split[split.length - 1];
+  }
+  private setProd() : Promise<any> {
+    this.prodIsReady = false;
+    if (this.prodIdKeyword === 'New') {
+      this.newProd = true;
+      let promise: Promise<any> = new Promise(
+        (resolve, reject) => resolve()
+      );
+      return promise.then(() => {
+        this.product = new WarehouseProd();
+        this.prodIsReady = true;
+      });
+    }
+    else {
+      return this.warehouseService
+        .getItem('products', +this.prodIdKeyword).then(product => {
+          let prodSrc: WarehouseProdSrc = <WarehouseProdSrc>product;
+          this.product = new WarehouseProd();
+          this.warehouseService.importProdPropsFromProdSrc(
+            this.product, prodSrc
+          ).then(() => this.prodIsReady = true);
+        });
+    }
+  }
+  private setTitle() : void {
+    this.title = (this.prodIdKeyword === 'New') ?
+      'Insert data for the new product' :
+      'Edit data for the product "' + this.product.name + '"';
   }
 }

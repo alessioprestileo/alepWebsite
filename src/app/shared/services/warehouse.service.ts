@@ -215,10 +215,11 @@ export class WarehouseService {
       for (let i = 0; i < length_i; i++) {
         let length_j: number = hierarchy[i].length;
         for (let j = 0; j < length_j; j++) {
-          prod.hierarchy.push([]);
+          prod.hierarchy.push('');
           for (let k = 0; k < length_k; k++) {
             if (depsToAdd[k].id === hierarchy[i][j]) {
-              prod.hierarchy[prod.hierarchy.length - 1].push(depsToAdd[k].name);
+              prod.hierarchy[prod.hierarchy.length - 1] +=
+                depsToAdd[k].name + '/';
             }
           }
         }

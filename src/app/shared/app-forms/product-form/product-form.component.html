@@ -1,0 +1,133 @@
+<div class="container-fluid">
+  <form [formGroup]="prodFormGroup">
+    <div class="container-fluid"
+         style="padding-left: 0;
+                padding-right: 0">
+      <div class="row">
+        <app-input-box [label]="'Name:'"
+                       [inFormControl]="prodFormGroup.controls['name']">
+        </app-input-box>
+      </div>
+      <br>
+      <div class="row">
+        <app-input-box [label]="'Price:'"
+                       [inFormControl]="prodFormGroup.controls['price']">
+        </app-input-box>
+      </div>
+      <br>
+      <div class="row">
+        <app-input-box [label]="'Quantity:'"
+                       [inFormControl]="prodFormGroup.controls['Quantity']">
+        </app-input-box>
+      </div>
+      <br>
+      <div class="row">
+        <app-input-box [label]="'Image source:'"
+                       [inFormControl]="prodFormGroup.controls['imgSrc']">
+        </app-input-box>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-xs-6">
+          <span [ngClass]="collapseHierarchy ?
+                            'glyphicon glyphicon-chevron-right' :
+                            'glyphicon glyphicon-chevron-down'"
+                (click)="collapseHierarchy = !collapseHierarchy"
+                style="vertical-align: middle">
+          </span>
+          <label class="app-input-box-label"
+                 style="padding-left: 7px;
+                        text-decoration: underline">
+            Departments:
+          </label>
+        </div>
+        <div class="col-xs-6"
+             style="text-align: right">
+          <button type="button" class="btn btn-default"
+                  style="border-radius: 16px;
+                         outline: 0"
+                  (click)="onHierarchyPathAdd()">
+            New path
+          </button>
+        </div>
+      </div>
+      <br>
+      <div [hidden]="collapseHierarchy">
+        <div style="padding-left: 20px;">
+          <div *ngFor="let control of hierarchyInfo.controls;
+                       let index = index"
+               style="border: 2px solid #d1b394;
+                      border-radius: 48px;
+                      margin-bottom: 15px;
+                      padding: 15px 15px;">
+            <app-input-box
+              [label]="hierarchyInfo.pathsLabel + ' ' + index.toString() + ':'"
+              [inFormControl]="control">
+            </app-input-box>
+            <div style="text-align: right">
+              <button
+                *ngIf="hierarchyPathsCount > 1"
+                type="button" class="btn btn-default"
+                (click)="onHierarchyPathRemove(index)"
+                style="border-radius: 16px;
+                             outline: 0;">
+                Remove path
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-6">
+          <span [ngClass]="collapseExtraFields ?
+                            'glyphicon glyphicon-chevron-right' :
+                            'glyphicon glyphicon-chevron-down'"
+                (click)="collapseExtraFields = !collapseExtraFields"
+                style="vertical-align: middle">
+          </span>
+        <label class="app-input-box-label"
+               style="padding-left: 7px;
+                        text-decoration: underline">
+          Extra fields:
+        </label>
+      </div>
+      <div class="col-xs-6"
+           style="text-align: right">
+        <button type="button" class="btn btn-default"
+                style="border-radius: 16px;
+                         outline: 0"
+                (click)="onExtraFieldAdd()">
+          New extra field
+        </button>
+      </div>
+    </div>
+    <br>
+    <div [hidden]="collapseExtraFields">
+      <div style="padding-left: 20px;">
+        <div *ngFor="let fieldName of extraFieldsInfo.fieldsNames;
+                       let index = index"
+             style="border: 2px solid #d1b394;
+                      border-radius: 48px;
+                      margin-bottom: 15px;
+                      padding: 15px 15px;">
+          <app-input-box
+            [label]="fieldName + ':'"
+            [inFormControl]="extraFieldsInfo.controls[index]">
+          </app-input-box>
+          <div style="text-align: right">
+            <button
+              *ngIf="extraFieldsCount > 1"
+              type="button" class="btn btn-default"
+              (click)="onExtraFieldRemove(index)"
+              style="border-radius: 16px;
+                             outline: 0;">
+              Remove extra field
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
