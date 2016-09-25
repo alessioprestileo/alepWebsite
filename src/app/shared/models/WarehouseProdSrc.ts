@@ -1,9 +1,9 @@
-import { WarehouseProdSrc } from "./WarehouseProdSrc";
+import { WarehouseProd } from "./WarehouseProd";
 
-export class WarehouseProd {
-	extraFields: {[field: string]: string};
+export class WarehouseProdSrc {
+  extraFields: {[field: string]: string};
   hierarchy: string[];
-	id: number;
+  id: number;
   imgSrc: string;
   name: string;
   price: number;
@@ -25,22 +25,22 @@ export class WarehouseProd {
     this.name = name;
     this.price = price;
     this.quantity = quantity;
-	}
+  }
   // import WarehouseProd props from WarehouseProdSrc
-  public importProdPropsFromProdSrc(
-    prodSrc: WarehouseProdSrc
+  public importProdSrcPropsFromProd(
+    prod: WarehouseProd
   ) : void {
-    let originalExtraFields: {[field: string]: any} = prodSrc.extraFields;
+    let originalExtraFields: {[field: string] : any} = prod.extraFields;
     for (let label in originalExtraFields) {
       this.extraFields[label] = originalExtraFields[label];
     }
-    for (let path of prodSrc.hierarchy) {
+    for (let path of prod.hierarchy) {
       this.hierarchy.push(path);
     }
-    this.id = prodSrc.id;
-    this.imgSrc = prodSrc.imgSrc;
-    this.name = prodSrc.name;
-    this.price = prodSrc.price;
-    this.quantity = prodSrc.quantity;
+    this.id = prod.id;
+    this.imgSrc = prod.imgSrc;
+    this.name = prod.name;
+    this.price = prod.price;
+    this.quantity = prod.quantity;
   }
 }

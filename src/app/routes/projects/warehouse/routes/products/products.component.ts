@@ -11,7 +11,7 @@ import { DataTableComponent } from '../../../../../shared/data-table/data-table.
 import { HeaderEntry, TableInput } from '../../../../../shared/models/table-input-classes';
 import { WarehouseDep } from "../../../../../shared/models/WarehouseDep";
 import { WarehouseProd } from '../../../../../shared/models/WarehouseProd';
-import { WarehouseProdSrc } from "../../../../../shared/models/warehouseProdSrc";
+import { WarehouseProdSrc } from "../../../../../shared/models/WarehouseProdSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
 
 declare var jQuery: any;
@@ -60,9 +60,6 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     let browserPath: string = this.location.path();
     if (browserPath && browserPath !== this.prevBrowserPath) {
       this.prevBrowserPath = browserPath;
-
-      console.log('browserPath = ', browserPath);
-
       this.setPathKeywords(browserPath);
       if (this.pathKeywords) {
         this.setProducts().then(
@@ -74,10 +71,6 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     }
   }
   ngDoCheck() {
-
-    console.log('this.products = ', this.products);
-    console.log('this.tableInput = ', this.tableInput);
-
   }
 
   public addProduct() : void {
@@ -90,9 +83,6 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     this.appRoutingService.navigate(link);
   }
   private buildTableInput(isMobile: boolean) : void {
-
-    console.log('CALLED');
-
     let headers: Array<HeaderEntry>;
     if (isMobile) {
       headers = [
@@ -162,40 +152,25 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     }
   }
   private setProducts() : Promise<void> {
-    let result: Promise<any>;
+    let result: Promise<void>;
     if (
       this.pathKeywords.length === 1 &&
       this.pathKeywords[0] === this.ROUTES_DICT.PRODUCTS
     ) {
-
-      console.log('case 1');
-
       result = this.warehouseService.getAll('products').then(
         (products) => {
           let src: WarehouseProdSrc[] = <WarehouseProdSrc[]>products;
           let length: number = src.length;
-          let counter: number = 0;
           for (let i = 0; i < length; i++) {
             let prod: WarehouseProd = new WarehouseProd();
             this.products.push(prod);
-            this.warehouseService.importProdPropsFromProdSrc(
-              prod, src[i]
-            ).then(
-              () => {
-                counter ++;
-                if (counter === length) {
-                  this.checkMobileAndBuildTableInput();
-                }
-              }
-            );
+            prod.importProdPropsFromProdSrc(src[i]);
           }
+          this.checkMobileAndBuildTableInput();
         }
       );
     }
     else if (this.pathKeywords.length > 1) {
-
-      console.log('case 2');
-
       this.depPath = this.pathKeywords.slice(
         0, this.pathKeywords.length - 1
       ).join('/');
@@ -208,19 +183,17 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
       );
     }
     else {
-      result = new Promise(
-        (resolve, reject) => resolve()
+      result = new Promise((resolve, reject) => resolve()).then(
+        () => {}
       );
     }
-    return result.then(
-      () => {}
-    );
+    return result;
   }
   private setTitle() : void {
     if (this.depName) {
       this.title = 'All products in department: ' + this.depName;
     } else {
-      this.title = 'All products';
+      this.title = 'Products explorer';
     }
   }
   private updateTableInput() : void {

@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, Component, Inject, OnInit, OnDestroy
+  AfterViewChecked, Component, DoCheck, Inject, OnInit, OnDestroy
 } from '@angular/core';
 import { Location }    from '@angular/common';
 import {
@@ -12,8 +12,11 @@ import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.va
 import { InputBoxComponent } from "../../../../../shared/app-forms/input-box/input-box.component";
 import { ProductFormComponent } from "../../../../../shared/app-forms/product-form/product-form.component";
 import { WarehouseProd }        from '../../../../../shared/models/WarehouseProd';
-import { WarehouseProdSrc } from "../../../../../shared/models/warehouseProdSrc";
+import { WarehouseProdSrc } from "../../../../../shared/models/WarehouseProdSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
+import {WarehouseDepSrc} from "../../../../../shared/models/WarehouseDepSrc";
+
+declare var jQuery: any;
 
 @Component({
   moduleId: module.id,
@@ -22,14 +25,15 @@ import { WarehouseService } from '../../../../../shared/services/warehouse.servi
   styleUrls: ['product-detail.component.css'],
   directives: [InputBoxComponent, ProductFormComponent, REACTIVE_FORM_DIRECTIVES]
 })
-export class ProductDetailComponent implements AfterViewChecked, OnDestroy, OnInit {
+export class ProductDetailComponent
+implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
   private formGroup: FormGroup;
   private formGroupValidator: ValidatorFn = formGroupValidator;
   private newProd: boolean = false;
   private obFormGroupValid: BehaviorSubject<boolean>;
   private prodIdKeyword: string;
   private prevBrowserPath: string;
-  private prodIsReady: boolean;
+  private prodIsReady: boolean = false;
   private product: WarehouseProd;
   private subFormGroupValid: Subscription;
   private title: string;
@@ -42,11 +46,13 @@ export class ProductDetailComponent implements AfterViewChecked, OnDestroy, OnIn
   }
 
   ngOnInit() {
+    this.setDarkBackground();
     this.createFormGroup();
     this.createObsAndSubs();
   }
   ngOnDestroy() {
     this.cancelSubs();
+    this.removeDarkBackground();
   }
   ngAfterViewChecked() {
     let browserPath: string = this.location.path();
@@ -59,6 +65,8 @@ export class ProductDetailComponent implements AfterViewChecked, OnDestroy, OnIn
         });
       }
     }
+  }
+  ngDoCheck() {
   }
 
   private cancelSubs() : void {
@@ -76,43 +84,79 @@ export class ProductDetailComponent implements AfterViewChecked, OnDestroy, OnIn
   private onGoBack() : void {
     window.history.back();
   }
-  private priceValidator(control: FormControl) :
-      {[s: string]: boolean} {
-    if (!control.value.match(/^[0-9]+\.[0-9]{2}$/)) {
-      return {invalidPrice: true};
-    }
-  }
   public onSave() : void {
-    this.warehouseService
-      // onSave product, id given by the server
-      .saveItem('products', this.product)
-      .then(() => this.onGoBack());
+    let prod: WarehouseProd = this.product;
+    this.warehouseService.getAll('departments').then(
+      departments => {
+        let deps: WarehouseDepSrc[] = <WarehouseDepSrc[]>departments;
+        let invalidPaths: string[] = [];
+        let filteredPaths: string[] = prod.hierarchy.filter(path => {
+          let result: boolean = false;
+          for (let dep of deps) {
+            if (path === dep.path) {
+              result = true;
+            }
+          }
+          if (result === false) {
+            invalidPaths.push(path);
+          }
+          return result;
+        });
+        if (invalidPaths.length > 0) {
+          let message: string = 'The following paths don\'t match any ' +
+            'department:';
+          for (let path of invalidPaths) {
+            message += '\n' + path;
+          }
+          alert(message);
+        }
+        else {
+          let prodSrc: WarehouseProdSrc = new WarehouseProdSrc();
+          prodSrc.importProdSrcPropsFromProd(this.product);
+          this.warehouseService
+            // save productSrc, id given by the server
+            .saveItem('products', prodSrc)
+            .then(() => this.onGoBack());
+        }
+      }
+    );
+  }
+  private removeDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundLight");
+    jQuery("#app-router-outlet").removeClass("backgroundDark");
+  }
+  private setDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundDark");
+    jQuery("#app-router-outlet").removeClass("backgroundLight");
   }
   private setIdKeyword(url: string) : void {
     let split: string[] = url.split('/');
-    this.prodIdKeyword = split[split.length - 1];
-  }
-  private setProd() : Promise<any> {
-    this.prodIsReady = false;
-    if (this.prodIdKeyword === 'New') {
-      this.newProd = true;
-      let promise: Promise<any> = new Promise(
-        (resolve, reject) => resolve()
-      );
-      return promise.then(() => {
-        this.product = new WarehouseProd();
-        this.prodIsReady = true;
-      });
+    if (split[split.length - 2] === this.ROUTES_DICT.PRODUCTS_DETAIL) {
+      this.prodIdKeyword = split[split.length - 1];
     }
-    else {
-      return this.warehouseService
-        .getItem('products', +this.prodIdKeyword).then(product => {
-          let prodSrc: WarehouseProdSrc = <WarehouseProdSrc>product;
+  }
+  private setProd() : Promise<void> {
+    this.prodIsReady = false;
+    if (this.prodIdKeyword) {
+      if (this.prodIdKeyword === 'New') {
+        this.newProd = true;
+        let promise: Promise<any> = new Promise(
+          (resolve, reject) => resolve()
+        );
+        return promise.then(() => {
           this.product = new WarehouseProd();
-          this.warehouseService.importProdPropsFromProdSrc(
-            this.product, prodSrc
-          ).then(() => this.prodIsReady = true);
+          this.prodIsReady = true;
         });
+      }
+      else {
+        return this.warehouseService
+          .getItem('products', +this.prodIdKeyword).then(product => {
+            let prodSrc: WarehouseProdSrc = <WarehouseProdSrc>product;
+            this.product = new WarehouseProd();
+            this.product.importProdPropsFromProdSrc(prodSrc);
+            this.prodIsReady = true;
+          });
+      }
     }
   }
   private setTitle() : void {

@@ -184,9 +184,7 @@ export class InMemoryData {
           size: '5"'
         },
         hierarchy: [
-          [
-            4
-          ]
+          'Technology'
         ],
         imgSrc: 'app/shared/assets/smartphone.jpg',
         name: 'Smartphone',
@@ -200,9 +198,7 @@ export class InMemoryData {
           type: 'electric'
         },
         hierarchy: [
-          [
-            2
-          ]
+          'Music'
         ],
         imgSrc: 'app/shared/assets/guitar.png',
         name: 'Guitar',
@@ -216,9 +212,7 @@ export class InMemoryData {
           type: 'grand piano'
         },
         hierarchy: [
-          [
-            2
-          ]
+          'Music'
         ],
         imgSrc: 'app/shared/assets/piano.jpg',
         name: 'Piano',
@@ -232,9 +226,7 @@ export class InMemoryData {
           size: '15"'
         },
         hierarchy: [
-          [
-            4
-          ]
+          'Technology'
         ],
         imgSrc: 'app/shared/assets/laptop.jpg',
         name: 'Laptop',
@@ -248,9 +240,7 @@ export class InMemoryData {
           size: 'S'
         },
         hierarchy: [
-          [
-            1
-          ]
+          'Fashion'
         ],
         imgSrc: 'app/shared/assets/jacket.jpg',
         name: 'Jacket',
@@ -264,9 +254,7 @@ export class InMemoryData {
           size: 'M'
         },
         hierarchy: [
-          [
-            1
-          ]
+          'Fashion'
         ],
         imgSrc: 'app/shared/assets/suit.jpg',
         name: 'Suit',
@@ -279,9 +267,7 @@ export class InMemoryData {
           type: 'beach'
         },
         hierarchy: [
-          [
-            3
-          ]
+          'Sport'
         ],
         imgSrc: 'app/shared/assets/ball.jpg',
         name: 'Ball',
@@ -295,9 +281,7 @@ export class InMemoryData {
           gears: 24
         },
         hierarchy: [
-          [
-            3
-          ]
+          'Sport'
         ],
         imgSrc: 'app/shared/assets/bicycle.png',
         name: 'Bicycle',

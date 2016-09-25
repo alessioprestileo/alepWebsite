@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { WarehouseDep } from "../models/WarehouseDep";
 import { WarehouseDepSrc } from "../models/WarehouseDepSrc";
 import { WarehouseProd } from "../models/WarehouseProd";
-import { WarehouseProdSrc } from "../models/warehouseProdSrc";
+import { WarehouseProdSrc } from "../models/WarehouseProdSrc";
 
 class Item {
   id: number;
@@ -97,7 +97,7 @@ export class WarehouseService {
           if (prodsIds[i] === filteredProdSrcs[j].id) {
             let prod: WarehouseProd = new WarehouseProd();
             result.push(prod);
-            this.importProdPropsFromProdSrc(prod, filteredProdSrcs[j]);
+            prod.importProdPropsFromProdSrc(filteredProdSrcs[j]);
           }
         }
       }
@@ -179,53 +179,76 @@ export class WarehouseService {
       .then(res => res.json().data)
       .catch(WarehouseService.handleError);
   }
-  // import WarehouseProd props from WarehouseProdSrc
-  public importProdPropsFromProdSrc(
-    prod: WarehouseProd,
-    prodSrc: WarehouseProdSrc
-  ) : Promise<void> {
-    let originalExtraFields: {[field: string] : any} = prodSrc.extraFields;
-    for (let label in originalExtraFields) {
-      prod.extraFields[label] = originalExtraFields[label];
-    }
-    prod.id = prodSrc.id;
-    prod.imgSrc = prodSrc.imgSrc;
-    prod.name = prodSrc.name;
-    prod.price = prodSrc.price;
-    prod.quantity = prodSrc.quantity;
-    return this.getAll('departments').then(departments => {
-      let depsToAdd: WarehouseDepSrc[] =
-        (<WarehouseDepSrc[]>departments).filter(dep => {
-          let result: boolean = false;
-          let hierarchy: number[][] = prodSrc.hierarchy;
-          let length_1: number = hierarchy.length;
-          for (let i = 0; i < length_1; i++) {
-            let length_2: number = hierarchy[i].length;
-            for (let j = 0; j < length_2; j++) {
-              if (hierarchy[i][j] === dep.id) {
-                result = true;
-              }
-            }
-          }
-          return result;
-        });
-      let hierarchy: number[][] = prodSrc.hierarchy;
-      let length_k: number = depsToAdd.length;
-      let length_i: number = hierarchy.length;
-      for (let i = 0; i < length_i; i++) {
-        let length_j: number = hierarchy[i].length;
-        for (let j = 0; j < length_j; j++) {
-          prod.hierarchy.push('');
-          for (let k = 0; k < length_k; k++) {
-            if (depsToAdd[k].id === hierarchy[i][j]) {
-              prod.hierarchy[prod.hierarchy.length - 1] +=
-                depsToAdd[k].name + '/';
-            }
-          }
-        }
-      }
-    });
-  }
+  // // import WarehouseProd props from WarehouseProdSrc
+  // public importProdPropsFromProdSrc(
+  //   prod: WarehouseProd,
+  //   prodSrc: WarehouseProdSrc
+  // ) : void {
+  //   let originalExtraFields: {[field: string] : any} = prodSrc.extraFields;
+  //   for (let label in originalExtraFields) {
+  //     prod.extraFields[label] = originalExtraFields[label];
+  //   }
+  //   for (let path of prodSrc.hierarchy) {
+  //     prod.hierarchy.push(path);
+  //   }
+  //   prod.id = prodSrc.id;
+  //   prod.imgSrc = prodSrc.imgSrc;
+  //   prod.name = prodSrc.name;
+  //   prod.price = prodSrc.price;
+  //   prod.quantity = prodSrc.quantity;
+    // return this.getAll('departments').then(departments => {
+    //   let depsToAdd: WarehouseDepSrc[] =
+    //     (<WarehouseDepSrc[]>departments).filter(dep => {
+    //       let result: boolean = false;
+    //       let hierarchy: number[][] = prodSrc.hierarchy;
+    //       let length_1: number = hierarchy.length;
+    //       for (let i = 0; i < length_1; i++) {
+    //         let length_2: number = hierarchy[i].length;
+    //         for (let j = 0; j < length_2; j++) {
+    //           if (hierarchy[i][j] === dep.id) {
+    //             result = true;
+    //           }
+    //         }
+    //       }
+    //       return result;
+    //     });
+    //   let hierarchy: number[][] = prodSrc.hierarchy;
+    //   let length_k: number = depsToAdd.length;
+    //   let length_i: number = hierarchy.length;
+    //   for (let i = 0; i < length_i; i++) {
+    //     let length_j: number = hierarchy[i].length;
+    //     for (let j = 0; j < length_j; j++) {
+    //       prod.hierarchy.push('');
+    //       for (let k = 0; k < length_k; k++) {
+    //         if (depsToAdd[k].id === hierarchy[i][j]) {
+    //           prod.hierarchy[prod.hierarchy.length - 1] += depsToAdd[k].name;
+    //           if (j !== length_j - 1) {
+    //             prod.hierarchy[prod.hierarchy.length - 1] += '/';
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
+  // }
+  // // import WarehouseProd props from WarehouseProdSrc
+  // public importProdSrcPropsFromProd(
+  //   prodSrc: WarehouseProdSrc,
+  //   prod: WarehouseProd
+  // ) : void {
+  //   let originalExtraFields: {[field: string] : any} = prod.extraFields;
+  //   for (let label in originalExtraFields) {
+  //     prodSrc.extraFields[label] = originalExtraFields[label];
+  //   }
+  //   for (let path of prod.hierarchy) {
+  //     prodSrc.hierarchy.push(path);
+  //   }
+  //   prodSrc.id = prod.id;
+  //   prodSrc.imgSrc = prod.imgSrc;
+  //   prodSrc.name = prod.name;
+  //   prodSrc.price = prod.price;
+  //   prodSrc.quantity = prod.quantity;
+  // }
   // Update existing item
   private put(target: string, item: Item) : Promise<Item> {
     let headers = new Headers();

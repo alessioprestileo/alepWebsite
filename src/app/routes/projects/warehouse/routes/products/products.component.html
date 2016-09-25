@@ -1,7 +1,17 @@
-<div class="animated fadeIn">
+<div class="animated fadeIn container-fluid">
 	<h2>{{title}}</h2>
-		<div	class="myButton text-center"
-		(click)="addProduct()">Add New Product</div>
+  <div class="row"
+       style="margin-bottom: 15px">
+    <div class="col-sm-offset-4 col-sm-4">
+      <button type="button" class="btn btn-default"
+              style="text-align: center;
+                     border-radius: 16px;
+                     outline: 0; width: 100%"
+              (click)="addProduct()">
+        Add New Product
+      </button>
+    </div>
+  </div>
 	<div>
 	  <app-data-table
       *ngIf="tableInput"

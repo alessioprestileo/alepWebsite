@@ -23,10 +23,11 @@ export class InputBoxComponent implements DoCheck, OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.setPlaceHolder();
+  }
 
   ngDoCheck() {
-    this.setPlaceHolder();
   }
 
   public hasError(reference: FormControlDirective) : boolean {

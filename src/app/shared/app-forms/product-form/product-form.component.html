@@ -5,38 +5,54 @@
                 padding-right: 0">
       <div class="row">
         <app-input-box [label]="'Name:'"
+                       [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['name']">
         </app-input-box>
       </div>
       <br>
       <div class="row">
         <app-input-box [label]="'Price:'"
+                       [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['price']">
         </app-input-box>
       </div>
       <br>
       <div class="row">
         <app-input-box [label]="'Quantity:'"
-                       [inFormControl]="prodFormGroup.controls['Quantity']">
+                       [labelCssClass]="'app-input-box-label-white'"
+                       [inFormControl]="prodFormGroup.controls['quantity']">
         </app-input-box>
       </div>
       <br>
       <div class="row">
         <app-input-box [label]="'Image source:'"
+                       [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['imgSrc']">
         </app-input-box>
       </div>
       <br>
+    </div>
+    <div class="container-fluid"
+         style="border: 2px solid #d1b394;
+                border-radius: 48px;
+                margin-bottom: 15px;
+                margin-left: -30px;
+                margin-right: -30px;
+                padding-bottom: 15px;
+                padding-top: 15px">
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-6"
+             (click)="collapseHierarchy = !collapseHierarchy"
+             style="cursor: pointer">
           <span [ngClass]="collapseHierarchy ?
                             'glyphicon glyphicon-chevron-right' :
                             'glyphicon glyphicon-chevron-down'"
-                (click)="collapseHierarchy = !collapseHierarchy"
-                style="vertical-align: middle">
+                style="color: white;
+                       vertical-align: middle">
           </span>
-          <label class="app-input-box-label"
-                 style="padding-left: 7px;
+          <label class="app-input-box-label-white"
+                 style="cursor: pointer;
+                        padding-left: 7px;
                         text-decoration: underline">
             Departments:
           </label>
@@ -51,20 +67,23 @@
           </button>
         </div>
       </div>
-      <br>
       <div [hidden]="collapseHierarchy">
         <div style="padding-left: 20px;">
           <div *ngFor="let control of hierarchyInfo.controls;
                        let index = index"
-               style="border: 2px solid #d1b394;
-                      border-radius: 48px;
-                      margin-bottom: 15px;
+               style="margin-bottom: 15px;
                       padding: 15px 15px;">
             <app-input-box
-              [label]="hierarchyInfo.pathsLabel + ' ' + index.toString() + ':'"
-              [inFormControl]="control">
+              [label]="hierarchyInfo.pathsLabel + ' ' +
+                       (index + 1).toString() + ':'"
+              [labelCssClass]="'app-input-box-label-white'"
+              [inFormControl]="control"
+              [placeHolder]=
+                "'Insert ' + hierarchyInfo.pathsLabel.toLocaleLowerCase() +
+                 ' ' + (index + 1).toString()">
             </app-input-box>
-            <div style="text-align: right">
+            <div style="margin-top: 10px;
+                        text-align: right">
               <button
                 *ngIf="hierarchyPathsCount > 1"
                 type="button" class="btn btn-default"
@@ -78,53 +97,103 @@
         </div>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col-xs-6">
-          <span [ngClass]="collapseExtraFields ?
-                            'glyphicon glyphicon-chevron-right' :
-                            'glyphicon glyphicon-chevron-down'"
-                (click)="collapseExtraFields = !collapseExtraFields"
-                style="vertical-align: middle">
-          </span>
-        <label class="app-input-box-label"
-               style="padding-left: 7px;
+    <div class="container-fluid"
+         style="border: 2px solid #d1b394;
+                border-radius: 48px;
+                margin-bottom: 15px;
+                margin-left: -30px;
+                margin-right: -30px;
+                padding-bottom: 15px;
+                padding-top: 15px">
+      <div class="row">
+        <div class="col-xs-6"
+             (click)="collapseExtraFields = !collapseExtraFields"
+             style="cursor: pointer">
+            <span [ngClass]="collapseExtraFields ?
+                              'glyphicon glyphicon-chevron-right' :
+                              'glyphicon glyphicon-chevron-down'"
+                  style="color: white;
+                         vertical-align: middle">
+            </span>
+          <label class="app-input-box-label-white"
+                 style="cursor: pointer;
+                        padding-left: 7px;
                         text-decoration: underline">
-          Extra fields:
-        </label>
+            Extra fields:
+          </label>
+        </div>
+        <div class="col-xs-6"
+             style="text-align: right">
+          <button type="button" class="btn btn-default"
+                  style="border-radius: 16px;
+                           outline: 0"
+                  (click)="addingExtraField = true">
+            New extra field
+          </button>
+        </div>
       </div>
-      <div class="col-xs-6"
-           style="text-align: right">
-        <button type="button" class="btn btn-default"
-                style="border-radius: 16px;
-                         outline: 0"
-                (click)="onExtraFieldAdd()">
-          New extra field
-        </button>
-      </div>
-    </div>
-    <br>
-    <div [hidden]="collapseExtraFields">
-      <div style="padding-left: 20px;">
-        <div *ngFor="let fieldName of extraFieldsInfo.fieldsNames;
-                       let index = index"
-             style="border: 2px solid #d1b394;
-                      border-radius: 48px;
-                      margin-bottom: 15px;
+      <div [hidden]="collapseExtraFields">
+        <div style="padding-left: 20px;">
+          <div *ngFor="let fieldName of extraFieldsInfo.fieldsNames;
+                         let index = index"
+               style="margin-bottom: 15px;
                       padding: 15px 15px;">
-          <app-input-box
-            [label]="fieldName + ':'"
-            [inFormControl]="extraFieldsInfo.controls[index]">
-          </app-input-box>
-          <div style="text-align: right">
-            <button
-              *ngIf="extraFieldsCount > 1"
-              type="button" class="btn btn-default"
-              (click)="onExtraFieldRemove(index)"
-              style="border-radius: 16px;
-                             outline: 0;">
-              Remove extra field
-            </button>
+            <app-input-box
+              [label]="fieldName + ':'"
+              [labelCssClass]="'app-input-box-label-white'"
+              [inFormControl]="extraFieldsInfo.controls[index]">
+            </app-input-box>
+            <div style="margin-top: 10px;
+                        text-align: right">
+              <button
+                type="button" class="btn btn-default"
+                (click)="onExtraFieldRemove(index)"
+                style="border-radius: 16px;
+                               outline: 0;">
+                Remove extra field
+              </button>
+            </div>
+          </div>
+          <div *ngIf="addingExtraField"
+               class="container-fluid">
+            <label class="app-input-box-label-white"
+                   style="text-align: center; width: 100%;">
+              Enter name for the new extra field:
+            </label>
+            <div class="row" style="margin-bottom: 15px">
+              <div class="col-sm-offset-4 col-sm-4">
+                <input #newExtraFieldName
+                       style="border-radius: 8px;
+                              height: 30px;
+                              outline: 0;
+                              padding-left: 15px;
+                              width: 100%">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-offset-4 col-sm-4">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <button
+                      type="button" class="btn btn-default"
+                      (click)="onExtraFieldAdd()"
+                      style="border-radius: 16px;
+                             outline: 0; width: 100%;">
+                      Ok
+                    </button>
+                  </div>
+                  <div class="col-xs-6">
+                    <button
+                      type="button" class="btn btn-default"
+                      (click)="addingExtraField = false"
+                      style="border-radius: 16px;
+                             outline: 0;  width: 100%;">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

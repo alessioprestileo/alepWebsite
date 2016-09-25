@@ -1,4 +1,6 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component, DoCheck, ElementRef, Input, OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
   REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl, ValidatorFn, Validators
 } from '@angular/forms';
@@ -49,10 +51,13 @@ class HierarchyInfo {
   styleUrls: ['product-form.component.css'],
   directives: [InputBoxComponent, REACTIVE_FORM_DIRECTIVES]
 })
-export class ProductFormComponent implements OnDestroy, OnInit {
+export class ProductFormComponent
+implements DoCheck, OnDestroy, OnInit {
   @Input() private newProd: boolean;
   @Input() private prodFormGroup: FormGroup;
   @Input() private product: WarehouseProd;
+  @ViewChild("newExtraFieldName") private newExtraFieldName: ElementRef;
+  private addingExtraField: boolean = false;
   private collapseExtraFields: boolean = false;
   private collapseHierarchy: boolean = false;
   private formGroupValidator: ValidatorFn = formGroupValidator;
@@ -79,23 +84,31 @@ export class ProductFormComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.createObsAndSubs();
     if (this.product) {
+      this.addFormControls();
+      this.createFormObsAndSubs();
+      this.createControlsSubs();
       if (!this.newProd) {
-        this.addFormControls();
-        this.createControlsSubs();
         this.initializeExtraFieldsControls();
         this.initializeHierarchyControls();
       }
       else {
-        this.addFormControls();
-        this.createControlsSubs();
+        this.hierarchyPathAdd('component+product');
       }
     }
   }
   ngOnDestroy() {
     this.removeFormControls();
     this.cancelSubs();
+  }
+  ngDoCheck() {
+
+    console.log('this.product = ', this.product);
+    console.log('this.extraFieldsCount = ', this.extraFieldsCount);
+    console.log('this.extraFieldsInfo = ', this.extraFieldsInfo);
+    console.log('this.hierarchyPathsCount = ', this.hierarchyPathsCount);
+    console.log('this.hierarchyInfo = ', this.hierarchyInfo);
+
   }
 
   private addFormControls() : void {
@@ -152,7 +165,7 @@ export class ProductFormComponent implements OnDestroy, OnInit {
       }
     );
   }
-  private createObsAndSubs() : void {
+  private createFormObsAndSubs() : void {
     this.obExtraFieldsForm = new BehaviorSubject(null);
     this.obHierarchyForm = new BehaviorSubject(null);
     this.obProdFormValid = new BehaviorSubject(false);
@@ -163,8 +176,11 @@ export class ProductFormComponent implements OnDestroy, OnInit {
             <FormGroup>this.prodFormGroup.controls['extraFields'];
           if (formGroup.valid) {
             for (let controlName in formGroup.controls) {
-              this.product.extraFields[controlName] =
-                formGroup.controls[controlName].value;
+              let value: string = formGroup.controls[controlName].value;
+              this.product.extraFields[controlName] = value;
+              let index: number =
+                this.extraFieldsInfo.fieldsNames.indexOf(controlName);
+              this.extraFieldsInfo.fieldsValues[index] = value;
             }
           }
         }
@@ -188,36 +204,39 @@ export class ProductFormComponent implements OnDestroy, OnInit {
       () => this.obProdFormValid.next(this.prodFormGroup.valid)
     );
   }
-  public extraFieldAdd(target: string) : void {
+  public extraFieldAdd(target: string, fieldName: string) : void {
     let initialValue: string;
     if (target === 'component+product' ||
-      target === 'component') {
+       (target === 'component')) {
       this.extraFieldsCount += 1;
       this.extraFieldsNextId += 1;
-      let label: string = this.extraFieldsInfo.fieldsLabel + ' ' +
-        this.extraFieldsNextId.toString();
+      let label: string = fieldName;
       if (target === 'component+product') {
+        // label = this.extraFieldsInfo.fieldsLabel + ' ' +
+        //   this.extraFieldsNextId.toString();
         initialValue = '';
         this.product.extraFields[label] = initialValue;
       }
       else {
-        initialValue = this.product.extraFields[
-          this.extraFieldsInfo.fieldsNames[this.extraFieldsCount - 1]
-          ];
+        // label = fieldName;
+        initialValue = this.product.extraFields[label];
       }
       this.extraFieldsInfo.controls.push(
         this.extraFieldControlAdd(label, initialValue)
       );
+      this.extraFieldsInfo.fieldsNames.push(label);
+      this.extraFieldsInfo.fieldsValues.push(initialValue);
     }
     else {
       console.log('ERROR: INVALID INPUT from collectionAdd method in ' +
         'ChartFormComponent');
-      return null;
     }
   }
-  private extraFieldControlAdd(key: string, initialValue: string) : FormControl {
+  private extraFieldControlAdd(
+    key: string, initialValue: string
+  ) : FormControl {
     let formGroup: FormGroup =
-      <FormGroup>(this.prodFormGroup.controls['hierarchy']);
+      <FormGroup>(this.prodFormGroup.controls['extraFields']);
     formGroup.addControl(key, new FormControl(
       initialValue, Validators.required
     ));
@@ -225,16 +244,22 @@ export class ProductFormComponent implements OnDestroy, OnInit {
   }
   private extraFieldControlRemoveByKey(key: string) : void {
     let formGroup: FormGroup =
-      <FormGroup>(this.prodFormGroup.controls['hierarchy']);
+      <FormGroup>(this.prodFormGroup.controls['extraFields']);
     formGroup.removeControl(key);
   }
-  public extraFieldRemove(position: number, label: string) : void {
-    let index: number = position - 1;
-    this.hierarchyInfo.controls = appArrayPopAt<FormControl>(
-      this.hierarchyInfo.controls, index
+  public extraFieldRemove(index: number, label: string) : void {
+    this.extraFieldsInfo.controls = appArrayPopAt<FormControl>(
+      this.extraFieldsInfo.controls, index
     );
-    this.hierarchyPathsCount -= 1;
-    this.hierarchyControlRemoveByKey(label);
+    this.extraFieldsInfo.fieldsNames = appArrayPopAt<string>(
+      this.extraFieldsInfo.fieldsNames, index
+    );
+    this.extraFieldsInfo.fieldsValues = appArrayPopAt<string>(
+      this.extraFieldsInfo.fieldsValues, index
+    );
+    this.extraFieldsCount -= 1;
+    this.extraFieldControlRemoveByKey(label);
+    delete this.product.extraFields[label];
   }
   private hierarchyControlAdd(key: string, initialValue: string) : FormControl {
     let formGroup: FormGroup =
@@ -254,9 +279,9 @@ export class ProductFormComponent implements OnDestroy, OnInit {
     if (target === 'component+product' ||
       target === 'component') {
       this.hierarchyPathsCount += 1;
-      this.hierarchyPathsNextId += 1;
       let label: string = this.hierarchyInfo.pathsLabel + ' ' +
         this.hierarchyPathsNextId.toString();
+      this.hierarchyPathsNextId += 1;
       if (target === 'component+product') {
         initialValue = '';
         this.product.hierarchy.push('');
@@ -274,18 +299,23 @@ export class ProductFormComponent implements OnDestroy, OnInit {
       return null;
     }
   }
-  public hierarchyPathRemove(position: number, label: string) : void {
-    let index: number = position - 1;
+  public hierarchyPathRemove(index: number, label: string) : void {
+
+    console.log('index = ', index);
+
     this.hierarchyInfo.controls = appArrayPopAt<FormControl>(
       this.hierarchyInfo.controls, index
     );
     this.hierarchyPathsCount -= 1;
     this.hierarchyControlRemoveByKey(label);
+    this.product.hierarchy = appArrayPopAt<string>(
+      this.product.hierarchy, index
+    );
   }
   private initializeExtraFieldsControls() : void {
-    let length: number = this.product.hierarchy.length;
-    for (let i = 0; i < length; i++) {
-      this.extraFieldAdd('component');
+    let extraFields: Object = this.product.extraFields;
+    for (let field in extraFields) {
+      this.extraFieldAdd('component', field);
     }
   }
   private initializeHierarchyControls() : void {
@@ -295,10 +325,13 @@ export class ProductFormComponent implements OnDestroy, OnInit {
     }
   }
   public onExtraFieldAdd() : void {
-
+    let newExtraFieldName: string = this.newExtraFieldName.nativeElement.value;
+    this.addingExtraField = false;
+    this.extraFieldAdd('component+product', newExtraFieldName);
   }
   public onExtraFieldRemove(index: number) : void {
-
+    let label: string = this.extraFieldsInfo.fieldsNames[index];
+    this.extraFieldRemove(index, label);
   }
   public onHierarchyPathAdd() : void {
     this.hierarchyPathAdd('component+product');
