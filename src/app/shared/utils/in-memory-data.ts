@@ -148,7 +148,7 @@ export class InMemoryData {
         id: 1,
         name: 'Fashion',
         path: 'Fashion',
-        productIds: [
+        productsIds: [
           5, 6
         ]
       },
@@ -156,7 +156,7 @@ export class InMemoryData {
         id: 2,
         name: 'Music',
         path: 'Music',
-        productIds: [
+        productsIds: [
           2, 3
         ]
       },
@@ -164,7 +164,7 @@ export class InMemoryData {
         id: 3,
         name: 'Sport',
         path: 'Sport',
-        productIds: [
+        productsIds: [
           7, 8
         ]
       },
@@ -172,7 +172,7 @@ export class InMemoryData {
         id: 4,
         name: 'Technology',
         path: 'Technology',
-        productIds: [
+        productsIds: [
           1, 4
         ]
       }

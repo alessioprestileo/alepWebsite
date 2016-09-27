@@ -116,7 +116,21 @@ implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
           this.warehouseService
             // save productSrc, id given by the server
             .saveItem('products', prodSrc)
-            .then(() => this.onGoBack());
+            .then((item) => {
+              let prodId: number = item.id;
+              for (let dep of deps) {
+                for (let path of prod.hierarchy) {
+                  if (
+                    dep.path === path &&
+                    dep.productsIds.indexOf(prodId) < 0
+                  ) {
+                    dep.productsIds.push(prodId);
+                    this.warehouseService.saveItem('departments', dep);
+                  }
+                }
+              }
+              this.onGoBack()
+            });
         }
       }
     );

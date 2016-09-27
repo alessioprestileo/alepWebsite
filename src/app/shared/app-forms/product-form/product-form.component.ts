@@ -102,13 +102,6 @@ implements DoCheck, OnDestroy, OnInit {
     this.cancelSubs();
   }
   ngDoCheck() {
-
-    console.log('this.product = ', this.product);
-    console.log('this.extraFieldsCount = ', this.extraFieldsCount);
-    console.log('this.extraFieldsInfo = ', this.extraFieldsInfo);
-    console.log('this.hierarchyPathsCount = ', this.hierarchyPathsCount);
-    console.log('this.hierarchyInfo = ', this.hierarchyInfo);
-
   }
 
   private addFormControls() : void {
@@ -118,9 +111,9 @@ implements DoCheck, OnDestroy, OnInit {
     this.prodFormGroup.addControl('hierarchy', new FormGroup(
       {}, null, this.formGroupValidator
     ));
-    this.prodFormGroup.addControl('imgSrc', new FormControl(
-      this.product.imgSrc, null
-    ));
+    // this.prodFormGroup.addControl('imgSrc', new FormControl(
+    //   this.product.imgSrc, null
+    // ));
     this.prodFormGroup.addControl('name', new FormControl(
       this.product.name, Validators.required
     ));
@@ -139,12 +132,12 @@ implements DoCheck, OnDestroy, OnInit {
     this.subProdFormValid.unsubscribe();
   }
   private createControlsSubs() : void {
-    this.subImgSrcControl = this.prodFormGroup.controls[
-      'imgSrc'
-      ].valueChanges.subscribe((value: string) : void => {
-        this.product.imgSrc = value;
-      }
-    );
+    // this.subImgSrcControl = this.prodFormGroup.controls[
+    //   'imgSrc'
+    //   ].valueChanges.subscribe((value: string) : void => {
+    //     this.product.imgSrc = value;
+    //   }
+    // );
     this.subNameControl = this.prodFormGroup.controls[
       'name'
       ].valueChanges.subscribe((value: string) : void => {
@@ -212,13 +205,10 @@ implements DoCheck, OnDestroy, OnInit {
       this.extraFieldsNextId += 1;
       let label: string = fieldName;
       if (target === 'component+product') {
-        // label = this.extraFieldsInfo.fieldsLabel + ' ' +
-        //   this.extraFieldsNextId.toString();
         initialValue = '';
         this.product.extraFields[label] = initialValue;
       }
       else {
-        // label = fieldName;
         initialValue = this.product.extraFields[label];
       }
       this.extraFieldsInfo.controls.push(
@@ -347,7 +337,7 @@ implements DoCheck, OnDestroy, OnInit {
     }
   }
   private removeFormControls() : void {
-    this.prodFormGroup.removeControl('imgSrc');
+    // this.prodFormGroup.removeControl('imgSrc');
     this.prodFormGroup.removeControl('name');
     this.prodFormGroup.removeControl('price');
     this.prodFormGroup.removeControl('quantity');

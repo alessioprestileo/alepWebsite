@@ -1,4 +1,5 @@
-<app-fluid-buttons [buttonType]="'sections'"
+<app-fluid-buttons
+  [buttonType]="buttonType"
   [btnsPerRow]="sectionsPerRow" [columnsPerBtn]="columnsPerSec"
   [inLabels]="sectionsLabels" [selectedLabel]="obSelectedSection"
   (selectedEmitter)="onSelectedSection($event)">

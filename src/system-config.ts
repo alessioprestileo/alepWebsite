@@ -44,9 +44,16 @@ const barrels: string[] = [
   /** @cli-barrel */
 ];
 
+// const cliSystemConfigPackages: any = {};
+// barrels.forEach((barrelName: string) => {
+//   cliSystemConfigPackages[barrelName] = { main: 'index' };
+// });
+
 const cliSystemConfigPackages: any = {};
 barrels.forEach((barrelName: string) => {
-  cliSystemConfigPackages[barrelName] = { main: 'index' };
+  if (barrelName !== 'ng2-file-upload') {
+    cliSystemConfigPackages[barrelName] = { main: 'index' };
+  }
 });
 
 /** Type declaration for ambient System. */

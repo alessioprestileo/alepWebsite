@@ -170,10 +170,11 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
         }
       );
     }
-    else if (this.pathKeywords.length > 1) {
-      this.depPath = this.pathKeywords.slice(
-        0, this.pathKeywords.length - 1
-      ).join('/');
+    else if (
+      this.pathKeywords.length > 1 &&
+      this.pathKeywords[0] === this.ROUTES_DICT.DEPARTMENTS_DETAIL
+    ) {
+      this.depPath = this.pathKeywords.slice(1).join('/');
       this.depName = this.pathKeywords[this.pathKeywords.length - 1];
       result = this.warehouseService.getDepFromPath(this.depPath).then(
         (dep: WarehouseDep) => {

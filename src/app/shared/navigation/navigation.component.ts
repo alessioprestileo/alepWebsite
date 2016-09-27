@@ -13,6 +13,7 @@ import { AppRoutingService } from '../services/app-routing.service';
   directives: [ FluidButtonsComponent ]
 })
 export class NavigationComponent implements OnInit {
+  @Input() buttonType: string = 'sections';
   @Input() private elements: NavButton[];
   @Input() private columnsPerSec: number; // Use even number!
   @Input() private navLevel: number;
