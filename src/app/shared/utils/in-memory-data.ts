@@ -97,20 +97,35 @@ export class InMemoryData {
       {
         id: 1,
         collectionsIds: [
-          1, 2
+          1
         ],
-        name: 'Chart1',
-        title: 'Title1',
-        type: 'bar'
+        name: 'Weather conditions-by hour-Portland, OR-2016/09/12 to ' +
+          '2016/09/18',
+        title: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
+          '2016/09/18 (by number of hours)',
+        type: 'pie'
       },
       {
         id: 2,
         collectionsIds: [
-          1, 2
+          3, 5, 7
         ],
-        name: 'Chart2',
-        title: 'Title1',
+        name: 'Max, min and avg temp-(°F)-daily-Portland, OR-2016/09/12 to ' +
+          '2016/09/18',
+        title: 'Max, min, and avg daily temperature (°F) in Portland, OR ' +
+          'from 2016/09/12 to 2016/09/18',
         type: 'line'
+      },
+      {
+        id: 3,
+        collectionsIds: [
+          9
+        ],
+        name: 'Temp variation-(°F)-daily-Portland, OR-2016/09/12 to ' +
+        '2016/09/18',
+        title: 'Daily temperature variation (°F) in Portland, OR ' +
+        'from 2016/09/12 to 2016/09/18',
+        type: 'bar'
       },
     ];
     let userData_collections = [
@@ -118,29 +133,174 @@ export class InMemoryData {
         id: 1,
         dataSet: {
           "id": 1,
-          "ticker": "ALESSIO",
-          "field": "Field1",
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Weather conditions',
           "dataPoints": {
-            "Monday": 1,
-            "Tuesday": 2,
-            "Wednesday": 3,
+            "Clear": 48,
+            "Cloudy": 11,
+            "Light drizzle": 9,
+            "Light rain": 15,
+            "Light rain shower": 3,
+            "Overcast": 12,
+            "Partly cloudy": 9,
+            "Patchy rain nearby": 3,
+            "Sunny": 57,
           }
         },
-        name: 'Collection1'
+        name: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
+          '2016/09/18'
       },
       {
         id: 2,
         dataSet: {
           "id": 2,
-          "ticker": "ALESSIO",
-          "field": "Field2",
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Max temperature (°C)',
           "dataPoints": {
-            "Monday": 4,
-            "Tuesday": 3,
-            "Wednesday": 2,
+            "Monday": 25.8,
+            "Tuesday": 26.8,
+            "Wednesday": 29.3,
+            "Thursday": 28.2,
+            "Friday": 30.1,
+            "Saturday": 22.1,
+            "Sunday": 22.2,
           }
         },
-        name: 'Collection2'
+        name: 'Max daily temperature (Celsius) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 3,
+        dataSet: {
+          "id": 3,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Max temperature (°F)',
+          "dataPoints": {
+            "Monday": 78.4,
+            "Tuesday": 80.2,
+            "Wednesday": 84.7,
+            "Thursday": 82.8,
+            "Friday": 86.2,
+            "Saturday": 71.8,
+            "Sunday": 72.0,
+          }
+        },
+        name: 'Max daily temperature (Fahrenheit) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 4,
+        dataSet: {
+          "id": 4,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Min temperature (°C)',
+          "dataPoints": {
+            "Monday": 10.2,
+            "Tuesday": 9.2,
+            "Wednesday": 10.2,
+            "Thursday": 13.2,
+            "Friday": 16.8,
+            "Saturday": 17.3,
+            "Sunday": 11.8,
+          }
+        },
+        name: 'Min daily temperature (Celsius) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 5,
+        dataSet: {
+          "id": 5,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Min temperature (°F)',
+          "dataPoints": {
+            "Monday": 50.4,
+            "Tuesday": 48.6,
+            "Wednesday": 50.4,
+            "Thursday": 55.8,
+            "Friday": 62.2,
+            "Saturday": 63.1,
+            "Sunday": 53.2,
+          }
+        },
+        name: 'Min daily temperature (Fahrenheit) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 6,
+        dataSet: {
+          "id": 6,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Avg temperature (°C)',
+          "dataPoints": {
+            "Monday": 18.2,
+            "Tuesday": 19.3,
+            "Wednesday": 19.2,
+            "Thursday": 18.4,
+            "Friday": 19.8,
+            "Saturday": 18.2,
+            "Sunday": 18.3,
+          }
+        },
+        name: 'Avg daily temperature (Celsius) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 7,
+        dataSet: {
+          "id": 7,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Avg temperature (°F)',
+          "dataPoints": {
+            "Monday": 64.7,
+            "Tuesday": 66.7,
+            "Wednesday": 66.6,
+            "Thursday": 65.1,
+            "Friday": 67.6,
+            "Saturday": 64.7,
+            "Sunday": 65.0,
+          }
+        },
+        name: 'Avg daily temperature (Fahrenheit) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 8,
+        dataSet: {
+          "id": 8,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Temperature variation (°C)',
+          "dataPoints": {
+            "Monday": 15.6,
+            "Tuesday": 17.6,
+            "Wednesday": 19.1,
+            "Thursday": 15.0,
+            "Friday": 13.3,
+            "Saturday": 4.8,
+            "Sunday": 10.4,
+          }
+        },
+        name: 'Daily temperature variation (Celsius) in Portland, OR from ' +
+          '2016/09/12 to 2016/09/18'
+      },
+      {
+        id: 9,
+        dataSet: {
+          "id": 9,
+          "ticker": 'Portland, OR from 2016/09/12 to 2016/09/18',
+          "field": 'Temperature variation (°F)',
+          "dataPoints": {
+            "Monday": 28.0,
+            "Tuesday": 31.6,
+            "Wednesday": 34.3,
+            "Thursday": 27.0,
+            "Friday": 24.0,
+            "Saturday": 8.7,
+            "Sunday": 18.8,
+          }
+        },
+        name: 'Daily temperature variation (Fahrenheit) in Portland, OR from ' +
+        '2016/09/12 to 2016/09/18'
       }
     ];
     let warehouse_departments = [

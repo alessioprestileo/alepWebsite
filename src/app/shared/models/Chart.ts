@@ -56,6 +56,7 @@ export class Chart {
       let lengthToAdd: number = collsToAdd.length;
       for (let i = 0; i < lengthToAdd; i++) {
         let coll: ChartColl = new ChartColl();
+        this.collections.push(coll);
         coll.importPropsFromSrc_UserData(collsToAdd[i]);
       }
     });

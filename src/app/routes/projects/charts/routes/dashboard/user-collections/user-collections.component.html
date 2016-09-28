@@ -1,16 +1,17 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-10"
+         (click)="collapseTable = !collapseTable">
       <span [ngClass]="collapseTable ?
                   'glyphicon glyphicon-chevron-right' :
                   'glyphicon glyphicon-chevron-down'"
-            (click)="collapseTable = !collapseTable"
             style="vertical-align: middle">
       </span>
       <label class="app-input-box-label"
              style="font-weight: bold;
-                  padding-left: 7px;
-                  text-decoration: underline">
+                    cursor: pointer;
+                    padding-left: 7px;
+                    text-decoration: underline">
         Your collections
       </label>
     </div>

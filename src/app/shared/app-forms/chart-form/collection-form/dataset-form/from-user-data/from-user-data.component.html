@@ -50,13 +50,7 @@
          *ngIf="!selectMode"
          style="padding-left: 10px;
                 padding-right: 0">
-      <label class="app-input-box-label"
-             style="border: 2px solid lightgray;
-                        border-radius: 8px;
-                        background-color: #f2f2f2;
-                        height: 30px;
-                        padding-left: 15px;
-                        width: 100%">
+      <label class="app-input-box-inactive">
         {{(obCollSrc | async).name}}
       </label>
     </div>
@@ -73,13 +67,7 @@
       <div class="col-sm-8"
            style="padding-left: 10px;
                   padding-right: 0">
-        <label class="app-input-box-label"
-               style="border: 2px solid lightgray;
-                        border-radius: 8px;
-                        background-color: #f2f2f2;
-                        height: 30px;
-                        padding-left: 15px;
-                        width: 100%">
+        <label class="app-input-box-inactive">
           {{currentDataSet.ticker}}
         </label>
       </div>
@@ -96,13 +84,7 @@
       <div class="col-sm-8"
            style="padding-left: 10px;
                   padding-right: 0">
-        <label class="app-input-box-label"
-               style="border: 2px solid lightgray;
-                        border-radius: 8px;
-                        background-color: #f2f2f2;
-                        height: 30px;
-                        padding-left: 15px;
-                        width: 100%">
+        <label class="app-input-box-inactive">
           {{currentDataSet.field}}
         </label>
       </div>

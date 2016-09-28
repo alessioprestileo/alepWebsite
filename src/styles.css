@@ -7,6 +7,18 @@
 .backgroundLight {
   background-color: #ebf0fa;
 }
+.app-input-box-inactive {
+  border: 2px solid lightgray;
+  border-radius: 8px;
+  background-color: #f2f2f2;
+  font-size: 20px;
+  font-weight: normal;
+  min-height: 30px;
+  margin-bottom: 0px;
+  padding-left: 15px;
+  vertical-align: middle;
+  width: 100%;
+}
 .app-input-box-label {
   font-size: 20px;
   font-weight: normal;

@@ -143,6 +143,11 @@ export const APP_ROUTES: Routes = [
             path: ROUTING_LABELS.PRODUCT_DETAIL,
             children: [
               {
+                path: '',
+                redirectTo: 'New',
+                pathMatch: 'full',
+              },
+              {
                 path: 'New',
                 component: ProductDetailComponent,
               },
