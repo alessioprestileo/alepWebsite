@@ -5,15 +5,16 @@ import {
 
 import {Subscription, BehaviorSubject}   from 'rxjs/Rx';
 
-import { CarouselSlide } from '../models/CarouselSlide'
 import { appRound } from '../appFunctions'
+import { CarouselSlide } from '../models/CarouselSlide'
+import Timer = NodeJS.Timer;
 
 declare var jQuery: any;
 
 let onResizeEmitter: EventEmitter<any> = new EventEmitter();
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-carousel',
   templateUrl: 'carousel.component.html',
   styleUrls: ['carousel.component.css']
@@ -124,7 +125,7 @@ export class CarouselComponent implements AfterViewInit,
     let maxSlideHeight: number = 0;
     let deltaTime: number = 100;
     let elapsedTime: number = 0;
-    let heightInterval: number = setInterval(() => {
+    let heightInterval: Timer = setInterval(() => {
       jQuery(this.carousel.nativeElement).find('.app-slideContainer').each(
         (index, element) => {
           let height: number = jQuery(element).height();

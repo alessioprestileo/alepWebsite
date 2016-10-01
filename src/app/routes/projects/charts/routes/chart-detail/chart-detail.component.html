@@ -1,5 +1,5 @@
 <div *ngIf="chartIsReady">
-  <form [formGroup]="formGroup">
+  <form>
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
@@ -22,7 +22,7 @@
         <div class="container-fluid">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-sm-offset-6 col-sm-3">
+              <div class="col-sm-offset-5 col-sm-3">
                 <button type="button" class="btn btn-default"
                         [disabled]="!(obFormGroupValid | async)"
                         (click)="onSave()"
@@ -33,7 +33,7 @@
                   Save
                 </button>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-4">
                 <button type="button" class="btn btn-default"
                         (click)="onBackToDashboard()"
                         style="border-radius: 8px;

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Observable } from "rxjs/Rx";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-fluid-buttons',
   templateUrl: 'fluid-buttons.component.html',
   styleUrls: ['fluid-buttons.component.css']

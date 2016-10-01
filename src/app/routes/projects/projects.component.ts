@@ -3,16 +3,14 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from "rxjs";
 
 import { AppRoutingService } from '../../shared/services/app-routing.service';
-import { CarouselComponent } from "../../shared/carousel/carousel.component";
 import { CarouselSlide } from "../../shared/models/CarouselSlide";
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-projects',
   templateUrl: 'projects.component.html',
-  styleUrls: ['projects.component.css'],
-  directives: [CarouselComponent]
+  styleUrls: ['projects.component.css']
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
   private carouselSlides: CarouselSlide[];
@@ -40,12 +38,20 @@ export class ProjectsComponent implements OnDestroy, OnInit {
   }
   private setCarouselSlides() : void {
     this.carouselSlides = [
-      new CarouselSlide('app/shared/assets/charts.jpg',
-                        'Charts',
-                        ['/' + this.ROUTES_DICT.CHARTS]),
-      new CarouselSlide('app/shared/assets/warehouse.jpeg',
-                        'Warehouse',
-                        ['/' + this.ROUTES_DICT.WAREHOUSE])
+      new CarouselSlide(
+        './assets/charts.jpg', 'Charts',
+        [
+          // '/' + this.ROUTES_DICT.PROJECTS +
+          '/' + this.ROUTES_DICT.CHARTS
+        ]
+      ),
+      new CarouselSlide(
+        './assets/warehouse.jpeg', 'Warehouse',
+        [
+          // '/' + this.ROUTES_DICT.PROJECTS +
+          '/' + this.ROUTES_DICT.WAREHOUSE
+        ]
+      )
     ];
   }
 }

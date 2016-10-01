@@ -1,16 +1,13 @@
 import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators, ValidatorFn
+  FormControl, FormGroup, Validators, ValidatorFn
 } from '@angular/forms';
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 
 import { Chart } from '../../models/Chart';
 import { ChartColl } from '../../models/ChartColl';
-import { CollectionFormComponent } from './collection-form/collection-form.component';
 import { formGroupValidator } from '../formGroup.validator';
-import { InputBoxComponent } from '../input-box/input-box.component';
-import { ShowChartComponent } from '../../show-chart/show-chart.component';
 
 enum ArrayTypes {
   AppChartCollection,
@@ -34,14 +31,10 @@ class CollectionInput {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-chart-form',
   templateUrl: 'chart-form.component.html',
   styleUrls: ['chart-form.component.css'],
-  directives: [
-    CollectionFormComponent, InputBoxComponent, REACTIVE_FORM_DIRECTIVES,
-    ShowChartComponent
-  ]
 })
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private chartFormGroup: FormGroup;
@@ -177,7 +170,7 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   }
   private collectionFormGroupAdd(key: string) : FormGroup {
     this.chartFormGroup.addControl(
-      key, new FormGroup({}, null, this.formGroupValidator)
+      key, new FormGroup({}, this.formGroupValidator)
     );
     return (<FormGroup>this.chartFormGroup.controls[key]);
   }

@@ -6,11 +6,11 @@ import { SharedModule } from "../../shared.module";
 
 
 @NgModule({
-  imports:      [
-    FormsModule, ReactiveFormsModule,
-    SharedModule ],
+  imports: [
+    FormsModule, ReactiveFormsModule, SharedModule
+  ],
   declarations: [ SearchBoxComponent ],
   exports:      [ SearchBoxComponent ],
-  providers:    [ ]
+  providers: [ ]
 })
 export class SearchBoxModule { }

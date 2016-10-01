@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { Location }    from '@angular/common';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormGroup, ValidatorFn
+  FormGroup, ValidatorFn
 } from '@angular/forms';
 
 import {BehaviorSubject, Subscription } from 'rxjs/Rx';
@@ -11,20 +11,15 @@ import {BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { AppRoutingService } from "../../../../../shared/services/app-routing.service";
 import { Chart } from "../../../../../shared/models/Chart";
 import { ChartColl } from "../../../../../shared/models/ChartColl";
-import { ChartFormComponent } from "../../../../../shared/app-forms/chart-form/chart-form.component";
 import { ChartSrc_UserData } from "../../../../../shared/models/ChartSrc_UserData";
 import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.validator';
-import { InputBoxComponent } from "../../../../../shared/app-forms/input-box/input-box.component";
 import { UserDataService } from "../../../../../shared/services/user-data.service";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-chart-detail',
   templateUrl: 'chart-detail.component.html',
   styleUrls: ['chart-detail.component.css'],
-  directives: [
-    ChartFormComponent, InputBoxComponent, REACTIVE_FORM_DIRECTIVES,
-  ]
 })
 export class ChartDetailComponent
 implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
@@ -73,7 +68,7 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
     this.subFormGroupValid.unsubscribe();
   }
   private createFormGroup() : void {
-    this.formGroup = new FormGroup({}, null, this.formGroupValidator);
+    this.formGroup = new FormGroup({}, this.formGroupValidator);
     this.subFormGroupValid = this.formGroup.valueChanges.subscribe(
       () => this.obFormGroupValid.next(this.formGroup.valid)
     );
@@ -164,6 +159,6 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
   private setTitle() : void {
     this.title = (this.chartIdKeyword === 'New') ?
       'Insert data for the new chart' :
-      'Edit data for the chart "' + this.chart.name + '"';
+    'Edit data for the chart "' + this.chart.name + '"';
   }
 }

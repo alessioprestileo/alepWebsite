@@ -1,12 +1,20 @@
 import { NgModule }           from '@angular/core';
 
-import { SharedModule } from "../shared.module";
-import { NavigationComponent } from './navigation.component';
+import { FluidButtonsModule } from "../fluid-buttons/fluid-buttons.module";
+import { NavigationComponent } from "./navigation.component";
+import { SharedModule } from "../../shared/shared.module";
 
 @NgModule({
-  imports:      [ SharedModule ],
-  declarations: [ NavigationComponent ],
-  exports:      [ NavigationComponent ],
-  providers:    [ ]
+  imports: [
+    FluidButtonsModule,
+    SharedModule
+  ],
+  declarations: [
+    NavigationComponent,
+  ],
+  exports: [
+    NavigationComponent,
+  ],
+  providers: [ ]
 })
 export class NavigationModule { }

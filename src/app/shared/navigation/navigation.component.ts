@@ -2,15 +2,13 @@ import {Component, Input, OnInit } from '@angular/core';
 import { Observable }   from 'rxjs/Rx';
 
 import { NavButton } from '../models/NavButton';
-import { FluidButtonsComponent } from '../fluid-buttons/fluid-buttons.component';
 import { AppRoutingService } from '../services/app-routing.service';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-navigation',
   templateUrl: 'navigation.component.html',
-  styleUrls: ['navigation.component.css'],
-  directives: [ FluidButtonsComponent ]
+  styleUrls: ['navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
   @Input() buttonType: string = 'sections';

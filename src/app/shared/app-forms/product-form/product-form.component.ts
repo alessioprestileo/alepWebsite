@@ -2,14 +2,13 @@ import {
   Component, DoCheck, ElementRef, Input, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl, ValidatorFn, Validators
+  FormGroup, FormControl, ValidatorFn, Validators
 } from '@angular/forms';
 
 import { BehaviorSubject, Subscription } from 'rxjs/Rx';
 
 import { appArrayPopAt } from '../../appFunctions';
 import { formGroupValidator } from '../formGroup.validator';
-import { InputBoxComponent } from '../input-box/input-box.component';
 import { WarehouseProd }        from '../../models/WarehouseProd';
 
 class ExtraFieldsInfo {
@@ -45,11 +44,10 @@ class HierarchyInfo {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-product-form',
   templateUrl: 'product-form.component.html',
-  styleUrls: ['product-form.component.css'],
-  directives: [InputBoxComponent, REACTIVE_FORM_DIRECTIVES]
+  styleUrls: ['product-form.component.css']
 })
 export class ProductFormComponent
 implements DoCheck, OnDestroy, OnInit {
@@ -74,7 +72,7 @@ implements DoCheck, OnDestroy, OnInit {
   private obHierarchyForm: BehaviorSubject<any>;
   private subExtraFieldsForm: Subscription;
   private subHierarchyForm: Subscription;
-  private subImgSrcControl: Subscription;
+  // private subImgSrcControl: Subscription;
   private subNameControl: Subscription;
   private subPriceControl: Subscription;
   private subProdFormValid: Subscription;
@@ -106,10 +104,10 @@ implements DoCheck, OnDestroy, OnInit {
 
   private addFormControls() : void {
     this.prodFormGroup.addControl('extraFields', new FormGroup(
-      {}, null, this.formGroupValidator
+      {}, this.formGroupValidator
     ));
     this.prodFormGroup.addControl('hierarchy', new FormGroup(
-      {}, null, this.formGroupValidator
+      {}, this.formGroupValidator
     ));
     // this.prodFormGroup.addControl('imgSrc', new FormControl(
     //   this.product.imgSrc, null
@@ -290,9 +288,6 @@ implements DoCheck, OnDestroy, OnInit {
     }
   }
   public hierarchyPathRemove(index: number, label: string) : void {
-
-    console.log('index = ', index);
-
     this.hierarchyInfo.controls = appArrayPopAt<FormControl>(
       this.hierarchyInfo.controls, index
     );

@@ -8,11 +8,10 @@ import { DataSet } from "../../../../../models/DataSet";
 import { UserDataService } from '../../../../../services/user-data.service';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-from-user-data',
   templateUrl: 'from-user-data.component.html',
   styleUrls: ['from-user-data.component.css'],
-  directives: []
 })
 export class FromUserDataComponent
 implements DoCheck, OnDestroy, OnInit {

@@ -1,16 +1,15 @@
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { NgModule }           from '@angular/core';
 
 import { DataSetFormComponent } from "./dataset-form.component";
-import { SearchBoxModule } from "../../../search-box/search-box.module";
+import { FromWeatherDataModule } from "./from-weather-data/from-weather-data.module";
+import { FromUserDataModule } from "./from-user-data/from-user-data.module";
 import { SharedModule } from "../../../../shared.module";
 
 
 @NgModule({
-  imports:      [
-    FormsModule, ReactiveFormsModule,
-    SearchBoxModule,
-                  SharedModule ],
+  imports: [
+    FromWeatherDataModule, FromUserDataModule, SharedModule
+  ],
   declarations: [ DataSetFormComponent ],
   exports:      [ DataSetFormComponent ],
   providers:    [ ]

@@ -1,6 +1,6 @@
 import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup
+  FormControl, FormGroup
 } from '@angular/forms';
 
 import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
@@ -10,27 +10,18 @@ import { DataSetBasicHandler } from "./../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../models/DataSetFeedback";
 import { BHSrcsDataSetSrc_External } from "../../../../../models/BHSrcsDataSetSrc_External";
 import { ExternalService } from '../../../../../services/external.service';
-import { FromFieldComponent } from "./from-field/from-field.component";
-import { FromIdComponent } from "./from-id/from-id.component";
-import { FromTickerComponent } from "./from-ticker/from-ticker.component";
-import { RadioInputComponent } from "../../../../radio-input/radio-input.component";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-from-external',
   templateUrl: 'from-external.component.html',
   styleUrls: ['from-external.component.css'],
-  directives: [
-    FromFieldComponent, FromIdComponent, FromTickerComponent,
-    REACTIVE_FORM_DIRECTIVES, RadioInputComponent
-  ]
 })
 export class FromExternalComponent
 extends DataSetBasicHandler
 implements DoCheck, OnDestroy, OnInit {
   @Input() protected currentDataSet: DataSet;
   @Input() private formGroup: FormGroup;
-
   private collapseDataSetForm: boolean = false;
   protected dataSetSrcBloodhoundSrcs: BHSrcsDataSetSrc_External = {
     'Field': {
@@ -61,22 +52,22 @@ implements DoCheck, OnDestroy, OnInit {
     this.createObsAndSubs();
   }
   ngOnDestroy() {
+    this.removeControls();
     this.cancelSubs();
   }
   ngDoCheck() {
-
-    console.log('this.currentDataSet external = ', this.currentDataSet);
-
   }
 
   private addFormControls() : void {
     this.formGroup.addControl('dataSet-radio', new FormControl('option0'));
   }
-  private cancelSubs() : void {
+  private cancelControlsSubs() : void {
     this.subRadioControl.unsubscribe();
   }
-  private createObsAndSubs() : void {
-    this.obDataSetFeedback = new BehaviorSubject(new DataSetFeedback());
+  private cancelSubs() : void {
+    this.cancelControlsSubs();
+  }
+  private createControlsObsAndSubs() : void {
     this.obRadioSelection = new BehaviorSubject(
       this.formGroup.controls['dataSet-radio'].value
     );
@@ -85,14 +76,16 @@ implements DoCheck, OnDestroy, OnInit {
         (radioSelection: string) : void => {
           this.formGroup.updateValueAndValidity();
           this.obRadioSelection.next(radioSelection);
-          // this.currentDataSet.resetProps();
-          this.currentDataSet = new DataSet();
-          // this.previousDatSet.resetProps();
-          this.previousDatSet = new DataSet();
+          this.currentDataSet.resetProps();
+          this.previousDatSet.resetProps();
           this.resetDataSetSrcBloodhoundSrc();
           this.resetDataSetFeedback();
         }
       );
+  }
+  private createObsAndSubs() : void {
+    this.obDataSetFeedback = new BehaviorSubject(new DataSetFeedback());
+    this.createControlsObsAndSubs();
   }
   private isNewDataSetFeedback(dataSetFeedback: DataSetFeedback) : boolean {
     if (this.previousDatSet[dataSetFeedback.prop] !== dataSetFeedback.val) {
@@ -118,7 +111,12 @@ implements DoCheck, OnDestroy, OnInit {
       this.obDataSetFeedback.next(feedback);
     }
   }
+  private removeControls() : void {
+    this.formGroup.removeControl('dataSet-radio');
+  }
   private resetDataSetFeedback() : void {
-    this.obDataSetFeedback.next(new DataSetFeedback('resetProps', 'resetProps'));
+    this.obDataSetFeedback.next(
+      new DataSetFeedback('resetProps', 'resetProps')
+    );
   }
 }

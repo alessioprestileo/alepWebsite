@@ -3,14 +3,12 @@ import {
 } from '@angular/core';
 import { Location }    from '@angular/common';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl, ValidatorFn
+  FormGroup, ValidatorFn
 } from '@angular/forms';
 
 import { BehaviorSubject, Subscription } from 'rxjs/Rx';
 
 import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.validator';
-import { InputBoxComponent } from "../../../../../shared/app-forms/input-box/input-box.component";
-import { ProductFormComponent } from "../../../../../shared/app-forms/product-form/product-form.component";
 import { WarehouseProd }        from '../../../../../shared/models/WarehouseProd';
 import { WarehouseProdSrc } from "../../../../../shared/models/WarehouseProdSrc";
 import { WarehouseService } from '../../../../../shared/services/warehouse.service';
@@ -19,11 +17,10 @@ import {WarehouseDepSrc} from "../../../../../shared/models/WarehouseDepSrc";
 declare var jQuery: any;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-product-detail',
   templateUrl: 'product-detail.component.html',
   styleUrls: ['product-detail.component.css'],
-  directives: [InputBoxComponent, ProductFormComponent, REACTIVE_FORM_DIRECTIVES]
 })
 export class ProductDetailComponent
 implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
@@ -73,7 +70,7 @@ implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
     this.subFormGroupValid.unsubscribe();
   }
   private createFormGroup() : void {
-    this.formGroup = new FormGroup({}, null, this.formGroupValidator);
+    this.formGroup = new FormGroup({}, this.formGroupValidator);
   }
   private createObsAndSubs() : void {
     this.obFormGroupValid = new BehaviorSubject(false);

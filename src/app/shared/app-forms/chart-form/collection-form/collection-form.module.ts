@@ -1,4 +1,3 @@
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { NgModule }           from '@angular/core';
 
 import { DataSetFormModule } from "./dataset-form/dataset-form.module";
@@ -8,11 +7,9 @@ import { SharedModule } from "../../../shared.module";
 
 
 @NgModule({
-  imports:      [ DataSetFormModule,
-    FormsModule,
-    InputBoxModule,
-                  ReactiveFormsModule,
-    SharedModule ],
+  imports: [
+    DataSetFormModule, InputBoxModule, SharedModule
+  ],
   declarations: [ CollectionFormComponent ],
   exports:      [ CollectionFormComponent ],
   providers:    [ ]

@@ -7,21 +7,13 @@ import { Location }    from '@angular/common';
 import { Subscription }   from 'rxjs/Rx';
 
 import { AppRoutingService } from './shared/services/app-routing.service';
-import { ChartsNavComponent } from './routes/projects/charts/charts-nav/charts-nav.component'
 import { NavButton } from "./shared/models/NavButton";
-import { NavigationComponent } from './shared/navigation/navigation.component';
-import { SiteMapComponent } from './shared/site-map/site-map.component';
-import { WarehouseNavComponent } from './routes/projects/warehouse/warehouse-nav/warehouse-nav.component'
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [
-    ChartsNavComponent, NavigationComponent, SiteMapComponent,
-    WarehouseNavComponent
-  ]
 })
 export class AppComponent
 implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
@@ -107,8 +99,8 @@ implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
     headerHeight = document.getElementById("app-header").clientHeight;
     footerHeight = document.getElementById("app-footer").clientHeight;
     body = document.getElementById("app-body");
-    body.style.height = 0.97 * window.innerHeight - headerHeight -
-                                footerHeight + 'px';
+    body.style.height = window.innerHeight - headerHeight -
+      footerHeight + 'px';
     routerOutlet = document.getElementById("app-router-outlet");
     routerOutlet.style.height = body.style.height;
   }

@@ -4,15 +4,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {BehaviorSubject, Subscription }   from 'rxjs/Rx';
 
 import { DataSet } from "../../../../../models/DataSet";
-import { InputBoxComponent } from "../../../../input-box/input-box.component";
 import { WeatherService } from '../../../../../services/weather.service'
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-from-weather-data',
   templateUrl: 'from-weather-data.component.html',
-  styleUrls: ['from-weather-data.component.css'],
-  directives: [InputBoxComponent]
+  styleUrls: ['from-weather-data.component.css']
 })
 export class FromWeatherDataComponent
 implements DoCheck, OnDestroy, OnInit {

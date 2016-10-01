@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-sample-pie-chart',
   templateUrl: 'sample-pie-chart.component.html',
   styleUrls: ['sample-pie-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
 })
 export class SamplePieChartComponent implements OnInit {
   private pieChartLabels: string[];

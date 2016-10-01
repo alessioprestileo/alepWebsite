@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-sample-radar-chart',
   templateUrl: 'sample-radar-chart.component.html',
   styleUrls: ['sample-radar-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
 })
 export class SampleRadarChartComponent implements OnInit {
   private radarChartLabels: string[];

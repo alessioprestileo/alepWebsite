@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-sample-bar-chart',
   templateUrl: 'sample-bar-chart.component.html',
   styleUrls: ['sample-bar-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
 })
 export class SampleBarChartComponent implements OnInit {
   private barChartOptions: any;

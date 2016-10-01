@@ -10,14 +10,12 @@ import { DataSetSrc_External } from "../../../../../../models/DataSetSrc_Externa
 import { DataSetBasicHandler } from "../../DataSetBasicHandler";
 import { DataSetFeedback } from "../../../../../../models/DataSetFeedback";
 import { ExternalService } from "../../../../../../services/external.service";
-import { SearchBoxComponent } from '../../../../../search-box/search-box.component';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-from-field',
   templateUrl: 'from-field.component.html',
   styleUrls: ['from-field.component.css'],
-  directives: [SearchBoxComponent]
 })
 export class FromFieldComponent
 extends DataSetBasicHandler

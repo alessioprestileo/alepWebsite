@@ -1,12 +1,12 @@
 import { NgModule }           from '@angular/core';
 
-import { BaseChartModule } from "./base-chart.module";
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { SharedModule } from "../shared.module";
 import { ShowChartComponent } from './show-chart.component';
 
 @NgModule({
   imports:      [
-    BaseChartModule,
+    ChartsModule,
     SharedModule ],
   declarations: [ ShowChartComponent ],
   exports:      [ ShowChartComponent ],

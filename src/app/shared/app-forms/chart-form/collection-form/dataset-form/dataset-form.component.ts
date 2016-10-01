@@ -1,20 +1,17 @@
-import {Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators
+  Component, DoCheck, Input, OnDestroy, OnInit
+} from '@angular/core';
+import {
+  FormControl, FormGroup, Validators
 } from '@angular/forms';
 
 import { DataSet } from "../../../../models/DataSet";
-import { FromUserDataComponent } from './from-user-data/from-user-data.component'
-import { FromWeatherDataComponent } from "./from-weather-data/from-weather-data.component";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-dataset-form',
   templateUrl: 'dataset-form.component.html',
   styleUrls: ['dataset-form.component.css'],
-  directives: [
-    FromUserDataComponent, FromWeatherDataComponent, REACTIVE_FORM_DIRECTIVES
-  ]
 })
 export class DataSetFormComponent
 implements DoCheck, OnDestroy, OnInit {

@@ -1,14 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 
-import { NavigationComponent } from "../../../../shared/navigation/navigation.component";
 import { NavButton } from "../../../../shared/models/NavButton";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-charts-nav',
   templateUrl: 'charts-nav.component.html',
-  styleUrls: ['charts-nav.component.css'],
-  directives: [NavigationComponent]
+  styleUrls: ['charts-nav.component.css']
 })
 export class ChartsNavComponent implements OnInit {
   private navInput: any[];

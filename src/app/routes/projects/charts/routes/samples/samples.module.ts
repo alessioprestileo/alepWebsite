@@ -1,24 +1,30 @@
 import { NgModule }           from '@angular/core';
 
-import { ROUTING } from "./samples.routing";
-import { SampleBarChartComponent }   from './sample-bar-chart/sample-bar-chart.component';
-import { SampleDoughnutChartComponent }   from './sample-doughnut-chart/sample-doughnut-chart.component';
-import { SampleDynamicChartComponent }   from './sample-dynamic-chart/sample-dynamic-chart.component';
-import { SampleLineChartComponent }   from './sample-line-chart/sample-line-chart.component';
-import { SamplePieChartComponent }   from './sample-pie-chart/sample-pie-chart.component';
-import { SamplePlotAreaChartComponent }   from './sample-polar-area-chart/sample-polar-area-chart.component';
-import { SampleRadarChartComponent }   from './sample-radar-chart/sample-radar-chart.component';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { SampleBarChartModule }   from './sample-bar-chart/sample-bar-chart.module';
+import { SampleDoughnutChartModule }   from './sample-doughnut-chart/sample-doughnut-chart.module';
+import { SampleDynamicChartModule }   from './sample-dynamic-chart/sample-dynamic-chart.module';
+import { SampleLineChartModule }   from './sample-line-chart/sample-line-chart.module';
+import { SamplePieChartModule }   from './sample-pie-chart/sample-pie-chart.module';
+import { SamplePolarAreaChartModule }   from './sample-polar-area-chart/sample-polar-area-chart.module';
+import { SampleRadarChartModule }   from './sample-radar-chart/sample-radar-chart.module';
 import { SamplesComponent }   from './samples.component';
 import { SharedModule } from "../../../../../shared/shared.module";
-import { BaseChartModule } from "../../../../../shared/show-chart/base-chart.module";
+
 
 @NgModule({
-  imports:      [ BaseChartModule, ROUTING, SharedModule ],
-  declarations: [ SampleBarChartComponent, SampleDoughnutChartComponent,
-                  SampleDynamicChartComponent, SampleLineChartComponent,
-                  SamplePieChartComponent, SamplePlotAreaChartComponent,
-                  SampleRadarChartComponent, SamplesComponent ],
-  exports:      [ ],
-  providers:    [ ]
+  imports: [
+    ChartsModule, SampleBarChartModule, SampleDoughnutChartModule,
+    SampleDynamicChartModule, SampleLineChartModule,
+    SamplePieChartModule, SamplePolarAreaChartModule,
+    SampleRadarChartModule, SharedModule
+  ],
+  declarations: [
+    SamplesComponent
+  ],
+  exports: [
+    SamplesComponent
+  ],
+  providers: [ ]
 })
 export class SamplesModule { }

@@ -7,7 +7,7 @@ import {ChartColl} from "../models/ChartColl";
 import {DataSet} from "../models/DataSet";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-show-chart',
   templateUrl: 'show-chart.component.html',
   styleUrls: ['show-chart.component.css']
@@ -110,7 +110,7 @@ export class ShowChartComponent implements DoCheck, OnDestroy, OnInit {
       }
       let dataPoint: Object = {
         data: data,
-        label: this.chart.collections[i].dataSet.field
+        label: this.chart.collections[i].name
       };
       this.chartData.push(dataPoint);
     }

@@ -3,7 +3,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, FormControlDirective,
+  FormControl, FormGroup, FormControlDirective,
   Validators
 } from '@angular/forms';
 
@@ -11,11 +11,10 @@ declare var jQuery: any;
 declare var Bloodhound: any;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-search-box',
   templateUrl: 'search-box.component.html',
-  styleUrls: ['search-box.component.css'],
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  styleUrls: ['search-box.component.css']
 })
 export class SearchBoxComponent implements OnDestroy, OnInit {
   @Input() private formControlKey: string;

@@ -7,11 +7,10 @@ import { WarehouseService } from '../../../../../shared/services/warehouse.servi
 declare var jQuery: any;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
 	selector: 'app-departments',
 	templateUrl: 'departments.component.html',
 	styleUrls: ['departments.component.css'],
-	directives: []
 })
 
 export class DepartmentsComponent implements OnDestroy, OnInit {

@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-sample-doughnut-chart',
   templateUrl: 'sample-doughnut-chart.component.html',
   styleUrls: ['sample-doughnut-chart.component.css'],
-  directives: [CHART_DIRECTIVES]
 })
 export class SampleDoughnutChartComponent implements OnInit {
   private doughnutChartLabels: string[];

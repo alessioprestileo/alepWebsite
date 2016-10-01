@@ -1,13 +1,12 @@
 import {
-  AfterViewChecked, Component, DoCheck, EventEmitter, HostListener, Inject, OnDestroy,
-  OnInit,
+  AfterViewChecked, Component, DoCheck, EventEmitter, HostListener, Inject,
+  OnDestroy, OnInit,
 } from '@angular/core';
 import { Location }    from '@angular/common';
 
 import { Subscription }   from 'rxjs/Rx';
 
 import { AppRoutingService } from '../../../../../shared/services/app-routing.service';
-import { DataTableComponent } from '../../../../../shared/data-table/data-table.component';
 import { HeaderEntry, TableInput } from '../../../../../shared/models/table-input-classes';
 import { WarehouseDep } from "../../../../../shared/models/WarehouseDep";
 import { WarehouseProd } from '../../../../../shared/models/WarehouseProd';
@@ -17,11 +16,10 @@ import { WarehouseService } from '../../../../../shared/services/warehouse.servi
 declare var jQuery: any;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-products',
   templateUrl: 'products.component.html',
   styleUrls: ['products.component.css'],
-  directives: [DataTableComponent]
 })
 export class ProductsComponent
 implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
@@ -73,15 +71,6 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
   ngDoCheck() {
   }
 
-  public addProduct() : void {
-    let link: string[] = [
-      '/' + this.ROUTES_DICT.PROJECTS +
-      '/' + this.ROUTES_DICT.WAREHOUSE +
-      '/' + this.ROUTES_DICT.PRODUCTS_DETAIL,
-      'New'
-    ];
-    this.appRoutingService.navigate(link);
-  }
   private buildTableInput(isMobile: boolean) : void {
     let headers: Array<HeaderEntry>;
     if (isMobile) {
@@ -113,7 +102,16 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
       () => this.checkMobileAndBuildTableInput()
     );
   }
-  public editProduct(product: WarehouseProd) : void {
+  public onAddProduct() : void {
+    let link: string[] = [
+      '/' + this.ROUTES_DICT.PROJECTS +
+      '/' + this.ROUTES_DICT.WAREHOUSE +
+      '/' + this.ROUTES_DICT.PRODUCTS_DETAIL,
+      'New'
+    ];
+    this.appRoutingService.navigate(link);
+  }
+  public onEditProduct(product: WarehouseProd) : void {
     let link: string[] = [
       '/' + this.ROUTES_DICT.PROJECTS +
       '/' + this.ROUTES_DICT.WAREHOUSE +
@@ -122,17 +120,17 @@ implements AfterViewChecked, DoCheck, OnInit, OnDestroy {
     ];
     this.appRoutingService.navigate(link);
   }
-  private removeDarkBackground() {
-    jQuery("#app-router-outlet").addClass("backgroundLight");
-    jQuery("#app-router-outlet").removeClass("backgroundDark");
-  }
-  public removeProduct(product: WarehouseProd) : void {
+  public onRemoveProduct(product: WarehouseProd) : void {
     this.warehouseService.deleteItem('products', product.id).then(
       () => {
         this.products = this.products.filter(p => p !== product);
         this.updateTableInput();
       }
     );
+  }
+  private removeDarkBackground() {
+    jQuery("#app-router-outlet").addClass("backgroundLight");
+    jQuery("#app-router-outlet").removeClass("backgroundDark");
   }
   private setDarkBackground() {
     jQuery("#app-router-outlet").addClass("backgroundDark");

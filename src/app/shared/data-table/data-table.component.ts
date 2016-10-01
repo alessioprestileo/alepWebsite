@@ -1,16 +1,12 @@
 import {
   Component, EventEmitter, Input, Output,
 } from '@angular/core';
-import { DatePipe } from "@angular/common";
-import { DataTableDirectives } from 'angular2-datatable/datatable';
 import { TableInput } from "../models/table-input-classes";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-data-table',
   templateUrl: 'data-table.component.html',
-  directives: [DataTableDirectives],
-  pipes: [DatePipe]
 })
 
 export class DataTableComponent {

@@ -1,4 +1,3 @@
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import {NgModule}           from '@angular/core';
 
 import { ChartFormComponent } from "./chart-form.component";
@@ -8,13 +7,8 @@ import { SharedModule } from "../../shared.module";
 import { ShowChartModule } from "../../show-chart/show-chart.module";
 
 @NgModule({
-  imports:      [
-    // CollectionFormModule,
-    // FormsModule,
-    // InputBoxModule,
-    // ReactiveFormsModule,
-    SharedModule,
-    ShowChartModule
+  imports: [
+    CollectionFormModule, InputBoxModule, SharedModule, ShowChartModule
   ],
   declarations: [ ChartFormComponent ],
   exports:      [ ChartFormComponent ],

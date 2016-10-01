@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-site-map',
   templateUrl: 'site-map.component.html',
   styleUrls: ['site-map.component.css']

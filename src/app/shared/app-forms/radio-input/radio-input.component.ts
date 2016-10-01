@@ -4,7 +4,7 @@ import { FormControl } from "@angular/forms";
 declare var jQuery: any;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-radio-input',
   templateUrl: 'radio-input.component.html',
   styleUrls: ['radio-input.component.css']

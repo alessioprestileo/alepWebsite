@@ -1,6 +1,6 @@
+import { BHSrcsDataSetSrc_External } from "../../../../models/BHSrcsDataSetSrc_External";
 import { DataSetSrc_External } from "../../../../models/DataSetSrc_External";
 import { DataSetFeedback } from "../../../../models/DataSetFeedback";
-import { BHSrcsDataSetSrc_External } from "../../../../models/BHSrcsDataSetSrc_External";
 import { ExternalService } from '../../../../services/external.service';
 
 export class DataSetBasicHandler {
@@ -34,7 +34,7 @@ export class DataSetBasicHandler {
     return this.externalService.getUniquePropertyValues('Ticker').then(
       (uniqueTickers: string[]) : Promise<void> => {
         this.dataSetSrcBloodhoundSrcs.Ticker.defaultSource = uniqueTickers;
-        return this.externalService.getUniquePropertyValues('Field').then(
+        return this.externalService.getUniquePropertyValues('field').then(
           (uniqueFields: string[]) : Promise<void> => {
             this.dataSetSrcBloodhoundSrcs.Field.defaultSource = uniqueFields;
             return this.externalService.getUniquePropertyValues('Id').then(

@@ -7,16 +7,14 @@ import { Subscription }   from 'rxjs/Rx';
 import { Chart } from '../../../../../../shared/models/Chart'
 import { ChartSrc_UserData } from "../../../../../../shared/models/ChartSrc_UserData";
 import { AppRoutingService } from '../../../../../../shared/services/app-routing.service'
-import { DataTableComponent } from "../../../../../../shared/data-table/data-table.component";
 import { HeaderEntry, TableInput } from '../../../../../../shared/models/table-input-classes'
 import { UserDataService } from '../../../../../../shared/services/user-data.service'
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-user-charts',
   templateUrl: 'user-charts.component.html',
   styleUrls: ['user-charts.component.css'],
-  directives: [DataTableComponent]
 })
 export class UserChartsComponent implements OnDestroy, OnInit {
   @HostListener('window:resize', ['$event'])

@@ -10,14 +10,12 @@ import { DataSetSrc_External } from "../../../../../../models/DataSetSrc_Externa
 import { DataSetFeedback } from "../../../../../../models/DataSetFeedback";
 import { DataSetBasicHandler } from "../../DataSetBasicHandler";
 import { ExternalService } from "../../../../../../services/external.service";
-import { SearchBoxComponent } from '../../../../../search-box/search-box.component';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-from-id',
   templateUrl: 'from-id.component.html',
   styleUrls: ['from-id.component.css'],
-  directives: [SearchBoxComponent]
 })
 export class FromIdComponent
 extends DataSetBasicHandler

@@ -1,14 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 
-import { NavigationComponent } from "../../../../shared/navigation/navigation.component";
 import { NavButton } from "../../../../shared/models/NavButton";
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,
   selector: 'app-warehouse-nav',
   templateUrl: 'warehouse-nav.component.html',
   styleUrls: ['warehouse-nav.component.css'],
-  directives: [NavigationComponent]
 })
 export class WarehouseNavComponent implements OnInit {
   private navInput: any[];
