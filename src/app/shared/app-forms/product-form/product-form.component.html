@@ -1,47 +1,45 @@
-<div class="container-fluid">
-  <form>
-    <div class="container-fluid"
-         style="padding-left: 0;
-                padding-right: 0">
-      <div class="row">
+<form>
+  <div class="container-fluid app-general">
+    <div class="row">
+      <div class="col-xs-12">
         <app-input-box [label]="'Name:'"
                        [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['name']">
         </app-input-box>
       </div>
-      <br>
-      <div class="row">
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-12">
         <app-input-box [label]="'Price:'"
                        [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['price']">
         </app-input-box>
       </div>
-      <br>
-      <div class="row">
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-12">
         <app-input-box [label]="'Quantity:'"
                        [labelCssClass]="'app-input-box-label-white'"
                        [inFormControl]="prodFormGroup.controls['quantity']">
         </app-input-box>
       </div>
-      <!--<br>-->
-      <!--<div class="row">-->
+    </div>
+    <!--<br>-->
+    <!--<div class="row">-->
+      <!--<div class="col-xs-12">-->
         <!--<app-input-box [label]="'Image source:'"-->
                        <!--[labelCssClass]="'app-input-box-label-white'"-->
                        <!--[inFormControl]="prodFormGroup.controls['imgSrc']">-->
         <!--</app-input-box>-->
       <!--</div>-->
-      <br>
-    </div>
-    <div class="container-fluid"
-         style="border: 2px solid #d1b394;
-                border-radius: 48px;
-                margin-bottom: 15px;
-                margin-left: -30px;
-                margin-right: -30px;
-                padding-bottom: 15px;
-                padding-top: 15px">
+    <!--</div>-->
+  </div>
+  <div class="app-bordered">
+    <div class="container-fluid app-hierarchy">
       <div class="row">
-        <div class="col-xs-6"
+        <div class="col-xs-7"
              (click)="collapseHierarchy = !collapseHierarchy"
              style="cursor: pointer">
           <span [ngClass]="collapseHierarchy ?
@@ -52,27 +50,24 @@
           </span>
           <label class="app-input-box-label-white"
                  style="cursor: pointer;
-                        padding-left: 7px;
                         text-decoration: underline">
             Departments:
           </label>
         </div>
-        <div class="col-xs-6"
+        <div class="col-xs-5"
              style="text-align: right">
-          <button type="button" class="btn btn-default"
-                  style="border-radius: 16px;
-                         outline: 0"
+          <button type="button" class="btn btn-default app-btn"
                   (click)="onHierarchyPathAdd()">
             New path
           </button>
         </div>
       </div>
-      <div [hidden]="collapseHierarchy">
-        <div style="padding-left: 20px;">
-          <div *ngFor="let control of hierarchyInfo.controls;
-                       let index = index"
-               style="margin-bottom: 15px;
-                      padding: 15px 15px;">
+      <div class="container-fluid app-paths">
+        <div class="row app-row"
+             [hidden]="collapseHierarchy"
+             *ngFor="let control of hierarchyInfo.controls;
+                     let index = index">
+          <div class="col-sm-9">
             <app-input-box
               [label]="hierarchyInfo.pathsLabel + ' ' +
                        (index + 1).toString() + ':'"
@@ -82,14 +77,13 @@
                 "'Insert ' + hierarchyInfo.pathsLabel.toLocaleLowerCase() +
                  ' ' + (index + 1).toString()">
             </app-input-box>
-            <div style="margin-top: 10px;
-                        text-align: right">
+          </div>
+          <div class="col-sm-3">
+            <div style="text-align: right">
               <button
                 *ngIf="hierarchyPathsCount > 1"
-                type="button" class="btn btn-default"
-                (click)="onHierarchyPathRemove(index)"
-                style="border-radius: 16px;
-                             outline: 0;">
+                type="button" class="btn btn-default app-btn app-remove-btn"
+                (click)="onHierarchyPathRemove(index)">
                 Remove path
               </button>
             </div>
@@ -97,16 +91,11 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid"
-         style="border: 2px solid #d1b394;
-                border-radius: 48px;
-                margin-bottom: 15px;
-                margin-left: -30px;
-                margin-right: -30px;
-                padding-bottom: 15px;
-                padding-top: 15px">
+  </div>
+  <div class="app-bordered">
+    <div class="container-fluid app-extra-fields">
       <div class="row">
-        <div class="col-xs-6"
+        <div class="col-xs-7"
              (click)="collapseExtraFields = !collapseExtraFields"
              style="cursor: pointer">
             <span [ngClass]="collapseExtraFields ?
@@ -117,80 +106,72 @@
             </span>
           <label class="app-input-box-label-white"
                  style="cursor: pointer;
-                        padding-left: 7px;
                         text-decoration: underline">
             Extra fields:
           </label>
         </div>
-        <div class="col-xs-6"
-             style="text-align: right">
-          <button type="button" class="btn btn-default"
-                  style="border-radius: 16px;
-                           outline: 0"
+        <div class="col-xs-5"
+             style="padding-left: 0;
+                    text-align: right">
+          <button type="button" class="btn btn-default app-btn"
                   (click)="addingExtraField = true">
             New extra field
           </button>
         </div>
       </div>
-      <div [hidden]="collapseExtraFields">
-        <div style="padding-left: 20px;">
-          <div *ngFor="let fieldName of extraFieldsInfo.fieldsNames;
-                         let index = index"
-               style="margin-bottom: 15px;
-                      padding: 15px 15px;">
+      <div class="container-fluid app-fields"
+           [hidden]="collapseExtraFields">
+        <div class="row app-row"
+             *ngFor="let fieldName of extraFieldsInfo.fieldsNames;
+                       let index = index">
+          <div class="col-sm-9">
             <app-input-box
               [label]="fieldName + ':'"
               [labelCssClass]="'app-input-box-label-white'"
               [inFormControl]="extraFieldsInfo.controls[index]">
             </app-input-box>
-            <div style="margin-top: 10px;
-                        text-align: right">
+          </div>
+          <div class="col-sm-3">
+            <div style="text-align: right">
               <button
-                type="button" class="btn btn-default"
-                (click)="onExtraFieldRemove(index)"
-                style="border-radius: 16px;
-                               outline: 0;">
+                type="button" class="btn btn-default app-btn app-remove-btn"
+                (click)="onExtraFieldRemove(index)">
                 Remove extra field
               </button>
             </div>
           </div>
-          <div *ngIf="addingExtraField"
-               class="container-fluid">
-            <label class="app-input-box-label-white"
-                   style="text-align: center; width: 100%;">
-              Enter name for the new extra field:
-            </label>
-            <div class="row" style="margin-bottom: 15px">
-              <div class="col-sm-offset-4 col-sm-4">
-                <input #newExtraFieldName
-                       style="border-radius: 8px;
-                              height: 30px;
-                              outline: 0;
-                              padding-left: 15px;
-                              width: 100%">
-              </div>
+        </div>
+        <div class="container-fluid app-new-extra-field"
+             *ngIf="addingExtraField">
+          <label class="app-input-box-label-white"
+                 style="text-align: center;
+                        width: 100%;">
+            Enter name for the new extra field:
+          </label>
+          <div class="row" style="margin-bottom: 2rem">
+            <div class="col-sm-offset-4 col-sm-4 app-input-box"
+                 style="text-align: center">
+              <input #newExtraFieldName>
             </div>
-            <div class="row">
-              <div class="col-sm-offset-4 col-sm-4">
-                <div class="row">
-                  <div class="col-xs-6">
-                    <button
-                      type="button" class="btn btn-default"
-                      (click)="onExtraFieldAdd()"
-                      style="border-radius: 16px;
-                             outline: 0; width: 100%;">
-                      Ok
-                    </button>
-                  </div>
-                  <div class="col-xs-6">
-                    <button
-                      type="button" class="btn btn-default"
-                      (click)="addingExtraField = false"
-                      style="border-radius: 16px;
-                             outline: 0;  width: 100%;">
-                      Cancel
-                    </button>
-                  </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-offset-4 col-sm-4">
+              <div class="row">
+                <div class="col-xs-6">
+                  <button
+                    type="button" class="btn btn-default app-btn"
+                    (click)="onExtraFieldAdd()"
+                    style="width: 100%">
+                    Ok
+                  </button>
+                </div>
+                <div class="col-xs-6">
+                  <button
+                    type="button" class="btn btn-default app-btn"
+                    (click)="addingExtraField = false"
+                    style="width: 100%">
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -198,5 +179,5 @@
         </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+</form>

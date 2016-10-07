@@ -8,6 +8,13 @@
   margin-left: 5%;
   margin-right: 5%;
 }
+.app-container-slide-open {
+  background-color: white;
+  margin-top: -1px;
+  padding: 1rem 2rem;
+  text-align: center;
+  width: 100%;
+}
 .app-slideContainer {
   margin: 10% 10%;
 }
@@ -15,6 +22,21 @@
   cursor: default;
   background-color: white;
 }
-.app-slideTitle:hover {
-  background-color: #ffb3b3;
+@media (max-width: 767px) {
+  .app-carousel {
+    width: 100%;
+    margin-left: 0;
+    padding: 0;
+  }
+  .app-carousel-background {
+    background-color: #d6e0f5;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .app-slideContainer {
+    margin: 10% 10%;
+  }
+  .container-fluid {
+    padding: 0;
+  }
 }

@@ -3,7 +3,7 @@
     <div #carousel>
       <div *ngFor="let slide of slides">
         <div class="app-slideContainer">
-          <div class="app-slideTitle" (click)="onSlideClicked(slide.link)">
+          <div class="app-slideTitle">
             <h2 style="margin-bottom: -1px;
                        text-align: center">
               {{slide.label}}
@@ -13,6 +13,12 @@
                style="text-align: center;
                       vertical-align: middle;
                       width: 100%">
+          <div class="app-container-slide-open">
+            <button class="btn btn-default app-btn"
+                    (click)="onSlideClicked(slide.link)">
+              open
+            </button>
+          </div>
         </div>
       </div>
     </div>

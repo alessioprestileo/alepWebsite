@@ -15,10 +15,7 @@
                                        hasSuccess(boxControl)}"
            style="margin-bottom: 0">
         <input #box #boxControl="ngForm" [formControl]="inFormControl"
-               type="text" class="form-control"
-               style="border-radius: 8px;
-                      height: 30px;
-                      width: 100%">
+               type="text" class="app-input-box">
         <span [ngClass]="{
               'glyphicon form-control-feedback':
                   hasError(boxControl) || hasSuccess(boxControl),

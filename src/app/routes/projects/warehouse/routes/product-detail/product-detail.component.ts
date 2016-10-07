@@ -133,12 +133,12 @@ implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
     );
   }
   private removeDarkBackground() {
-    jQuery("#app-router-outlet").addClass("backgroundLight");
-    jQuery("#app-router-outlet").removeClass("backgroundDark");
+    jQuery("#app-router-outlet").addClass("app-backgroundLight");
+    jQuery("#app-router-outlet").removeClass("app-backgroundDark");
   }
   private setDarkBackground() {
-    jQuery("#app-router-outlet").addClass("backgroundDark");
-    jQuery("#app-router-outlet").removeClass("backgroundLight");
+    jQuery("#app-router-outlet").addClass("app-backgroundDark");
+    jQuery("#app-router-outlet").removeClass("app-backgroundLight");
   }
   private setIdKeyword(url: string) : void {
     let split: string[] = url.split('/');

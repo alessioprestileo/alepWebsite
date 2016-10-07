@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row" style="margin-bottom: 10px">
+  <div class="row" style="margin-bottom: 1rem">
     <div class="col-sm-4">
       <label [ngClass]="labelCssClass ? labelCssClass : labelDefaultCssClass">
         {{label || targetProperty}}:
@@ -14,10 +14,7 @@
         <div #searchBox class="app-searchBox" style="width: 100%;">
           <input #box #boxControl="ngForm" [formControl]="boxFormControl"
                  type="text" placeholder="Search"
-                 class="form-control typeahead"
-                 style="border-radius: 8px;
-                        height: 30px;
-                        width: 100%">
+                 class="form-control typeahead app-input-box">
           <span [ngClass]="{
                 'glyphicon form-control-feedback':
                     hasError(boxControl) || hasSuccess(boxControl),

@@ -1,14 +1,12 @@
 <div class="container-fluid">
   <div class="row" *ngFor="let row of labels">
-    <div *ngFor="let label of row, let first=first">
-      <div [ngClass]="first ? styleColumnClassOffset : styleColumnClass">
-        <div [ngClass]=buttonType>
-          <div	class="fluidButton"
-            [ngClass]="{'isSelected': (selectedLabel | async) === label}"
-            (click)="onSelected(label)">{{label}}
-          </div>
-        </div>
-      </div>
+    <div *ngFor="let label of row, let first=first"
+         [ngClass]="first ? styleColumnClassOffset : styleColumnClass">
+      <button	[class]="'app-fluidButton ' + buttonType"
+              [ngClass]="{'isSelected': (selectedLabel | async) === label}"
+              (click)="onSelected(label)">
+        {{label}}
+      </button>
     </div>
   </div>
 </div>

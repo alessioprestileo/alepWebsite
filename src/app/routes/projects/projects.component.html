@@ -1,13 +1,15 @@
-<div>
-  <div>
-    Here you can check out the latest Angular 2 projects I've been working on.
-    These are samples that I adapted to be displayed on the website; if you
-    want to see the complete source code, go to
-    <a href="https://github.com/alessioprestileo">
-    my GitHub page</a>.
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="intro">
+        Here you can check out the latest Angular 2 projects I've been working on.
+        These are samples that I adapted to be displayed on the website; if you
+        want to see the complete source code, go to
+        <a href="https://github.com/alessioprestileo">
+        my GitHub page</a>.
+      </div>
+    </div>
   </div>
-  <br>
-  <br>
   <app-carousel [slides]="carouselSlides"
                 (slideClickedEmitter)="onSelectedProject($event)">
   </app-carousel>

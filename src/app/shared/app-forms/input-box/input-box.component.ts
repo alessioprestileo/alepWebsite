@@ -19,6 +19,7 @@ export class InputBoxComponent implements DoCheck, OnInit {
   @ViewChild("box") private box: ElementRef;
 
   private labelDefaultCssClass: string = 'app-input-box-label';
+  private prevPlaceHolder: string = this.placeHolder;
 
   constructor() {}
 
@@ -26,6 +27,10 @@ export class InputBoxComponent implements DoCheck, OnInit {
     this.setPlaceHolder();
   }
   ngDoCheck() {
+    if (this.placeHolder !== this.prevPlaceHolder) {
+      this.prevPlaceHolder = this.placeHolder;
+      this.setPlaceHolder();
+    }
   }
 
   public hasError(reference: FormControlDirective) : boolean {

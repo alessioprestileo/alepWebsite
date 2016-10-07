@@ -1,3 +1,15 @@
+.app-bordered {
+  border: 2px solid #d1b394;
+  border-radius: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+button.btn.btn-default.app-btn {
+  border-radius: 2rem;
+  outline: 0;
+  width: 100%;
+}
 h2 {
   text-align: center;
   margin-bottom: 2%;
@@ -31,6 +43,14 @@ button:hover {
 }
 button:disabled {
   background-color: #eee;
-  color: #ccc; 
+  color: #ccc;
   cursor: auto;
+}
+@media (max-width: 767px) {
+  .app-bordered {
+    border: none;
+  }
+  .app-frame {
+    padding: 0 0.5rem;
+  }
 }

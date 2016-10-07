@@ -1,51 +1,61 @@
-<div class="background animated fadeIn">
-  <header id="app-header"
-          style="padding-bottom: 10px">
-    <div id="app-main-routes">
-      <h1 style="margin-bottom: 10px;
-                 margin-top: 0px;
-                 padding-top: 15px;">
-        {{title}}
-      </h1>
-      <div [hidden]="currentUrl.split('/').length > 2">
-        <app-navigation [columnsPerSec]="navInput[2]"
-                        [elements]="navInput[1]"
-                        [navLevel]="navInput[0]"
-                        [sectionsPerRow]="navInput[3]">
-        </app-navigation>
+<div class="app-background animated fadeIn">
+  <header id="app-header">
+    <h1>
+      {{title}}
+    </h1>
+    <div id="app-navigation"
+         [hidden]="!showNavigation">
+      <div id="app-main-routes">
+        <div [hidden]="currentUrl.split('/').length > 2">
+          <app-navigation [columnsPerSec]="navInput[2]"
+                          [elements]="navInput[1]"
+                          [navLevel]="navInput[0]"
+                          [sectionsPerRow]="navInput[3]">
+          </app-navigation>
+        </div>
+      </div>
+      <div id="app-projects-charts"
+           *ngIf="siteMapInput[0][0] === 'Projects' &&
+                  siteMapInput[0][1] === 'Charts'">
+        <h2>
+          {{projectTitles[0]}}
+        </h2>
+        <app-charts-nav>
+        </app-charts-nav>
+      </div>
+      <div id="app-projects-warehouse"
+           *ngIf="siteMapInput[0][0] === 'Projects' &&
+                  siteMapInput[0][1] === 'Warehouse'">
+        <h2>
+          {{projectTitles[1]}}
+        </h2>
+        <app-warehouse-nav>
+        </app-warehouse-nav>
       </div>
     </div>
-    <div id="app-projects-charts"
-         *ngIf="siteMapInput[0][0] === 'Projects' &&
-                siteMapInput[0][1] === 'Charts'">
-      <h2 style="color: #666666;">
-        {{projectTitles[0]}}
-      </h2>
-      <app-charts-nav>
-      </app-charts-nav>
-    </div>
-    <div id="app-projects-warehouse"
-         *ngIf="siteMapInput[0][0] === 'Projects' &&
-                siteMapInput[0][1] === 'Warehouse'">
-      <h2 style="color: #666666;">
-        {{projectTitles[1]}}
-      </h2>
-      <app-warehouse-nav>
-      </app-warehouse-nav>
+    <div class="container-fluid app-navigation-button-container">
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8">
+          <button class="btn btn-default app-btn"
+                  (click)="showNavigation = !showNavigation">
+            {{showNavigation ? 'hide navigation' : 'show navigation'}}
+            <span class="glyphicon glyphicon-chevron-up"
+                  *ngIf="showNavigation">
+            </span>
+            <span class="glyphicon glyphicon-chevron-down"
+                  *ngIf="!showNavigation">
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
   <div id="app-body">
-    <div class="container-fluid">
+    <div class="container-fluid app-router-container">
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <div id="app-router-outlet"
-               class="backgroundLight"
-               style="border: 2px groove;
-                      border-radius: 32px;
-                      overflow-y: auto;
-                      padding-left: 2.5%;
-                      padding-right: 2.5%;
-                      padding-top: 10px">
+               class="app-backgroundLight">
             <router-outlet>
             </router-outlet>
           </div>
@@ -53,21 +63,20 @@
       </div>
     </div>
   </div>
-  <footer id='app-footer'
-          style="margin-bottom: 0px;
-                 padding-top: 10px;">
+  <footer id='app-footer'>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-xs-2">
-          <a (click)="onHomeButtonClicked()">
+        <div class="col-sm-2 homeLink">
+          <button class="btn btn-default app-button-home"
+                  (click)="onHomeButtonClicked()">
             Home
-          </a>
+          </button>
         </div>
-        <div class="col-xs-9 col-xs-offset-1">
-          <app-site-map [labels]="siteMapInput[0]"
+        <div class="col-sm-offset-1 col-sm-9">
+          <app-site-map class="siteMap"
+                        [labels]="siteMapInput[0]"
                         [links]="siteMapInput[1]"
-                        (navEmitter)="onSiteMapClick($event)"
-                        style="text-align: right">
+                        (navEmitter)="onSiteMapClick($event)">
           </app-site-map>
         </div>
       </div>

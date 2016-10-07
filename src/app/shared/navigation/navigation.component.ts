@@ -13,7 +13,7 @@ import { AppRoutingService } from '../services/app-routing.service';
 export class NavigationComponent implements OnInit {
   @Input() buttonType: string = 'sections';
   @Input() private elements: NavButton[];
-  @Input() private columnsPerSec: number; // Use even number!
+  @Input() private columnsPerSec: number;
   @Input() private navLevel: number;
   @Input() private sectionsPerRow: number;
 

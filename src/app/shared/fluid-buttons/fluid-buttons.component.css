@@ -1,75 +1,73 @@
-.fluidButton {
+.app-fluidButton {
   background-color: #607D8B;
   border: 2px groove;
-  border-radius: 10px;
+  border-radius: 1.5rem;
   color: #eee;
-  margin-bottom: 5%;
-  padding: 30px;
+  outline: 0;
+  width: 100%;
+}
+.app-fluidButton-content {
+  height: 100%;
+  margin: -3px -8px;
+  width: 100%;
+}
+.app-fluidButton.departments {
+  background-color: #607D8B;
+  border-radius: 1.5rem;
+  color: #eee;
+  margin-top: 1rem;
+  padding: 3rem 1.5rem;
   text-align: center;
   width: 100%;
 }
-.fluidButton:hover {
+.app-fluidButton.departments:hover {
   background-color: #CFD8DC;
   cursor: default;
   color: black;
 }
-.fluidButton.isSelected {
+.app-fluidButton.departments.isSelected{
   background-color: #ffb3b3;
   color: black;
 }
-.sections .fluidButton {
+.app-fluidButton:hover {
+  background-color: #CFD8DC;
+  cursor: default;
+  color: black;
+}
+.app-fluidButton.isSelected {
+  background-color: #ffb3b3;
+  color: black;
+}
+.app-fluidButton.sections {
+  background-color: #eee;
+  border-radius: 1.5rem;
+  color: #039be5;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.5rem;
   text-align: center;
   width: 100%;
-  padding: 3% 2%;
-  text-decoration: none;
-  font-weight: bold;
-  margin-top: 0.5%;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
-  display: inline-block;
-  color: #039be5;
-  background-color: #eee;
-  border-radius: 10px;
 }
-.sections .fluidButton:hover {
+.app-fluidButton.sections:hover {
   background-color: #CFD8DC;
   cursor: default;
   color: #ffffff;
 }
-.sections .fluidButton.isSelected {
+.app-fluidButton.sections.isSelected {
   background-color: #ffb3b3;
   color: #039be5;
 }
-
-.departments .fluidButton {
-  text-align: center;
-  width: 100%;
-  margin-bottom: 5%;
-  padding: 30px;
-  color: #eee;
-  background-color: #607D8B;
-  border-radius: 10px;
-}
-.departments .fluidButton:hover {
-  background-color: #CFD8DC;
-  cursor: default;
-  color: black;
-}
-.departments .fluidButton.isSelected {
-  background-color: #ffb3b3;
-  color: black;
-}
 @media (max-width: 767px) {
-  .fluidButton {
-    margin-bottom: 1%;
-    padding: 15px;
+  .app-fluidButton {
+    margin: 0.25rem 0;
+    padding: 0.2rem 0;
   }
-  .sections .fluidButton {
-    margin-bottom: 1%;
-    padding: 15px;
+  .app-fluidButton.sections {
+    margin: 0.25rem 0;
+    padding: 0.2rem 0;
   }
-  .departments .fluidButton {
-    margin-bottom: 1%;
-    padding: 15px;
+  .app-fluidButton.departments {
+    margin: 0.25rem 0;
+    padding: 0.4rem 0;
   }
 }

@@ -1,6 +1,6 @@
 <div *ngIf="prodIsReady">
   <form>
-    <div class="container-fluid">
+    <div class="container-fluid app-frame">
       <div class="row">
         <div class="col-xs-12">
           <h2>
@@ -9,10 +9,7 @@
         </div>
       </div>
       <br>
-      <div style="border: 3px solid #d1b394;
-               border-radius: 48px;
-               margin-bottom: 2%;
-               padding: 2% 4%;">
+      <div class="app-bordered">
         <app-product-form
           [prodFormGroup]="formGroup"
           [product]="product"
@@ -23,23 +20,15 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm-offset-6 col-sm-3">
-                <button type="button" class="btn btn-default"
+                <button type="button" class="btn btn-default app-btn"
                         [disabled]="!(obFormGroupValid | async)"
-                        (click)="onSave()"
-                        style="border-radius: 8px;
-                                 height: 30px;
-                                 outline: 0;
-                                 width: 100%">
+                        (click)="onSave()">
                   Save
                 </button>
               </div>
               <div class="col-sm-3">
-                <button type="button" class="btn btn-default"
-                        (click)="onGoBack()"
-                        style="border-radius: 8px;
-                                 height: 30px;
-                                 outline: 0;
-                                 width: 100%">
+                <button type="button" class="btn btn-default app-btn"
+                        (click)="onGoBack()">
                   Go back
                 </button>
               </div>
