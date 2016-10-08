@@ -1,83 +1,62 @@
-<div class="container-fluid"
-     style="margin-top: 15px;">
+<div class="container-fluid">
   <div class="row">
     <div class="col-sm-offset-4 col-sm-8"
-         style="margin-bottom: 10px;
-                text-align: justify">
+         style="text-align: justify">
       Weather data as measured in the city of Portland (Oregon, USA)
       during the 7 days period from 2016-09-12 to 2016-09-18. <br>
       Source: www.apixu.com
     </div>
   </div>
   <div class="row"
-       [hidden]="selectMode"
-       style="margin-bottom: 15px">
-    <div class="col-sm-offset-8 col-sm-4"
-         style="padding-right: 0">
-      <button type="button" class="btn btn-default"
+       [hidden]="selectMode">
+    <div class="col-sm-offset-8 col-sm-4">
+      <button type="button" class="btn btn-default app-btn"
               (click)="onToggleSelectMode()"
-              style="border-radius: 8px;
-                           height: 30px;
-                           outline: 0;
-                           width: 100%">
+              style="width: 100%">
         Change property
       </button>
     </div>
   </div>
-  <div class="row"
-       style="margin-bottom: 15px">
-    <div class="col-sm-4"
-         style="padding-left: 0">
+  <div class="row">
+    <div class="col-sm-4">
       <label class="app-input-box-label">
         Property:
       </label>
     </div>
-    <div class="col-sm-8"
+    <div class="col-sm-8 app-prop-list"
          *ngIf="props"
-         [hidden]="!selectMode"
-         style="margin-bottom: 2px;
-                margin-top: 2px;
-                max-height: 150px;
-                min-height: 30px;
-                overflow-y: auto;
-                padding-left: 25px">
+         [hidden]="!selectMode">
       <div class="row"
            *ngFor="let prop of props;
                    let index = index;
                    let last = last">
-        <div class="col-xs-12 weatherProp"
-             [ngStyle]="{'margin-bottom': last ? '5px' : '-2px'}"
-             [ngClass]="{'weatherProp-selected':
-                        (obProp | async) === prop}"
-             (click)="onPropSelected(index)">
-          {{prop}}
+        <div class="col-xs-12">
+          <div class="weatherProp"
+               [ngStyle]="{'margin-bottom': last ? '5px' : '-2px'}"
+               [ngClass]="{'weatherProp-selected':
+                          (obProp | async) === prop}"
+               (click)="onPropSelected(index)">
+            {{prop}}
+          </div>
         </div>
       </div>
     </div>
     <div class="col-sm-8"
-         *ngIf="!selectMode"
-         style="padding-left: 10px;
-                padding-right: 0">
+         *ngIf="!selectMode">
       <label class="app-input-box-inactive">
         {{(obProp | async)}}
       </label>
     </div>
   </div>
-  <div class="row"
-       style="margin-bottom: 15px">
-    <div class="col-xs-12"
-         style="padding-left: 0;
-                padding-right: 0">
+  <div class="row">
+    <div class="col-xs-12">
       <app-input-box [label]="'Ticker:'"
                      [inFormControl]="formGroup.controls['ticker']">
       </app-input-box>
     </div>
   </div>
-  <div class="row"
-       style="margin-bottom: 15px">
-    <div class="col-xs-12"
-         style="padding-left: 0;
-                padding-right: 0">
+  <div class="row">
+    <div class="col-xs-12">
       <app-input-box [label]="'Field:'"
                      [inFormControl]="formGroup.controls['field']">
       </app-input-box>

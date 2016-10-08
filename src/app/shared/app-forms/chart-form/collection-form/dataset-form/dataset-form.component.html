@@ -1,13 +1,12 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3"
+    <div class="col-xs-5"
          (click)="collapseDataSetForm = !collapseDataSetForm"
          style="cursor: pointer">
           <span [ngClass]="collapseDataSetForm ?
                             'glyphicon glyphicon-chevron-right' :
                             'glyphicon glyphicon-chevron-down'"
-                style="vertical-align: middle;
-                        width: 20px">
+                style="vertical-align: middle;">
           </span>
       <label class="app-input-box-label"
              style="cursor: pointer;
@@ -15,30 +14,26 @@
         Data set
       </label>
     </div>
-    <div class="col-sm-offset-5 col-sm-4"
-         [hidden]="newDataSet">
-      <button type="button" class="btn"
+    <div class="col-xs-7"
+         [hidden]="newDataSet || collapseDataSetForm"
+         style="padding-left: 0;
+                text-align: right">
+      <button type="button" class="btn app-btn"
               [ngClass]="{
                 'btn-success': editDataSet,
                 'btn-danger': !editDataSet
                 }"
               (click)="onToggleEditMode()"
-              style="border-radius: 8px;
-                           height: 30px;
-                           outline: 0;
-                           width: 100%">
+              style="outline: 0;
+                     padding: 0.5rem 1rem;">
         {{editDataSet ? 'Edit data set: ON' : 'Edit data set: OFF'}}
       </button>
     </div>
   </div>
-  <div class="container-fluid"
+  <div class="app-dataset-props"
        *ngIf="!editDataSet"
-       [hidden]="collapseDataSetForm"
-       style="padding-left: 23px;
-              padding-right: 0">
-    <br>
-    <div class="row"
-         style="margin-bottom: 10px">
+       [hidden]="collapseDataSetForm">
+    <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
           Ticker:
@@ -50,8 +45,7 @@
         </label>
       </div>
     </div>
-    <div class="row"
-         style="margin-bottom: 10px">
+    <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
           Field:
@@ -64,14 +58,9 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid"
-       *ngIf="editDataSet"
-       [hidden]="collapseDataSetForm"
-       style="padding-left: 23px;
-              padding-right: 0">
-    <br>
-    <div class="row"
-         style="margin-bottom: 10px">
+  <div *ngIf="editDataSet"
+       [hidden]="collapseDataSetForm">
+    <div class="row">
       <div class="col-sm-4">
         <label class="app-input-box-label">
           Source:
@@ -79,14 +68,11 @@
       </div>
       <div class="col-sm-8">
         <div class="btn-group"
-             style="height: 30px;
-                    width: 100%">
+             style="width: 100%">
           <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown" aria-haspopup="true"
                   aria-expanded="false"
-                  style="border-radius: 8px;
-                             height: 30px;
-                             width: 100%">
+                  style="width: 100%">
             {{formGroup.controls['source'].value ?
             sourcesMap[formGroup.controls['source'].value] :
             'select'}}&nbsp;

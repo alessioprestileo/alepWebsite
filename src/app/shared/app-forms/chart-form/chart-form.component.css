@@ -1,0 +1,32 @@
+.app-bordered {
+  border: 2px solid #d1b394;
+  border-radius: 2rem;
+  margin: 1rem;
+  padding: 2.5rem;
+}
+.container-fluid {
+  padding: 0;
+}
+button.btn.btn-default.app-btn {
+  border-radius: 1rem;
+  outline: 0;
+}
+.row {
+  padding: 1rem 0;
+}
+@media (max-width: 767px) {
+  .app-bordered {
+    padding: 0.5rem;
+  }
+  .app-title {
+    font-size: 2.2rem;
+  }
+  button.btn.btn-default.app-btn {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    width: 100%;
+  }
+  .row {
+    padding: 0.5rem 0;
+  }
+}

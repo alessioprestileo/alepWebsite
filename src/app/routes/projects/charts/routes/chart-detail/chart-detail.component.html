@@ -3,47 +3,32 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
-          <h2>
+          <h2 class="app-title">
             {{title}}
           </h2>
         </div>
       </div>
-      <br>
-      <div style="border: 3px solid #d1b394;
-               border-radius: 48px;
-               margin-bottom: 2%;
-               padding: 2% 4%;">
+      <div class="app-bordered">
         <app-chart-form
           [chartFormGroup]="formGroup"
           [currentChart]="chart"
           [newChart]="newChart">
         </app-chart-form>
-        <br>
-        <div class="container-fluid">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-offset-5 col-sm-3">
-                <button type="button" class="btn btn-default"
-                        [disabled]="!(obFormGroupValid | async)"
-                        (click)="onSave()"
-                        style="border-radius: 8px;
-                                 height: 30px;
-                                 outline: 0;
-                                 width: 100%">
-                  Save
-                </button>
-              </div>
-              <div class="col-sm-4">
-                <button type="button" class="btn btn-default"
-                        (click)="onBackToDashboard()"
-                        style="border-radius: 8px;
-                                 height: 30px;
-                                 outline: 0;
-                                 width: 100%">
-                  Back to dashboard
-                </button>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-sm-offset-4 col-sm-4">
+            <button type="button" class="btn btn-default app-btn"
+                    [disabled]="!(obFormGroupValid | async)"
+                    (click)="onSave()"
+                    style="width: 100%">
+              Save
+            </button>
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-default app-btn"
+                    (click)="onBackToDashboard()"
+                    style="width: 100%">
+              Back to dashboard
+            </button>
           </div>
         </div>
       </div>

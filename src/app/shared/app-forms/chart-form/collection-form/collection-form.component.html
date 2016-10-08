@@ -4,13 +4,11 @@
       <div class="row"
            *ngIf="!detachedCollection">
         <div class="col-xs-12">
-          <label class="app-input-box-label"
-                 style="font-weight: bold">
+          <label class="app-input-box-label app-title">
             {{titleLabel}}&nbsp;{{currentPosition}}
           </label>
         </div>
       </div>
-      <br>
       <div class="row">
         <div class="col-xs-12">
           <app-input-box [label]="'Name:'"
@@ -18,8 +16,7 @@
           </app-input-box>
         </div>
       </div>
-      <div class="row"
-           style="margin-top: 15px">
+      <div class="row">
         <div class="col-xs-12">
           <app-dataset-form
             [currentDataSet]="currentCollection.dataSet"

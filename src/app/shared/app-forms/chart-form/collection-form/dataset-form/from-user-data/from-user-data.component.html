@@ -1,72 +1,52 @@
-<div class="container-fluid"
-     style="margin-top: 15px;">
+<div class="container-fluid">
   <div class="row"
-       [hidden]="selectMode"
-       style="margin-bottom: 15px">
-    <div class="col-sm-offset-8 col-sm-4"
-         style="padding-right: 0">
-      <button type="button" class="btn btn-default"
-              (click)="onToggleSelectMode()"
-              style="border-radius: 8px;
-                           height: 30px;
-                           outline: 0;
-                           width: 100%">
+       [hidden]="selectMode">
+    <div class="col-sm-offset-8 col-sm-4">
+      <button type="button" class="btn btn-default app-btn"
+              (click)="onToggleSelectMode()">
         Change collection
       </button>
     </div>
   </div>
-  <div class="row"
-       style="margin-bottom: 15px">
-    <div class="col-sm-4"
-         style="padding-left: 0;
-                padding-right: 0">
+  <div class="row">
+    <div class="col-sm-4">
       <label class="app-input-box-label">
         Collection:
       </label>
     </div>
-    <div class="col-sm-8"
+    <div class="col-sm-8 app-prop-list"
          *ngIf="collSrcs"
-         [hidden]="!selectMode"
-         style="margin-bottom: 2px;
-                margin-top: 2px;
-                max-height: 150px;
-                min-height: 30px;
-                overflow-y: auto;
-                padding-left: 25px">
+         [hidden]="!selectMode">
       <div class="row"
            *ngFor="let collSrc of collSrcs;
                    let index = index;
                    let last = last">
-        <div class="col-xs-12 collSrc"
-             [ngStyle]="{'margin-bottom': last ? '5px' : '-2px'}"
-             [ngClass]="{'collSrc-selected':
-                        (obCollSrc | async).id === collSrc.id}"
-             (click)="onCollSrcSelected(index)">
-          {{collSrc.name}}
+        <div class="col-xs-12">
+          <div class="collSrc"
+               [ngStyle]="{'margin-bottom': last ? '5px' : '-2px'}"
+               [ngClass]="{'collSrc-selected':
+                          (obCollSrc | async).id === collSrc.id}"
+               (click)="onCollSrcSelected(index)">
+            {{collSrc.name}}
+           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-8"
-         *ngIf="!selectMode"
-         style="padding-left: 10px;
-                padding-right: 0">
+         *ngIf="!selectMode">
       <label class="app-input-box-inactive">
         {{(obCollSrc | async).name}}
       </label>
     </div>
   </div>
   <div *ngIf="currentDataSet.ticker && !selectMode">
-    <div class="row"
-         style="margin-bottom: 10px">
-      <div class="col-sm-4"
-           style="padding-left: 0">
+    <div class="row">
+      <div class="col-sm-4">
         <label class="app-input-box-label">
           Ticker:
         </label>
       </div>
-      <div class="col-sm-8"
-           style="padding-left: 10px;
-                  padding-right: 0">
+      <div class="col-sm-8">
         <label class="app-input-box-inactive">
           {{currentDataSet.ticker}}
         </label>
@@ -75,15 +55,12 @@
   </div>
   <div *ngIf="currentDataSet.field && !selectMode">
     <div class="row">
-      <div class="col-sm-4"
-           style="padding-left: 0">
+      <div class="col-sm-4">
         <label class="app-input-box-label">
           Field:
         </label>
       </div>
-      <div class="col-sm-8"
-           style="padding-left: 10px;
-                  padding-right: 0">
+      <div class="col-sm-8">
         <label class="app-input-box-inactive">
           {{currentDataSet.field}}
         </label>

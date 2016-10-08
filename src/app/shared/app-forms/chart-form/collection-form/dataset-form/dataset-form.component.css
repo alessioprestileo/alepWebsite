@@ -1,0 +1,19 @@
+.app-dataset-props {
+  padding-left: 2rem;
+}
+.container-fluid {
+  padding: 0;
+  padding-bottom: 1rem;
+}
+button.btn.btn-default.app-btn {
+  border-radius: 1rem;
+  outline: 0;
+}
+.row {
+  margin-top: 1rem;
+}
+@media (max-width: 767px) {
+  .app-dataset-props {
+    padding-left: 0;
+  }
+}

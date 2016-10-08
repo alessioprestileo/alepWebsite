@@ -1,0 +1,8 @@
+@media (max-width: 767px) {
+  button.btn.btn-default.app-btn {
+    padding: 0.5rem;
+  }
+  .container-fluid {
+    padding: 0.5rem;
+  }
+}

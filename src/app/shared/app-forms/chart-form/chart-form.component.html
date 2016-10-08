@@ -1,36 +1,27 @@
 <div class="container-fluid">
   <form>
-    <div class="container-fluid"
-         style="padding-left: 0;
-                padding-right: 0">
+    <div class="container-fluid">
       <div class="row">
-        <app-input-box [label]="'Name:'"
-                       [inFormControl]="chartFormGroup.controls['name']">
-        </app-input-box>
+        <div class="col-xs-12">
+          <app-input-box [label]="'Name:'"
+                         [inFormControl]="chartFormGroup.controls['name']">
+          </app-input-box>
+        </div>
       </div>
-      <br>
-      <div class="row"
-           style="padding-left: 0;
-                  padding-right: 0">
-        <div class="col-sm-4"
-             style="padding-left: 0;
-                  padding-right: 0">
+      <div class="row">
+        <div class="col-sm-4">
           <label class="app-input-box-label">
             Type:
           </label>
         </div>
-        <div class="col-sm-8"
-             style="padding-left: 10px;
-                  padding-right: 0">
+        <div class="col-sm-8">
           <div class="btn-group"
-               style="height: 30px;
-                      width: 100%">
-            <button type="button" class="btn btn-default dropdown-toggle"
+               style="width: 100%">
+            <button type="button"
+                    class="btn btn-default app-btn dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"
-                    style="border-radius: 8px;
-                         height: 30px;
-                         width: 100%">
+                    style="width: 100%">
               {{chartFormGroup.controls['type'].value ?
               chartTypeMap[chartFormGroup.controls['type'].value] :
                   'select'}}&nbsp;
@@ -50,13 +41,13 @@
           </div>
         </div>
       </div>
-      <br>
       <div class="row">
-        <app-input-box [label]="'Title:'"
-                       [inFormControl]="chartFormGroup.controls['title']">
-        </app-input-box>
+        <div class="col-xs-12">
+          <app-input-box [label]="'Title:'"
+                         [inFormControl]="chartFormGroup.controls['title']">
+          </app-input-box>
+        </div>
       </div>
-      <br>
       <div class="row">
         <div class="col-xs-6"
              (click)="collapseCollectionForms = !collapseCollectionForms">
@@ -68,29 +59,22 @@
           </span>
           <label class="app-input-box-label"
                  style="cursor: pointer;
-                        padding-left: 7px;
                         text-decoration: underline">
             Collections:
           </label>
         </div>
         <div class="col-xs-6"
+             [hidden]="collapseCollectionForms"
              style="text-align: right">
-          <button type="button" class="btn btn-default"
-                  style="border-radius: 16px;
-                         outline: 0"
+          <button type="button" class="btn btn-default app-btn"
                   (click)="onCollectionAdd()">
             New {{collectionsLabel}}
           </button>
         </div>
       </div>
-      <br>
-      <div [hidden]="collapseCollectionForms">
-        <div style="padding-left: 20px;">
-          <div *ngFor="let collectionInput of collectionInputs"
-               style="border: 2px solid #d1b394;
-                      border-radius: 48px;
-                      margin-bottom: 15px;
-                      padding: 15px 15px;">
+          <div class="app-bordered"
+               [hidden]="collapseCollectionForms"
+               *ngFor="let collectionInput of collectionInputs">
             <app-collection-form
               [currentCollection]="collectionInput.collectionObject"
               [currentPosition]="collectionInput.position"
@@ -99,53 +83,40 @@
             <div style="text-align: right">
               <button
                 *ngIf="collectionInputs.length > 1"
-                type="button" class="btn btn-default"
+                type="button" class="btn btn-default app-btn"
                 (click)="onCollectionRemove(
-                  collectionInput.position, collectionInput.label
-                )"
-                style="border-radius: 16px;
-                             outline: 0;">
+                  collectionInput.position,
+                  collectionInput.label)">
                 Remove {{collectionsLabel}}
               </button>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   </form>
-  <div>
-    <button *ngIf="!previewMode"
-            type="button" class="btn btn-default"
-            (click)="onPreviewToggleOn()"
-            style="outline: 0"
-            [disabled]="!(obChartFormValid | async)">
-      Preview chart
-    </button>
-    <div class="row">
-      <div class="col-xs-3">
-        <button *ngIf="previewMode"
-                type="button" class="btn btn-default"
-                style="margin-top: 15px;
-                       outline: 0"
-                (click)="onUpdatePreview()"
-                [disabled]="!(obChartFormValid | async)">
-          Update chart preview
-        </button>
-      </div>
-      <div class="col-xs-3 col-xs-offset-6"
-           style="text-align: right">
-        <button *ngIf="previewMode"
-                type="button" class="btn btn-default"
-                (click)="onPreviewToggleOff()"
-                style="margin-top: 15px;
-                          outline: 0">
-          Turn off chart preview
-        </button>
-      </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <button *ngIf="!previewMode"
+              type="button" class="btn btn-default app-btn"
+              (click)="onPreviewToggleOn()"
+              [disabled]="!(obChartFormValid | async)">
+        Preview chart
+      </button>
+      <button *ngIf="previewMode"
+              type="button" class="btn btn-default app-btn"
+              (click)="onUpdatePreview()"
+              [disabled]="!(obChartFormValid | async)">
+        Update chart preview
+      </button>
+    </div>
+    <div class="col-sm-6"
+         style="text-align: right">
+      <button *ngIf="previewMode"
+              type="button" class="btn btn-default app-btn"
+              (click)="onPreviewToggleOff()">
+        Turn off chart preview
+      </button>
     </div>
   </div>
-  <br>
-  <br>
   <div *ngIf="previewMode">
     <app-show-chart [chart]="currentChart"
                     [obUpdateFlag]="obUpdateChartPreview">
