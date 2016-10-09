@@ -1,6 +1,9 @@
 .app-dataset-props {
   padding-left: 2rem;
 }
+.app-indented {
+  padding-left: 30px;
+}
 .container-fluid {
   padding: 0;
   padding-bottom: 1rem;
@@ -13,6 +16,9 @@ button.btn.btn-default.app-btn {
   margin-top: 1rem;
 }
 @media (max-width: 767px) {
+  .app-indented {
+    padding-left: 15px;
+  }
   .app-dataset-props {
     padding-left: 0;
   }

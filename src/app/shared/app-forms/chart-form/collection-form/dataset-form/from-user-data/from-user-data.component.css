@@ -12,7 +12,7 @@ button.btn.btn-default.app-btn {
 .collSrc {
   border: 2px solid lightgray;
   background-color: white;
-  height: 2.7rem;
+  min-height: 2.7rem;
   text-align: center;
   vertical-align: middle;
 }
@@ -24,6 +24,14 @@ button.btn.btn-default.app-btn {
 }
 .collSrc-selected:hover {
   background-color: lightblue;
+}
+.container-fluid {
+  margin: 0 -15px;
+  padding: 0;
+  padding-left: 15px;
+}
+.row {
+  margin: 1rem 0;
 }
 @media (max-width: 767px) {
   .app-prop-list {

@@ -8,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyCvComponent implements OnInit {
 
-  constructor() {}
+  constructor(
+  ) {}
 
   ngOnInit() {
+    window.location.replace('https://drive.google.com/file/d/0B5fpN0QiKMiDb0JmejAwUjhiWWc/view?usp=sharing');
   }
 
 }

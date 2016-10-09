@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <div class="row"
        [hidden]="selectMode">
-    <div class="col-sm-offset-8 col-sm-4">
+    <div class="col-sm-offset-8 col-sm-4"
+         style="text-align: right">
       <button type="button" class="btn btn-default app-btn"
               (click)="onToggleSelectMode()">
         Change collection
@@ -20,7 +21,8 @@
       <div class="row"
            *ngFor="let collSrc of collSrcs;
                    let index = index;
-                   let last = last">
+                   let last = last"
+           style="cursor: pointer">
         <div class="col-xs-12">
           <div class="collSrc"
                [ngStyle]="{'margin-bottom': last ? '5px' : '-2px'}"
