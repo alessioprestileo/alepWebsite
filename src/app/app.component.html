@@ -35,10 +35,10 @@
     </div>
     <div class="container-fluid app-navigation-button-container">
       <div class="row">
-        <div class="col-xs-offset-2 col-xs-8">
-          <button class="btn btn-default app-btn"
+        <div class="col-xs-offset-2 col-xs-8"
+             style="text-align: center">
+          <button class="btn btn-default app-nav-toggle"
                   (click)="showNavigation = !showNavigation">
-            {{showNavigation ? 'hide navigation' : 'show navigation'}}
             <span class="glyphicon glyphicon-chevron-up"
                   *ngIf="showNavigation">
             </span>
@@ -64,7 +64,25 @@
     </div>
   </div>
   <footer id='app-footer'>
-    <div class="container-fluid">
+    <div class="container-fluid app-sitemap-button-container">
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8"
+             style="text-align: center">
+          <button class="btn btn-default app-sitemap-toggle"
+                  (click)="showSiteMap = !showSiteMap">
+            <span class="glyphicon glyphicon-chevron-down"
+                  *ngIf="showSiteMap">
+            </span>
+            <span class="glyphicon glyphicon-chevron-up"
+                  *ngIf="!showSiteMap">
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id='sitemap'
+         class="container-fluid app-sitemap-container"
+         [hidden]="!showSiteMap">
       <div class="row">
         <div class="col-sm-2 homeLink">
           <button class="btn btn-default app-button-home"

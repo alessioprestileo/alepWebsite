@@ -23,7 +23,7 @@
 .container-fluid.app-fields {
   padding-left: 2.1rem;
 }
-button.btn.btn-default.app-btn {
+button.btn.btn-default.app-nav-toggle {
   border-radius: 2rem;
   outline: 0;
 }
@@ -34,7 +34,7 @@ button.btn.btn-default.app-btn {
   margin-top: 1rem;
 }
 @media (max-width: 767px) {
-  .app-btn {
+  .app-nav-toggle {
     border-radius: 2rem;
     margin-top: 0.5rem;
     padding: 0.5rem;

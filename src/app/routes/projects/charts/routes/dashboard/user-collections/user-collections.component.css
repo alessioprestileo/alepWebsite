@@ -1,5 +1,5 @@
 @media (max-width: 767px) {
-  button.btn.btn-default.app-btn {
+  button.btn.btn-default.app-nav-toggle {
     padding: 0.5rem;
   }
   .container-fluid {

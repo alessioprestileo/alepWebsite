@@ -41,15 +41,14 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentChart: Chart;
   @Input() private newChart: boolean;
   private chartTypeValues: string[] =  [
-    'bar', 'doughnut', 'line', 'pie', 'polarArea', 'radar'
+    'Bar', 'Donut', 'Line', 'Pie', 'PolarArea'
   ];
   private chartTypeMap: {[value: string] : string} = {
-    'bar': 'bar',
-    'doughnut': 'doughnut',
-    'line': 'line',
-    'pie': 'pie',
-    'polarArea': 'polar area',
-    'radar': 'radar'
+    'Bar': 'bar',
+    'Donut': 'donut',
+    'Line': 'line',
+    'Pie': 'pie',
+    'PolarArea': 'polar area',
   };
   private collapseCollectionForms: boolean = false;
   private collectionInputs: CollectionInput[] = [];

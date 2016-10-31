@@ -28,6 +28,7 @@ implements AfterViewChecked, DoCheck, OnDestroy, OnInit {
   private projectTitles: string[];
   private siteMapInput: any[];
   private showNavigation: boolean = true;
+  private showSiteMap: boolean = true;
   private subCurrentUrl: Subscription;
   private subOnResize: Subscription;
   private title: string;

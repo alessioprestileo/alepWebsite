@@ -5,7 +5,7 @@
   min-height: 2.7rem;
   overflow-y: auto;
 }
-button.btn.btn-default.app-btn {
+button.btn.btn-default.app-nav-toggle {
   border-radius: 1rem;
   outline: 0;
 }
@@ -37,7 +37,7 @@ button.btn.btn-default.app-btn {
   .app-prop-list {
     padding: 0 0.5rem;
   }
-  button.btn.btn-default.app-btn {
+  button.btn.btn-default.app-nav-toggle {
     margin: 0.5rem 0;
     padding: 0.5rem;
     width: 100%;

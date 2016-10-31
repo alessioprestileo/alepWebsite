@@ -1,0 +1,17 @@
+.app-centered {
+  border: groove;
+  border-radius: 4rem;
+  font-size: 2rem;
+  margin-top: 15rem;
+  padding: 5rem 7rem;
+  text-align: center;
+}
+button.btn.btn-primary {
+  outline: 0;
+}
+@media (max-width: 767px) {
+  .app-centered {
+    margin-top: 12rem;
+    padding: 2.5rem 3.5rem;
+  }
+}

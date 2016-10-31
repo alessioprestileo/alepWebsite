@@ -103,7 +103,7 @@ export class InMemoryData {
           '2016/09/18',
         title: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
           '2016/09/18 (by number of hours)',
-        type: 'pie'
+        type: 'Pie'
       },
       {
         id: 2,
@@ -114,7 +114,7 @@ export class InMemoryData {
           '2016/09/18',
         title: 'Max, min, and avg daily temperature (°F) in Portland, OR ' +
           'from 2016/09/12 to 2016/09/18',
-        type: 'line'
+        type: 'Line'
       },
       {
         id: 3,
@@ -125,7 +125,7 @@ export class InMemoryData {
         '2016/09/18',
         title: 'Daily temperature variation (°F) in Portland, OR ' +
         'from 2016/09/12 to 2016/09/18',
-        type: 'bar'
+        type: 'Bar'
       },
     ];
     let userData_collections = [

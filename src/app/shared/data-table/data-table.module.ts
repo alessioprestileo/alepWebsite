@@ -2,15 +2,15 @@ import { NgModule }           from '@angular/core';
 
 import { DataTableComponent } from "./data-table.component";
 import { SharedModule } from "../../shared/shared.module";
-import { DataTableDirectives } from "angular2-datatable/datatable";
+import { DataTableModule as ng2DataTableModule } from "angular2-datatable/index";
 
 
 @NgModule({
   imports: [
+    ng2DataTableModule,
     SharedModule
   ],
   declarations: [
-    DataTableDirectives,
     DataTableComponent
   ],
   exports: [
