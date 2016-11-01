@@ -23,8 +23,7 @@ export class AlepNg2ChartComponent implements OnInit {
    ****************************************************************************/
   @Input() private inputConfig: Object = {
     effects: {
-      duration: 300,
-      hovercolor: '#ffff00'
+      duration: 0
     },
     graph: {
       orientation: 'Vertical',
@@ -94,7 +93,7 @@ export class AlepNg2ChartComponent implements OnInit {
     if (this.hasValidInput === true) {
       this.prepareContainer(this.chartContainerId);
       this.createChart(this.finalConfig, this.finalGraphDef, this.finalType);
-      this.format();
+      this.formatChart();
     }
   }
   private checkInputValidity(finalType: string, validTypes: string[]) : void {
@@ -112,7 +111,7 @@ export class AlepNg2ChartComponent implements OnInit {
         finalConfig
     );
   }
-  private format() : void {
+  private formatChart() : void {
     let defaultFrameHeight: number = 600;
     let container: HTMLElement = this.alepNg2ChartContainerChild.nativeElement;
     let panel: any = container
@@ -151,20 +150,69 @@ export class AlepNg2ChartComponent implements OnInit {
     }
   }
   private formatValues(collections: any) : void {
-
-    console.log('collections = ', collections);
-
     for (let i = 0; i < collections.length; i++) {
-      if (collections[i].attributes.class.value.includes('cg-')) {
-        let values: any = collections[i]
-          .getElementsByTagName('g')[0];
+      let collection: any = collections[i];
+      if (collection.attributes.class.value.includes('cge-')) {
+        let path: any = collection.getElementsByTagName('path')[0];
 
-        console.log('values = ', values);
+        // this.chartObject.effects = {};
+        // this.chartObject.effects['line'] = {};
+        // this.chartObject.effects['line']['mouseover'] = null;
+
+        // console.log('this.chartObject.effects 1 = ', this.chartObject.effects);
+        //
+        // for (let collection in this.chartObject.effects) {
+        //
+        //   console.log(collection);
+        //
+        //   this.chartObject.effects[collection]['mouseover'] = {};
+        //   this.chartObject.effects[collection]['mouseout'] = {};
+        // }
+        //
+        // console.log('this.chartObject.effects 2 = ', this.chartObject.effects);
+        //
+        // path.onmouseenter = null;
+        // path.onmouseleave = null;
+        // path.onmouseout = null;
+
+        // console.log('path.style.stroke = ', path.style.stroke);
+        //
+
+        // path.onmouseenter =  (event) => {
+        //
+        //   console.log('event = ', event);
+        //   console.log('mouseenter');
+        //
+        //   console.log('event.target.style.stroke = ', event.target.style.stroke);
+        //
+        //   event.target.style.stroke = '000';
+        //
+        // };
+        // path.onmouseleave = () => {
+        //   console.log('mouseleave')
+        // };
+        // path.onmouseover =  (event) => {
+        //
+        //   console.log('event = ', event);
+        //   console.log('mouseover');
+        //   console.log('event.target.style.stroke = ', event.target.style.stroke);
+        //
+        //   event.target.style.stroke = '000';
+        // };
+
+        let values: any = collections[i]
+          .getElementsByTagName('text');
+        for (let j = 0; j < values.length; j++) {
+          let value: any = values[j];
+          let x: any = Math.floor(value.x.animVal[0].value);
+          let y: any = Math.floor(value.y.animVal[0].value);
+          let dx: any = Math.floor(value.dx.animVal[0].value);
+          let dy: any = Math.floor(value.dy.animVal[0].value);
+          value.setAttribute('transform', `rotate(-30 ${x+dx} ${y+dy})`);
+          value.style.fontSize = '17';
+          value.style.textAnchor = 'start';
+        }
       }
-        // .getElementsByTagName('text');
-      // for (let j = 0; j < values.length; j++) {
-      //   values[j].style.fontsize = '20';
-      // }
     }
   }
   private formatVertAxis(vertAxis: any) : void {

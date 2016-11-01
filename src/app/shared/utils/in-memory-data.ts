@@ -99,33 +99,40 @@ export class InMemoryData {
         collectionsIds: [
           1
         ],
+        hAxisLabel: '',
         name: 'Weather conditions-by hour-Portland, OR-2016/09/12 to ' +
           '2016/09/18',
+        subTitle: '(by number of hours)',
         title: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
-          '2016/09/18 (by number of hours)',
-        type: 'Pie'
+          '2016/09/18',
+        type: 'Pie',
+        vAxisLabel: ''
       },
       {
         id: 2,
         collectionsIds: [
           3, 5, 7
         ],
+        hAxisLabel: 'Days',
         name: 'Max, min and avg temp-(°F)-daily-Portland, OR-2016/09/12 to ' +
           '2016/09/18',
-        title: 'Max, min, and avg daily temperature (°F) in Portland, OR ' +
-          'from 2016/09/12 to 2016/09/18',
-        type: 'Line'
+        subTitle: 'from 2016/09/12 to 2016/09/18',
+        title: 'Max, min, and avg daily temperature (°F) in Portland, OR',
+        type: 'Line',
+        vAxisLabel: 'Temperature (°F)'
       },
       {
         id: 3,
         collectionsIds: [
           9
         ],
+        hAxisLabel: 'Days',
         name: 'Temp variation-(°F)-daily-Portland, OR-2016/09/12 to ' +
         '2016/09/18',
-        title: 'Daily temperature variation (°F) in Portland, OR ' +
-        'from 2016/09/12 to 2016/09/18',
-        type: 'Bar'
+        subTitle: 'from 2016/09/12 to 2016/09/18',
+        title: 'Daily temperature variation (°F) in Portland, OR',
+        type: 'Bar',
+        vAxisLabel: 'Temperature variation (°F)'
       },
     ];
     let userData_collections = [

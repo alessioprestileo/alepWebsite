@@ -5,19 +5,30 @@ import { UserDataService } from "../services/user-data.service";
 
 export class Chart {
   public collections: ChartColl[];
+  public hAxisLabel: string;
   public id: number = null;
   public name: string;
+  public subTitle: string;
   public title: string;
   public type: string;
+  public vAxisLabel: string;
 
 	constructor(
-	  name: string = null, type: string = null, title: string = null,
-    collections: ChartColl[] = []
+	  name: string = null,
+    type: string = null,
+    collections: ChartColl[] = [],
+    title: string = null,
+    subTitle: string = null,
+    hAxisLabel: string = null,
+    vAxisLabel: string = null
   ) {
 	  this.collections = collections;
+    this.hAxisLabel = hAxisLabel;
     this.name = name;
+    this.subTitle = subTitle;
 		this.title = title;
     this.type = type;
+    this.vAxisLabel = vAxisLabel;
 	}
 
 	public createCopy() : Chart {
@@ -27,9 +38,12 @@ export class Chart {
     for (let i = 0; i < length; i++) {
       copy.collections.push(originalCollections[i].createCopy());
     }
+    copy.hAxisLabel = this.hAxisLabel;
     copy.name = this.name;
+    copy.subTitle = this.subTitle;
     copy.title = this.title;
     copy.type = this.type;
+    copy.vAxisLabel = this.vAxisLabel;
     return copy;
   }
   public importPropsFromSrc_UserData(
@@ -37,9 +51,12 @@ export class Chart {
     service: UserDataService
   ) : Promise<void> {
     this.id = src.id;
+    this.hAxisLabel = src.hAxisLabel;
     this.name = src.name;
+    this.subTitle = src.subTitle;
     this.title = src.title;
     this.type = src.type;
+    this.vAxisLabel = src.vAxisLabel;
     return service.getAll('collections').then(collections => {
       let collsToAdd: ChartCollSrc_UserData[] =
         <ChartCollSrc_UserData[]>collections.filter(coll => {
