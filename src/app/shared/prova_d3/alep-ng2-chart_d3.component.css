@@ -1,33 +1,43 @@
-.alep-ng2-chart-caption {
+.alep-ng2-chart-legend {
   background-color: white;
-  font-size: 3rem;
+  margin-bottom: 10px;
+  margin-top: -7px;
+  padding-bottom: 10px;
+}
+.alep-ng2-chart-title {
+  background-color: white;
+  font-size: 27px;
   font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
   text-align: center;
 }
 .alep-ng2-chart-container {
   height: 100%;
   width: 100%;
 }
-.alep-ng2-chart-subCaption {
+.alep-ng2-chart-subTitle {
   background-color: white;
-  font-size: 2rem;
+  font-size: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   text-align: center;
 }
 /* Medium screen */
 @media (min-width: 376px) and (max-width: 767px) {
-  .alep-ng2-chart-caption {
-    font-size: 1.2rem;
+  .alep-ng2-chart-title {
+    font-size: 12px;
   }
-  .alep-ng2-chart-subCaption {
-    font-size: 0.8rem;
+  .alep-ng2-chart-subTitle {
+    font-size: 8px;
   }
 }
 /* Small screen */
 @media (max-width: 375px) {
-  .alep-ng2-chart-caption {
-    font-size: 1.3rem;
+  .alep-ng2-chart-title {
+    font-size: 12px;
   }
-  .alep-ng2-chart-subCaption {
-    font-size: 0.9rem;
+  .alep-ng2-chart-subTitle {
+    font-size: 8px;
   }
 }

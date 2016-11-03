@@ -8,7 +8,7 @@ export class Chart {
   public hAxisLabel: string;
   public id: number = null;
   public name: string;
-  public subTitle: string;
+  public subtitle: string;
   public title: string;
   public type: string;
   public vAxisLabel: string;
@@ -18,14 +18,14 @@ export class Chart {
     type: string = null,
     collections: ChartColl[] = [],
     title: string = null,
-    subTitle: string = null,
+    subtitle: string = null,
     hAxisLabel: string = null,
     vAxisLabel: string = null
   ) {
 	  this.collections = collections;
     this.hAxisLabel = hAxisLabel;
     this.name = name;
-    this.subTitle = subTitle;
+    this.subtitle = subtitle;
 		this.title = title;
     this.type = type;
     this.vAxisLabel = vAxisLabel;
@@ -40,7 +40,7 @@ export class Chart {
     }
     copy.hAxisLabel = this.hAxisLabel;
     copy.name = this.name;
-    copy.subTitle = this.subTitle;
+    copy.subtitle = this.subtitle;
     copy.title = this.title;
     copy.type = this.type;
     copy.vAxisLabel = this.vAxisLabel;
@@ -53,7 +53,7 @@ export class Chart {
     this.id = src.id;
     this.hAxisLabel = src.hAxisLabel;
     this.name = src.name;
-    this.subTitle = src.subTitle;
+    this.subtitle = src.subtitle;
     this.title = src.title;
     this.type = src.type;
     this.vAxisLabel = src.vAxisLabel;

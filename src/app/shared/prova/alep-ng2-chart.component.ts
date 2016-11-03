@@ -297,7 +297,7 @@ export class AlepNg2ChartComponent implements OnInit {
       // Override config
       this.finalConfig['meta']['caption'] = inputChart.title;
       this.finalConfig['meta']['hlabel'] = inputChart.hAxisLabel;
-      this.finalConfig['meta']['subcaption'] = inputChart.subTitle;
+      this.finalConfig['meta']['subcaption'] = inputChart.subtitle;
       this.finalConfig['meta']['vlabel'] = inputChart.vAxisLabel;
     }
     // Define chart container by using CSS selector

@@ -102,7 +102,7 @@ export class InMemoryData {
         hAxisLabel: '',
         name: 'Weather conditions-by hour-Portland, OR-2016/09/12 to ' +
           '2016/09/18',
-        subTitle: '(by number of hours)',
+        subtitle: '(by number of hours)',
         title: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
           '2016/09/18',
         type: 'Pie',
@@ -116,7 +116,7 @@ export class InMemoryData {
         hAxisLabel: 'Days',
         name: 'Max, min and avg temp-(°F)-daily-Portland, OR-2016/09/12 to ' +
           '2016/09/18',
-        subTitle: 'from 2016/09/12 to 2016/09/18',
+        subtitle: 'from 2016/09/12 to 2016/09/18',
         title: 'Max, min, and avg daily temperature (°F) in Portland, OR',
         type: 'Line',
         vAxisLabel: 'Temperature (°F)'
@@ -129,7 +129,7 @@ export class InMemoryData {
         hAxisLabel: 'Days',
         name: 'Temp variation-(°F)-daily-Portland, OR-2016/09/12 to ' +
         '2016/09/18',
-        subTitle: 'from 2016/09/12 to 2016/09/18',
+        subtitle: 'from 2016/09/12 to 2016/09/18',
         title: 'Daily temperature variation (°F) in Portland, OR',
         type: 'Bar',
         vAxisLabel: 'Temperature variation (°F)'
@@ -154,6 +154,7 @@ export class InMemoryData {
             "Sunny": 57,
           }
         },
+        label: 'Weather conditions',
         name: 'Weather conditions in Portland, OR from 2016/09/12 to ' +
           '2016/09/18'
       },
@@ -173,6 +174,7 @@ export class InMemoryData {
             "Sunday": 22.2,
           }
         },
+        label: 'Max daily temperature',
         name: 'Max daily temperature (Celsius) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -192,6 +194,7 @@ export class InMemoryData {
             "Sunday": 72.0,
           }
         },
+        label: 'Max daily temperature',
         name: 'Max daily temperature (Fahrenheit) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -211,6 +214,7 @@ export class InMemoryData {
             "Sunday": 11.8,
           }
         },
+        label: 'Min daily temperature',
         name: 'Min daily temperature (Celsius) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -230,6 +234,7 @@ export class InMemoryData {
             "Sunday": 53.2,
           }
         },
+        label: 'Min daily temperature',
         name: 'Min daily temperature (Fahrenheit) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -249,6 +254,7 @@ export class InMemoryData {
             "Sunday": 18.3,
           }
         },
+        label: 'Avg daily temperature',
         name: 'Avg daily temperature (Celsius) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -268,6 +274,7 @@ export class InMemoryData {
             "Sunday": 65.0,
           }
         },
+        label: 'Avg daily temperature',
         name: 'Avg daily temperature (Fahrenheit) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -287,6 +294,7 @@ export class InMemoryData {
             "Sunday": 10.4,
           }
         },
+        label: 'Daily temperature variation',
         name: 'Daily temperature variation (Celsius) in Portland, OR from ' +
           '2016/09/12 to 2016/09/18'
       },
@@ -306,6 +314,7 @@ export class InMemoryData {
             "Sunday": 18.8,
           }
         },
+        label: 'Daily temperature variation',
         name: 'Daily temperature variation (Fahrenheit) in Portland, OR from ' +
         '2016/09/12 to 2016/09/18'
       }

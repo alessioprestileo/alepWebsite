@@ -3,7 +3,7 @@ export class ChartSrc_UserData {
   public hAxisLabel: string;
   public id: number = null;
   public name: string;
-  public subTitle: string;
+  public subtitle: string;
   public title: string;
   public type: string;
   public vAxisLabel: string;
@@ -13,14 +13,14 @@ export class ChartSrc_UserData {
     type: string = null,
     collectionsIds:  number[] = [],
     title: string = null,
-    subTitle: string = null,
+    subtitle: string = null,
     hAxisLabel: string = null,
     vAxisLabel: string = null
   ) {
     this.collectionsIds = collectionsIds;
     this.hAxisLabel = hAxisLabel;
     this.name = name;
-    this.subTitle = subTitle;
+    this.subtitle = subtitle;
     this.title = title;
     this.type = type;
     this.vAxisLabel = vAxisLabel;

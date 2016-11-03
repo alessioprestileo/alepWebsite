@@ -5,7 +5,7 @@ export interface iChart {
   hAxisLabel: string;
   id: number;
   name: string;
-  subTitle: string;
+  subtitle: string;
   title: string;
   type: string;
   vAxisLabel: string;
