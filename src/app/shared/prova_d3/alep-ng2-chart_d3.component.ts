@@ -453,8 +453,19 @@ export class AlepNg2ChartD3Component implements OnInit {
           'stroke-opacity': strokeOpacity,
           'stroke-width': strokeWidth
         });
+      let dataPoints: any = collection.selectAll('circle')
+        .data(values)
+        .enter()
+        .append('circle')
+        .attr({
+          'class': 'dataPoint',
+          'cx': function(d, index) {return hScale(index)},
+          'cy': function(d) { return vScale(d)},
+          'fill': paletteScale(i + 1),
+          'r': 4
+        });
     }
-    // Event handling
+    // Event handling for paths
     let pathElements: SVGPathElement[] = this.alepNg2ChartContainerChild
       .nativeElement
       .querySelectorAll('.canvas .chart .collection .path');
@@ -470,7 +481,23 @@ export class AlepNg2ChartD3Component implements OnInit {
       pathElement.onmouseout = (event) => {
         event.target['style']['strokeWidth'] = strokeWidth;
       };
+      // Event handling for dataPoints
+      let dataPointElements: SVGCircleElement[] =
+        this.alepNg2ChartContainerChild
+          .nativeElement
+          .querySelectorAll('.canvas .chart .collection .dataPoint');
+      let lengthDataPoints: number = dataPointElements.length;
+      for (let i = 0; i < lengthDataPoints; i++) {
+        let dataPoint: SVGCircleElement = dataPointElements[i];
+        dataPoint.onmouseover = (event) => {
+          dataPoint.setAttribute('r', '6px');
+        };
+        dataPoint.onmouseout = (event) => {
+          dataPoint.setAttribute('r', '4px');
+        };
+      }
     }
+
   }
   private createVertAxis(
     styling: iStylingObject,
