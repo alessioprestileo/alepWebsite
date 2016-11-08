@@ -1,4 +1,6 @@
-import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component, DoCheck, EventEmitter, Input, OnDestroy, OnInit,
+} from '@angular/core';
 import {
   FormControl, FormGroup, Validators, ValidatorFn
 } from '@angular/forms';
@@ -54,6 +56,9 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   private collectionInputs: CollectionInput[] = [];
   private collectionsCount: number = 0;
   private collectionsLabel: string = 'collection';
+
+  private emUpdateChartPreview: EventEmitter<any> = new EventEmitter();
+
   private formGroupValidator: ValidatorFn = formGroupValidator;
   private nextCollectionId: number = 0;
   private obChartFormValid: BehaviorSubject<boolean>;
@@ -231,14 +236,16 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     this.collectionRemove(position, label);
   }
   public onPreviewToggleOn() : void {
-    this.obUpdateChartPreview = new BehaviorSubject(true);
+    // this.obUpdateChartPreview = new BehaviorSubject(true);
+    this.emUpdateChartPreview.emit();
     this.previewMode = true;
   }
   public onPreviewToggleOff() : void {
     this.previewMode = false;
   }
   public onUpdatePreview() : void {
-    this.obUpdateChartPreview.next(true);
+    // this.obUpdateChartPreview.next(true);
+    this.emUpdateChartPreview.emit();
   }
   private removeFormControls() : void {
     this.chartFormGroup.removeControl('name');

@@ -2,6 +2,8 @@ import {
     Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild
 } from '@angular/core'
 
+import { Subscription } from 'rxjs/Rx';
+
 // import { iChart } from '../../models/iChart'
 import { iChart } from './iChart'
 import { iChartColl } from "./iChartColl";
@@ -26,76 +28,12 @@ export class AlepNg2ChartD3Component implements OnInit {
   private onResize(event: any) {
     this.emOnResize.emit();
   }
+  @Input() private emUpdateChart: EventEmitter<any>;
   @Input() private legendCssClass: string;
   @Input() private titleCssClass: string;
   @Input() private subtitleCssClass: string;
   @Input() private inputChartObject: iChart;
-  @Input() private styling: iStylingObject = {
-    aspectRatio: [1],
-    backgroundColor: 'white',
-    hAxis: {
-      fontSize: 15,
-      gridLines: {
-        opacity: 0.3,
-        stroke: 'none',
-        strokeWidth: 1
-      },
-      label: {
-        fontSize: 20,
-        fontWeight: 'normal',
-        marginTop: 10
-      },
-      stroke: 'black',
-      strokeWidth: 2,
-      ticks: {
-        labelsAngle: '-30',
-        opacity: 1,
-        stroke: 'black',
-        strokeWidth: 1
-      }
-    },
-    largeScreenSize: 767,
-    marginTop: 30,
-    mediumScreenSize: 375,
-    plotArea: {
-      marginRight: 30,
-      paletteRange: [
-        '#F15854',
-        '#5DA5DA',
-        '#FAA43A',
-        '#60BD68',
-        '#F17CB0',
-        '#B2912F',
-        '#B276B2',
-        '#DECF3F',
-        '#4D4D4D'
-      ],
-      strokeOpacity: 1,
-      strokeWidthDeselected: [3],
-      strokeWidthSelected: [5],
-    },
-    vAxis: {
-      fontSize: 15,
-      gridLines: {
-        opacity: 0.3,
-        stroke: 'grey',
-        strokeWidth: 1
-      },
-      label: {
-        fontSize: 20,
-        fontWeight: 'normal',
-        marginLeft: 10
-      },
-      marginLeft: 10,
-      stroke: 'black',
-      strokeWidth: 2,
-      ticks: {
-        opacity: 1,
-        stroke: 'black',
-        strokeWidth: 1
-      }
-    }
-  };
+  @Input() private inputStyling: Object = {};
   @ViewChild(
       'alepNg2ChartContainer'
   ) private alepNg2ChartContainerChild: ElementRef;
@@ -104,27 +42,94 @@ export class AlepNg2ChartD3Component implements OnInit {
   ) private alepNg2ChartLegendChild: ElementRef;
   private canvasSelection: any;
   private chartContainerId: number;
+  private defaultStyling: iStylingObject = {
+    aspectRatio: [1, 1, 2],
+    backgroundColor: ['white'],
+    hAxis: {
+      fontSize: [9, 15],
+      gridLines: {
+        opacity: [0.3],
+        stroke: ['none'],
+        strokeWidth: [1]
+      },
+      label: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginTop: [10]
+      },
+      stroke: ['black'],
+      strokeWidth: [2],
+      ticks: {
+        labelsAngle: ['-30'],
+        opacity: [1],
+        stroke: ['black'],
+        strokeWidth: [1]
+      }
+    },
+    largeScreenSize: 767,
+    marginTop: [30],
+    mediumScreenSize: 375,
+    plotArea: {
+      marginRight: [30],
+      paletteRange: [
+        [
+          '#F15854',
+          '#5DA5DA',
+          '#FAA43A',
+          '#60BD68',
+          '#F17CB0',
+          '#B2912F',
+          '#B276B2',
+          '#DECF3F',
+          '#4D4D4D'
+        ]
+      ],
+      strokeOpacity: [1],
+      strokeWidthDeselected: [3],
+      strokeWidthSelected: [5],
+    },
+    vAxis: {
+      fontSize: [9, 15],
+      gridLines: {
+        opacity: [0.3],
+        stroke: ['grey'],
+        strokeWidth: [1]
+      },
+      label: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginLeft: [10]
+      },
+      marginLeft: [10],
+      stroke: ['black'],
+      strokeWidth: [2],
+      ticks: {
+        opacity: [1],
+        stroke: ['black'],
+        strokeWidth: [1]
+      }
+    }
+  };
   private emOnResize: EventEmitter<any> = new EventEmitter();
+  private finalStyling: iStylingObject;
   private hasValidInput: boolean = true;
+  private subUpdateChart: Subscription;
   private validTypes: string[] = [
     'Bar',
-    'Line',
-    'Area',
-    'StackedBar',
-    'StackedArea',
-    'Pie',
-    'PercentBar',
-    'PercentArea',
     'Donut',
-    'StepUpBar',
-    'PolarArea',
-    'Waterfall',
+    'Line',
+    'Pie'
   ];
 
   constructor() {
   }
 
   ngOnInit() {
+    if (this.emUpdateChart) {
+     this.subUpdateChart = this.emUpdateChart.subscribe(
+       () => this.updateChart()
+     );
+    }
     this.emOnResize.subscribe(() => this.updateChart());
     this.setChartContainerId();
     this.buildChart();
@@ -140,7 +145,9 @@ export class AlepNg2ChartD3Component implements OnInit {
     }
     if (this.hasValidInput === true) {
       this.prepareContainer(this.chartContainerId);
-      this.createChart(this.inputChartObject, this.styling);
+      this.setFinalStyling(this.inputStyling, this.defaultStyling);
+      this.responsiveStyling(this.finalStyling);
+      this.createChart(this.inputChartObject, this.finalStyling);
     }
   }
   private checkInputValidity(chartType: string, validTypes: string[]) : void {
@@ -153,13 +160,35 @@ export class AlepNg2ChartD3Component implements OnInit {
       chartObject: iChart,
       styling: iStylingObject
   ) : void {
-    let aspectRatio: number = styling.aspectRatio[0];
+    let screenSizeIndex: number = this.getScreenSizeIndex(styling);
+    let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
     let containerWidth: number =
       this.alepNg2ChartContainerChild.nativeElement.offsetWidth;
     let containerHeight: number =
-      containerWidth / aspectRatio +
-      styling.hAxis.label.fontSize +
-      styling.hAxis.label.marginTop;
+      (containerWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
+      styling.hAxis.label.fontSize[screenSizeIndex] +
+      styling.hAxis.label.marginTop[screenSizeIndex];
+    let tooltipSelection: any = d3.select(
+      `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
+    )
+      .append('div')
+      .attr('class', 'tooltip')
+      .html('PROVA')
+      .style({
+        'background': 'lightsteelblue',
+        'border': '0px',
+        'border-radius': '8px',
+        'font': '12px sans-serif',
+        'left': '0px',
+        // 'height': '28px',
+        'opacity': 1,
+        'padding': '2px',
+        'top': '0px',
+        // 'pointer-events': 'none',
+        'position': 'absolute',
+        // 'text-align': 'center',
+        // 'width': '60px'
+      });
     this.canvasSelection = d3.select(
       `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
     )
@@ -170,22 +199,23 @@ export class AlepNg2ChartD3Component implements OnInit {
     let backgroundSelection: any = this.canvasSelection
       .append('rect')
       .attr('class', 'background')
-      .style('fill', styling.backgroundColor)
+      .style('fill', styling.backgroundColor[screenSizeIndex])
       .style('height', containerHeight)
       .style('width', containerWidth);
     let chartSelection: any = this.canvasSelection
       .append('g')
       .attr('class', 'chart')
-      .attr('transform', `translate(0 ${styling.marginTop})`);
+      .attr('transform', `translate(0 ${styling.marginTop[screenSizeIndex]})`);
     /*
      Collections and scales
      */
-    let plotAreaMarginRight: number = styling.plotArea.marginRight;
+    let plotAreaMarginRight: number =
+      styling.plotArea.marginRight[screenSizeIndex];
     let plotAreaMarginLeft: number =
-      styling.vAxis.label.marginLeft +
-      styling.vAxis.label.fontSize +
-      styling.vAxis.marginLeft +
-      styling.vAxis.fontSize * 2;
+      styling.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.vAxis.label.fontSize[screenSizeIndex] +
+      styling.vAxis.marginLeft[screenSizeIndex] +
+      styling.vAxis.fontSize[screenSizeIndex] * 2;
     let plotAreaWidth: number =
       containerWidth -
       plotAreaMarginLeft -
@@ -236,50 +266,70 @@ export class AlepNg2ChartD3Component implements OnInit {
     /*
      Vertical axis
      */
-    this.createVertAxis(styling, chartSelection, vScale, plotAreaWidth);
+    this.createVertAxis(
+      styling, chartSelection, vScale, plotAreaWidth, screenSizeIndex
+    );
     /*
      Vertical axis label
      */
-    this.createVertAxisLabel(chartObject, chartSelection, styling);
+    this.createVertAxisLabel(
+      chartObject, chartSelection, styling, screenSizeIndex
+    );
     /*
      Horizontal axis
      */
     this.createHorAxis(
-      styling, chartSelection, hScale, collections[0].labels, plotAreaHeight
+      styling,
+      chartSelection,
+      hScale,
+      collections[0].labels,
+      plotAreaHeight,
+      screenSizeIndex
     );
     /*
      Horizontal axis label
      */
     this.createHorAxisLabel(
-      chartObject, chartSelection, plotAreaWidth, plotAreaMarginLeft, styling
+      chartObject,
+      chartSelection,
+      plotAreaWidth,
+      plotAreaMarginLeft,
+      styling,
+      screenSizeIndex
     );
     /*
      Plot Area
      */
     this.createPlotArea(
-      collections, chartSelection, plotAreaMarginLeft, styling
+      collections,
+      chartSelection,
+      plotAreaMarginLeft,
+      styling,
+      tooltipSelection,
+      screenSizeIndex
     );
     /*
      Legend
      */
-    this.createLegend(plotAreaMarginLeft, styling);
+    this.createLegend(plotAreaMarginLeft, styling, screenSizeIndex);
   }
   private createHorAxis(
     styling: iStylingObject,
     chartSelection: any,
     hScale: any,
     labels: string[],
-    plotAreaHeight: number
+    plotAreaHeight: number,
+    screenSizeIndex: number
   ) : void {
     let hAxis: any = d3.svg.axis()
       .scale(hScale)
       .ticks(labels.length)
       .orient('bottom');
     let x: number =
-      styling.vAxis.label.marginLeft +
-      styling.vAxis.label.fontSize +
-      styling.vAxis.marginLeft +
-      styling.vAxis.fontSize * 2;
+      styling.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.vAxis.label.fontSize[screenSizeIndex] +
+      styling.vAxis.marginLeft[screenSizeIndex] +
+      styling.vAxis.fontSize[screenSizeIndex] * 2;
     let hAxisSelection: any = chartSelection
       .append('g')
       .attr('class', 'horAxis')
@@ -290,8 +340,8 @@ export class AlepNg2ChartD3Component implements OnInit {
         'transform': `translate(${x} ${plotAreaHeight})`
       });
     // Create tick labels
-    let fontSize: number = styling.vAxis.fontSize;
-    let labelsAngle: string = styling.hAxis.ticks.labelsAngle;
+    let fontSize: number = styling.vAxis.fontSize[screenSizeIndex];
+    let labelsAngle: string = styling.hAxis.ticks.labelsAngle[screenSizeIndex];
     hAxisSelection.selectAll('.tick text')
       .data(labels)
       .text((d) => {return d})
@@ -301,8 +351,9 @@ export class AlepNg2ChartD3Component implements OnInit {
       })
       .attr('transform', `rotate(${labelsAngle})`);
     // Styling axis
-    let stroke: string = styling.hAxis.stroke;
-    let strokeWidth: string = styling.hAxis.strokeWidth.toString() + 'px';
+    let stroke: string = styling.hAxis.stroke[screenSizeIndex];
+    let strokeWidth: string =
+      styling.hAxis.strokeWidth[screenSizeIndex].toString() + 'px';
     hAxisSelection.select('.domain')
       .style({
         'fill': 'none',
@@ -310,9 +361,10 @@ export class AlepNg2ChartD3Component implements OnInit {
         'stroke-width': strokeWidth
       });
     // Styling tick lines
-    let tickOpacity: number = styling.hAxis.ticks.opacity;
-    let tickStroke: string = styling.hAxis.ticks.stroke;
-    let tickStrokeWidth: number = styling.hAxis.ticks.strokeWidth;
+    let tickOpacity: number = styling.hAxis.ticks.opacity[screenSizeIndex];
+    let tickStroke: string = styling.hAxis.ticks.stroke[screenSizeIndex];
+    let tickStrokeWidth: number =
+      styling.hAxis.ticks.strokeWidth[screenSizeIndex];
     hAxisSelection.selectAll('.tick line')
       .attr('class', 'tick-line')
       .attr('y2', 6)
@@ -322,9 +374,10 @@ export class AlepNg2ChartD3Component implements OnInit {
         'stroke-width': tickStrokeWidth
       });
     // Styling grid lines
-    let gridOpacity: number = styling.hAxis.gridLines.opacity;
-    let gridStroke: string = styling.hAxis.gridLines.stroke;
-    let gridStrokeWidth: number = styling.hAxis.gridLines.strokeWidth;
+    let gridOpacity: number = styling.hAxis.gridLines.opacity[screenSizeIndex];
+    let gridStroke: string = styling.hAxis.gridLines.stroke[screenSizeIndex];
+    let gridStrokeWidth: number =
+      styling.hAxis.gridLines.strokeWidth[screenSizeIndex];
     hAxisSelection.selectAll('.tick')
       .append('line')
       .attr('class', 'grid-line')
@@ -340,15 +393,16 @@ export class AlepNg2ChartD3Component implements OnInit {
     chartSelection: any,
     plotAreaWidth: number,
     plotAreaMarginLeft: number,
-    styling: iStylingObject
+    styling: iStylingObject,
+    screenSizeIndex: number
   ) : void {
     let x: number = plotAreaMarginLeft + plotAreaWidth / 2;
     let y: number = this.alepNg2ChartContainerChild.nativeElement
       .querySelector('.canvas .chart .horAxis .axis')
       .getBBox().height;
-    let marginTop: number = styling.hAxis.label.marginTop;
-    let fontSize: number = styling.hAxis.label.fontSize;
-    let fontWeight: string = styling.hAxis.label.fontWeight;
+    let marginTop: number = styling.hAxis.label.marginTop[screenSizeIndex];
+    let fontSize: number = styling.hAxis.label.fontSize[screenSizeIndex];
+    let fontWeight: string = styling.hAxis.label.fontWeight[screenSizeIndex];
     let hAxisLabel = chartSelection.select('.horAxis')
       .append('g')
       .attr('class', 'label')
@@ -367,9 +421,10 @@ export class AlepNg2ChartD3Component implements OnInit {
   }
   private createLegend(
     plotAreaMarginLeft: number,
-    styling: iStylingObject
+    styling: iStylingObject,
+    screenSizeIndex: number
   ) : void {
-    let colors: string[] = styling.plotArea.paletteRange;
+    let colors: string[] = styling.plotArea.paletteRange[screenSizeIndex];
     let legendElement: HTMLElement =
       this.alepNg2ChartLegendChild.nativeElement;
     let legendContainer: HTMLElement = document.createElement('div');
@@ -414,20 +469,31 @@ export class AlepNg2ChartD3Component implements OnInit {
     collections: iCollection[],
     chartSelection: any,
     marginLeft: number,
-    styling: iStylingObject
+    styling: iStylingObject,
+    tooltipSelection: any,
+    screenSizeIndex: number
   ) {
-    let paletteRange = styling.plotArea.paletteRange;
+    let paletteRange = styling.plotArea.paletteRange[screenSizeIndex];
     let paletteScale: any = d3.scale.ordinal()
       .range(paletteRange);
-    let strokeWidth: string = styling.plotArea.strokeWidthDeselected[0]
+    let strokeWidth: string =
+      styling.plotArea.strokeWidthDeselected[screenSizeIndex]
         .toString() + 'px';
-    let strokeWidthSelected: string = styling.plotArea.strokeWidthSelected[0]
+    let strokeWidthSelected: string =
+      styling.plotArea.strokeWidthSelected[screenSizeIndex]
         .toString() + 'px';
-    let strokeOpacity: number = styling.plotArea.strokeOpacity;
+    let strokeOpacity: number = styling.plotArea.strokeOpacity[screenSizeIndex];
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
       .attr('transform', `translate(${marginLeft} 0)`);
+
+    // let tooltipProva: HTMLElement =
+    //   this.alepNg2ChartContainerChild
+    //     .nativeElement
+    //     .querySelector('.tooltip');
+    // tooltipProva.innerHTML = `TOOLTIP`;
+
     // Create collections
     let lengthCollections: number = collections.length;
     for (let i = 0; i < lengthCollections; i++) {
@@ -453,6 +519,14 @@ export class AlepNg2ChartD3Component implements OnInit {
           'stroke-opacity': strokeOpacity,
           'stroke-width': strokeWidth
         });
+
+      let newLine: string = '<br/>';
+      let containerElement: HTMLElement = this.alepNg2ChartContainerChild
+        .nativeElement;
+      // let containerSelection: any = d3.select(
+      //   `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
+      // );
+
       let dataPoints: any = collection.selectAll('circle')
         .data(values)
         .enter()
@@ -463,7 +537,35 @@ export class AlepNg2ChartD3Component implements OnInit {
           'cy': function(d) { return vScale(d)},
           'fill': paletteScale(i + 1),
           'r': 4
+        })
+
+        .on('mouseover', function(d) {
+
+          console.log('contX = ', containerElement.getBoundingClientRect().left);
+          console.log('contY = ', containerElement.getBoundingClientRect().top);
+
+          let contX: number = containerElement.getBoundingClientRect().left;
+          let contY: number = containerElement.getBoundingClientRect().top;
+
+          tooltipSelection.transition()
+            .duration(200)
+            .style('opacity', .9);
+          tooltipSelection.html(`Collection: ${d}${newLine}Value: ${d}`)
+            .style('left', d3.mouse(containerElement)[0] + 'px')
+            .style('top', d3.mouse(containerElement)[1] + 'px');
+
+          console.log('X = ', d3.mouse(containerElement)[0]);
+          console.log('Y = ', d3.mouse(containerElement)[1]);
+
+
+
         });
+        // .on('mouseout', function(d) {
+        //   tooltip.transition()
+        //     .duration(500)
+        //     .style('opacity', 0);
+        // });
+
     }
     // Event handling for paths
     let pathElements: SVGPathElement[] = this.alepNg2ChartContainerChild
@@ -489,12 +591,22 @@ export class AlepNg2ChartD3Component implements OnInit {
       let lengthDataPoints: number = dataPointElements.length;
       for (let i = 0; i < lengthDataPoints; i++) {
         let dataPoint: SVGCircleElement = dataPointElements[i];
-        dataPoint.onmouseover = (event) => {
+        dataPoint.addEventListener('mouseover', (event) => {
+          // Increase radius
           dataPoint.setAttribute('r', '6px');
-        };
-        dataPoint.onmouseout = (event) => {
+          // Show tooltip
+          console.log('event = ', event);
+          // console.log('tooltip = ', tooltipProva);
+          // tooltipProva.style.transform = `translate(200 200)`;
+          // tooltipProva.style.opacity = '0.9';
+
+
+
+        });
+        dataPoint.addEventListener('mouseout', (event) => {
+          // Increase radius
           dataPoint.setAttribute('r', '4px');
-        };
+        });
       }
     }
 
@@ -503,16 +615,17 @@ export class AlepNg2ChartD3Component implements OnInit {
     styling: iStylingObject,
     chartSelection: any,
     vScale: any,
-    plotAreaWidth: number
+    plotAreaWidth: number,
+    screenSizeIndex: number
   ) : void {
     let vAxis: any = d3.svg.axis()
       .scale(vScale)
       .orient('left');
     let x: number =
-      styling.vAxis.label.marginLeft +
-      styling.vAxis.label.fontSize +
-      styling.vAxis.marginLeft +
-      styling.vAxis.fontSize * 2;
+      styling.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.vAxis.label.fontSize[screenSizeIndex] +
+      styling.vAxis.marginLeft[screenSizeIndex] +
+      styling.vAxis.fontSize[screenSizeIndex] * 2;
     let y: number = 0;
     let vAxisSelection: any = chartSelection
       .append('g')
@@ -524,8 +637,9 @@ export class AlepNg2ChartD3Component implements OnInit {
         'transform': `translate(${x} ${y})`
       });
     // Styling axis
-    let stroke: string = styling.vAxis.stroke;
-    let strokeWidth: string = styling.vAxis.strokeWidth.toString() + 'px';
+    let stroke: string = styling.vAxis.stroke[screenSizeIndex];
+    let strokeWidth: string =
+      styling.vAxis.strokeWidth[screenSizeIndex].toString() + 'px';
     vAxisSelection.select('.domain')
       .style({
         'fill': 'none',
@@ -533,9 +647,10 @@ export class AlepNg2ChartD3Component implements OnInit {
         'stroke-width': strokeWidth
       });
     // Styling tick lines
-    let tickOpacity: number = styling.vAxis.ticks.opacity;
-    let tickStroke: string = styling.vAxis.ticks.stroke;
-    let tickStrokeWidth: number = styling.vAxis.ticks.strokeWidth;
+    let tickOpacity: number = styling.vAxis.ticks.opacity[screenSizeIndex];
+    let tickStroke: string = styling.vAxis.ticks.stroke[screenSizeIndex];
+    let tickStrokeWidth: number =
+      styling.vAxis.ticks.strokeWidth[screenSizeIndex];
     vAxisSelection.selectAll('.tick line')
       .attr('class', 'tick-line')
       .attr('x2', -6)
@@ -545,15 +660,16 @@ export class AlepNg2ChartD3Component implements OnInit {
         'stroke-width': tickStrokeWidth
       });
     // Styling tick labels
-    let fontSize: number = styling.vAxis.fontSize;
+    let fontSize: number = styling.vAxis.fontSize[screenSizeIndex];
     vAxisSelection.selectAll('.tick text')
       .style({
         'font-size': fontSize
       });
     // Styling grid lines
-    let gridOpacity: number = styling.vAxis.gridLines.opacity;
-    let gridStroke: string = styling.vAxis.gridLines.stroke;
-    let gridStrokeWidth: number = styling.vAxis.gridLines.strokeWidth;
+    let gridOpacity: number = styling.vAxis.gridLines.opacity[screenSizeIndex];
+    let gridStroke: string = styling.vAxis.gridLines.stroke[screenSizeIndex];
+    let gridStrokeWidth: number =
+      styling.vAxis.gridLines.strokeWidth[screenSizeIndex];
     vAxisSelection.selectAll('.tick')
       .append('line')
       .attr('class', 'grid-line')
@@ -567,14 +683,15 @@ export class AlepNg2ChartD3Component implements OnInit {
   private createVertAxisLabel(
     chartObject: iChart,
     chartSelection: any,
-    styling: iStylingObject
+    styling: iStylingObject,
+    screenSizeIndex: number
   ) : void {
     let height: number = this.alepNg2ChartContainerChild.nativeElement
       .querySelector('.canvas .chart .vertAxis .axis')
       .getBBox().height;
-    let marginLeft: number = styling.vAxis.label.marginLeft;
-    let fontSize: number = styling.vAxis.label.fontSize;
-    let fontWeight: string = styling.vAxis.label.fontWeight;
+    let marginLeft: number = styling.vAxis.label.marginLeft[screenSizeIndex];
+    let fontSize: number = styling.vAxis.label.fontSize[screenSizeIndex];
+    let fontWeight: string = styling.vAxis.label.fontWeight[screenSizeIndex];
     let dy: number = 0.75 * fontSize;
     let y: number = height / 2;
     let vAxisLabel = chartSelection.select('.vertAxis')
@@ -594,10 +711,74 @@ export class AlepNg2ChartD3Component implements OnInit {
         'font-weight': fontWeight
       });
   }
+  private getScreenSizeIndex(styling: iStylingObject) : number {
+    let index: number;
+    let width: number = window.innerWidth;
+    if (width < styling.mediumScreenSize) {
+      index = 0;
+    }
+    else if (width >= styling.mediumScreenSize &&
+      width < styling.largeScreenSize) {
+      index = 1;
+    }
+    else {
+      index = 2;
+    }
+    return index;
+
+  }
   private prepareContainer(chartContainerId: number) : void {
     this.alepNg2ChartContainerChild.nativeElement.setAttribute(
         'container-id', chartContainerId
     );
+  }
+  private recursiveMergeStyling (
+    inputStyling: Object,
+    defaultStyling: iStylingObject,
+    temp: Object
+  ) : void {
+    for (let prop in defaultStyling) {
+      if (inputStyling[prop]) {
+        if (
+          Object.prototype
+            .toString
+            .call(defaultStyling[prop]) === '[object Object]'
+        ) {
+          temp[prop] = {};
+          this.recursiveMergeStyling(
+            inputStyling[prop],
+            defaultStyling[prop],
+            temp[prop]
+          )
+        }
+        else {
+          temp[prop] = inputStyling[prop];
+        }
+      }
+      else {
+        temp[prop] = defaultStyling[prop];
+      }
+    }
+  }
+  private responsiveStyling(styling: iStylingObject) : void {
+    for (let prop in styling) {
+      if (
+        Object.prototype
+          .toString
+          .call(styling[prop]) === '[object Object]'
+      ) {
+        this.responsiveStyling(styling[prop]);
+      }
+      else {
+        if (styling[prop].length === 1) {
+          styling[prop].push(styling[prop][0]);
+          styling[prop].push(styling[prop][0]);
+        }
+        else if (styling[prop].length === 2) {
+          styling[prop].push(styling[prop][1]);
+        }
+      }
+    }
   }
   private setChartContainerId() : void {
     if (!window['alep-ng2-chart']) {
@@ -609,6 +790,14 @@ export class AlepNg2ChartD3Component implements OnInit {
     let containerId: number =
         window['alep-ng2-chart']['nextChartContainerId'] ++;
     this.chartContainerId = containerId;
+  }
+  private setFinalStyling(
+    inputStyling: Object,
+    defaultStyling: iStylingObject
+  ) : void {
+    let temp: Object = {};
+    this.recursiveMergeStyling(inputStyling, defaultStyling, temp);
+    this.finalStyling = (<iStylingObject>temp);
   }
   private updateChart() : void {
     let parentChart: HTMLElement = this.alepNg2ChartContainerChild.nativeElement;

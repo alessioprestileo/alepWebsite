@@ -1,56 +1,56 @@
 export interface iStylingObject {
   aspectRatio: number[],
-  backgroundColor: string,
+  backgroundColor: string[],
   hAxis: {
-    fontSize: number,
+    fontSize: number[],
     gridLines: {
-      opacity: number,
-      stroke: string,
-      strokeWidth: number
+      opacity: number[],
+      stroke: string[],
+      strokeWidth: number[]
     },
     label: {
-      fontSize: number,
-      fontWeight: string,
-      marginTop: number
+      fontSize: number[],
+      fontWeight: string[],
+      marginTop: number[]
     },
-    stroke: string,
-    strokeWidth: number,
+    stroke: string[],
+    strokeWidth: number[],
     ticks: {
-      labelsAngle: string,
-      opacity: number,
-      stroke: string,
-      strokeWidth: number
+      labelsAngle: string[],
+      opacity: number[],
+      stroke: string[],
+      strokeWidth: number[]
     }
   },
   largeScreenSize: number,
-  marginTop: number,
+  marginTop: number[],
   mediumScreenSize: number,
   plotArea: {
-    marginRight: number,
-    paletteRange: string[],
-    strokeOpacity: number,
+    marginRight: number[],
+    paletteRange: string[][],
+    strokeOpacity: number[],
     strokeWidthDeselected: number[],
     strokeWidthSelected: number[]
   },
   vAxis: {
-    fontSize: number,
+    fontSize: number[],
     gridLines: {
-      opacity: number,
-      stroke: string,
-      strokeWidth: number
+      opacity: number[],
+      stroke: string[],
+      strokeWidth: number[]
     },
     label: {
-      fontSize: number,
-      fontWeight: string,
-      marginLeft: number
+      fontSize: number[],
+      fontWeight: string[],
+      marginLeft: number[]
     },
-    marginLeft: number,
-    stroke: string,
-    strokeWidth: number,
+    marginLeft: number[],
+    stroke: string[],
+    strokeWidth: number[],
     ticks: {
-      opacity: number,
-      stroke: string,
-      strokeWidth: number
+      opacity: number[],
+      stroke: string[],
+      strokeWidth: number[]
     }
   }
 }
