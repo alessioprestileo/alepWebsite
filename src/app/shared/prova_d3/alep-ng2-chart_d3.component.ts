@@ -1,5 +1,6 @@
 import {
-    Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild
+  Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy,
+  OnInit, ViewChild
 } from '@angular/core'
 
 import { Subscription } from 'rxjs/Rx';
@@ -14,6 +15,7 @@ declare var d3: any;
 interface iCollection {
   hScale: any,
   labels: string[],
+  name: string;
   values: number[],
   vScale: any
 }
@@ -23,7 +25,7 @@ interface iCollection {
   templateUrl: 'alep-ng2-chart_d3.component.html',
   styleUrls: ['alep-ng2-chart_d3.component.css']
 })
-export class AlepNg2ChartD3Component implements OnInit {
+export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   @HostListener('window:resize', ['$event'])
   private onResize(event: any) {
     this.emOnResize.emit();
@@ -134,6 +136,10 @@ export class AlepNg2ChartD3Component implements OnInit {
     this.setChartContainerId();
     this.buildChart();
   }
+  ngOnDestroy() {
+    this.cancelSubs();
+    this.destroyComponentElements();
+  }
 
   private buildChart() : void {
     try {
@@ -149,6 +155,9 @@ export class AlepNg2ChartD3Component implements OnInit {
       this.responsiveStyling(this.finalStyling);
       this.createChart(this.inputChartObject, this.finalStyling);
     }
+  }
+  private cancelSubs() : void {
+    this.subUpdateChart.unsubscribe();
   }
   private checkInputValidity(chartType: string, validTypes: string[]) : void {
     let typeIndex: number = validTypes.indexOf(chartType);
@@ -168,27 +177,24 @@ export class AlepNg2ChartD3Component implements OnInit {
       (containerWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
       styling.hAxis.label.fontSize[screenSizeIndex] +
       styling.hAxis.label.marginTop[screenSizeIndex];
-    let tooltipSelection: any = d3.select(
-      `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
-    )
+    let tooltipSelection: any = d3.select(`body`)
       .append('div')
-      .attr('class', 'tooltip')
-      .html('PROVA')
+      .attr('class', 'alep-ng2-chart-tooltip')
       .style({
-        'background': 'lightsteelblue',
+        'background': '#1a1a1a',
         'border': '0px',
         'border-radius': '8px',
+        'color': 'white',
         'font': '12px sans-serif',
         'left': '0px',
-        // 'height': '28px',
-        'opacity': 1,
-        'padding': '2px',
+        'opacity': 0,
+        'padding': '5px',
         'top': '0px',
-        // 'pointer-events': 'none',
-        'position': 'absolute',
-        // 'text-align': 'center',
-        // 'width': '60px'
+        'position': 'absolute'
       });
+    tooltipSelection[0][0].setAttribute(
+      'tooltip-id', this.chartContainerId
+    );
     this.canvasSelection = d3.select(
       `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
     )
@@ -227,6 +233,7 @@ export class AlepNg2ChartD3Component implements OnInit {
     let minVal: number = 0;
     for (let i = 0; i < chartObject.collections.length; i++) {
       let dataPoints: any = chartObject.collections[i].dataSet.dataPoints;
+      let name: string = chartObject.collections[i].label;
       let labels: string[] = [];
       let values: number[] = [];
       let dataPointsLength: number = 0;
@@ -248,6 +255,7 @@ export class AlepNg2ChartD3Component implements OnInit {
         {
           hScale: null,
           labels: labels,
+          name: name,
           values: values,
           vScale: null
         }
@@ -487,13 +495,6 @@ export class AlepNg2ChartD3Component implements OnInit {
       .append('g')
       .attr('class', 'plotArea')
       .attr('transform', `translate(${marginLeft} 0)`);
-
-    // let tooltipProva: HTMLElement =
-    //   this.alepNg2ChartContainerChild
-    //     .nativeElement
-    //     .querySelector('.tooltip');
-    // tooltipProva.innerHTML = `TOOLTIP`;
-
     // Create collections
     let lengthCollections: number = collections.length;
     for (let i = 0; i < lengthCollections; i++) {
@@ -507,6 +508,7 @@ export class AlepNg2ChartD3Component implements OnInit {
       let collection: any = plotAreaSelection
         .append('g')
         .attr('class', 'collection');
+      // Path
       let path: any = collection
         .append('path')
         .attr({
@@ -518,16 +520,18 @@ export class AlepNg2ChartD3Component implements OnInit {
           stroke: paletteScale(i + 1),
           'stroke-opacity': strokeOpacity,
           'stroke-width': strokeWidth
+        })
+        .on('mouseover', function(d) {
+          this.style.strokeWidth = strokeWidthSelected
+        })
+        .on('mouseout', function(d) {
+          this.style.strokeWidth = strokeWidth
         });
-
+      /*
+       Data points
+       */
       let newLine: string = '<br/>';
-      let containerElement: HTMLElement = this.alepNg2ChartContainerChild
-        .nativeElement;
-      // let containerSelection: any = d3.select(
-      //   `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
-      // );
-
-      let dataPoints: any = collection.selectAll('circle')
+      let dataPointsSelection: any = collection.selectAll('circle')
         .data(values)
         .enter()
         .append('circle')
@@ -536,80 +540,66 @@ export class AlepNg2ChartD3Component implements OnInit {
           'cx': function(d, index) {return hScale(index)},
           'cy': function(d) { return vScale(d)},
           'fill': paletteScale(i + 1),
-          'r': 4
+          'r': '4px'
         })
-
-        .on('mouseover', function(d) {
-
-          console.log('contX = ', containerElement.getBoundingClientRect().left);
-          console.log('contY = ', containerElement.getBoundingClientRect().top);
-
-          let contX: number = containerElement.getBoundingClientRect().left;
-          let contY: number = containerElement.getBoundingClientRect().top;
-
+        .on('mouseover', function(d, index) {
+          // Increase radius
+          this.setAttribute('r', '6px');
+          // Show tooltip
+          tooltipSelection.html(
+            collections[i].name + newLine +
+            collections[i].labels[index] + ': ' + d
+          );
+          // Tooltip
+          let width: number = tooltipSelection[0][0].offsetWidth;
+          tooltipSelection
+            .style('left', function() {
+              let plotAreaMarginLeft: number = plotAreaSelection[0][0]
+                .getBoundingClientRect().left;
+              let plotAreaWidth: number = plotAreaSelection[0][0]
+                .getBoundingClientRect().width;
+              let result: string =
+                (d3.event.pageX - plotAreaMarginLeft) < plotAreaWidth / 2 ?
+                d3.event.pageX + 'px' :
+                (d3.event.pageX - width) + 'px';
+              return result;
+            })
+            .style('top', (d3.event.pageY - 4 * 12) + 'px');
           tooltipSelection.transition()
             .duration(200)
-            .style('opacity', .9);
-          tooltipSelection.html(`Collection: ${d}${newLine}Value: ${d}`)
-            .style('left', d3.mouse(containerElement)[0] + 'px')
-            .style('top', d3.mouse(containerElement)[1] + 'px');
-
-          console.log('X = ', d3.mouse(containerElement)[0]);
-          console.log('Y = ', d3.mouse(containerElement)[1]);
-
-
-
+            .style('opacity', 0.9);
+        })
+        .on('mouseout', function(d) {
+          // Decrease radius
+          this.setAttribute('r', '4px');
+          // Fade out tooltip
+          tooltipSelection.transition()
+            .duration(500)
+            .style('opacity', 0);
         });
-        // .on('mouseout', function(d) {
-        //   tooltip.transition()
-        //     .duration(500)
-        //     .style('opacity', 0);
-        // });
-
+      // If data point is selected, deselect it when user touches on body
+      d3.select('body')[0][0]
+        .addEventListener('touchstart', function() {
+          // Deselect data point if selected
+          let length: number = dataPointsSelection[0].length;
+          for (let i = 0; i < length; i++) {
+            if (dataPointsSelection[0][i].getAttribute('r') === '6px') {
+              dataPointsSelection[0][i].setAttribute('r', '4px');
+              break;
+            }
+          }
+        });
     }
-    // Event handling for paths
-    let pathElements: SVGPathElement[] = this.alepNg2ChartContainerChild
-      .nativeElement
-      .querySelectorAll('.canvas .chart .collection .path');
-    let lengthPaths: number = pathElements.length;
-    for (let i = 0; i < lengthPaths; i++) {
-      let pathElement: SVGPathElement = pathElements[i];
-      pathElement.onmouseover = (event) => {
-        let currentStrokeWidth: string = event.target['style']['strokeWidth'];
-        if (currentStrokeWidth !== strokeWidthSelected) {
-          event.target['style']['strokeWidth'] = strokeWidthSelected;
+    // Fade out active tooltip when user touches on body
+    d3.select('body')[0][0]
+      .addEventListener('touchstart', function() {
+        // Fade out tooltip if active
+        if (tooltipSelection.style('opacity') === '0.9') {
+          tooltipSelection.transition()
+            .duration(500)
+            .style('opacity', 0);
         }
-      };
-      pathElement.onmouseout = (event) => {
-        event.target['style']['strokeWidth'] = strokeWidth;
-      };
-      // Event handling for dataPoints
-      let dataPointElements: SVGCircleElement[] =
-        this.alepNg2ChartContainerChild
-          .nativeElement
-          .querySelectorAll('.canvas .chart .collection .dataPoint');
-      let lengthDataPoints: number = dataPointElements.length;
-      for (let i = 0; i < lengthDataPoints; i++) {
-        let dataPoint: SVGCircleElement = dataPointElements[i];
-        dataPoint.addEventListener('mouseover', (event) => {
-          // Increase radius
-          dataPoint.setAttribute('r', '6px');
-          // Show tooltip
-          console.log('event = ', event);
-          // console.log('tooltip = ', tooltipProva);
-          // tooltipProva.style.transform = `translate(200 200)`;
-          // tooltipProva.style.opacity = '0.9';
-
-
-
-        });
-        dataPoint.addEventListener('mouseout', (event) => {
-          // Increase radius
-          dataPoint.setAttribute('r', '4px');
-        });
-      }
-    }
-
+      });
   }
   private createVertAxis(
     styling: iStylingObject,
@@ -711,6 +701,23 @@ export class AlepNg2ChartD3Component implements OnInit {
         'font-weight': fontWeight
       });
   }
+  private destroyComponentElements() : void {
+    // Destroy chart
+    let parentChart: HTMLElement = this.alepNg2ChartContainerChild.nativeElement;
+    let childChart: SVGSVGElement = parentChart.getElementsByTagName('svg')[0];
+    parentChart.removeChild(childChart);
+    // Destroy legend
+    let parentLegend: HTMLElement = this.alepNg2ChartLegendChild.nativeElement;
+    let childLegend: Element =
+      parentLegend.getElementsByClassName('legend-container')[0];
+    parentLegend.removeChild(childLegend);
+    // Destroy tooltip
+    let parentTooltip: HTMLElement = document.querySelector('body');
+    let childTooltip: Element =
+      parentTooltip.getElementsByClassName('alep-ng2-chart-tooltip')[0];
+    parentTooltip.removeChild(childTooltip);
+
+  }
   private getScreenSizeIndex(styling: iStylingObject) : number {
     let index: number;
     let width: number = window.innerWidth;
@@ -800,13 +807,7 @@ export class AlepNg2ChartD3Component implements OnInit {
     this.finalStyling = (<iStylingObject>temp);
   }
   private updateChart() : void {
-    let parentChart: HTMLElement = this.alepNg2ChartContainerChild.nativeElement;
-    let childChart: SVGSVGElement = parentChart.getElementsByTagName('svg')[0];
-    parentChart.removeChild(childChart);
-    let parentLegend: HTMLElement = this.alepNg2ChartLegendChild.nativeElement;
-    let childLegend: Element =
-      parentLegend.getElementsByClassName('legend-container')[0];
-    parentLegend.removeChild(childLegend);
+    this.destroyComponentElements();
     this.buildChart();
   }
 }

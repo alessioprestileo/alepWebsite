@@ -29,7 +29,7 @@
     font-size: 18px;
   }
   .alep-ng2-chart-subTitle {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 /* Small screen */
@@ -38,6 +38,6 @@
     font-size: 15px;
   }
   .alep-ng2-chart-subTitle {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
