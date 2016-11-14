@@ -42,7 +42,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   @ViewChild(
     'alepNg2ChartLegend'
   ) private alepNg2ChartLegendChild: ElementRef;
-  private canvasSelection: any;
   private chartContainerId: number;
   private defaultStyling: iStylingObject = {
     aspectRatio: [1, 1, 2],
@@ -72,6 +71,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     marginTop: [30],
     mediumScreenSize: 375,
     plotArea: {
+      bar: {
+      },
+      dataPoint: {
+        diameterDeselected: [4],
+        diameterSelected: [6]
+      },
       marginRight: [30],
       paletteRange: [
         [
@@ -86,9 +91,18 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           '#4D4D4D'
         ]
       ],
-      strokeOpacity: [1],
-      strokeWidthDeselected: [3],
-      strokeWidthSelected: [5],
+      path: {
+        strokeOpacity: [1],
+        strokeWidthDeselected: [3],
+        strokeWidthSelected: [5],
+      },
+      slice: {
+      },
+    },
+    tooltip: {
+      fadeInDuration: [200],
+      fadeOutDuration: [500],
+      opacity: [0.9]
     },
     vAxis: {
       fontSize: [9, 15],
@@ -153,7 +167,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       this.prepareContainer(this.chartContainerId);
       this.setFinalStyling(this.inputStyling, this.defaultStyling);
       this.responsiveStyling(this.finalStyling);
-      this.createChart(this.inputChartObject, this.finalStyling);
+      this.createChart(
+        this.alepNg2ChartContainerChild,
+        this.alepNg2ChartLegendChild,
+        this.chartContainerId,
+        this.inputChartObject,
+        this.finalStyling
+      );
     }
   }
   private cancelSubs() : void {
@@ -166,13 +186,15 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   }
   private createChart(
-      chartObject: iChart,
-      styling: iStylingObject
+    chartContainerChild: ElementRef,
+    chartLegendChild: ElementRef,
+    chartContainerId: number,
+    chartObject: iChart,
+    styling: iStylingObject
   ) : void {
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
-    let containerWidth: number =
-      this.alepNg2ChartContainerChild.nativeElement.offsetWidth;
+    let containerWidth: number = chartContainerChild.nativeElement.offsetWidth;
     let containerHeight: number =
       (containerWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
       styling.hAxis.label.fontSize[screenSizeIndex] +
@@ -193,22 +215,22 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         'position': 'absolute'
       });
     tooltipSelection[0][0].setAttribute(
-      'tooltip-id', this.chartContainerId
+      'tooltip-id', chartContainerId
     );
-    this.canvasSelection = d3.select(
-      `.alep-ng2-chart-container[container-id="${this.chartContainerId}"`
+    let canvasSelection: any = d3.select(
+      `.alep-ng2-chart-container[container-id="${chartContainerId}"`
     )
       .append('svg')
       .attr('class', 'canvas')
       .style('height', containerHeight)
       .style('width', containerWidth);
-    let backgroundSelection: any = this.canvasSelection
+    let backgroundSelection: any = canvasSelection
       .append('rect')
       .attr('class', 'background')
       .style('fill', styling.backgroundColor[screenSizeIndex])
       .style('height', containerHeight)
       .style('width', containerWidth);
-    let chartSelection: any = this.canvasSelection
+    let chartSelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart')
       .attr('transform', `translate(0 ${styling.marginTop[screenSizeIndex]})`);
@@ -231,6 +253,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let maxDataPointsLength: number = 0;
     let maxVal: number = 0;
     let minVal: number = 0;
+    // Fill collections array
     for (let i = 0; i < chartObject.collections.length; i++) {
       let dataPoints: any = chartObject.collections[i].dataSet.dataPoints;
       let name: string = chartObject.collections[i].label;
@@ -261,6 +284,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         }
       );
     }
+    // Create scales
     let hScale: any = d3.scale.linear()
       .domain([0, maxDataPointsLength - 1])
       .range([0, plotAreaWidth]);
@@ -275,13 +299,21 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      Vertical axis
      */
     this.createVertAxis(
-      styling, chartSelection, vScale, plotAreaWidth, screenSizeIndex
+      styling,
+      chartSelection,
+      vScale,
+      plotAreaWidth,
+      screenSizeIndex
     );
     /*
      Vertical axis label
      */
     this.createVertAxisLabel(
-      chartObject, chartSelection, styling, screenSizeIndex
+      chartContainerChild,
+      chartObject,
+      chartSelection,
+      styling,
+      screenSizeIndex
     );
     /*
      Horizontal axis
@@ -298,6 +330,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      Horizontal axis label
      */
     this.createHorAxisLabel(
+      chartContainerChild,
       chartObject,
       chartSelection,
       plotAreaWidth,
@@ -319,7 +352,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Legend
      */
-    this.createLegend(plotAreaMarginLeft, styling, screenSizeIndex);
+    this.createLegend(
+      chartLegendChild,
+      chartObject,
+      plotAreaMarginLeft,
+      styling,
+      screenSizeIndex
+    );
   }
   private createHorAxis(
     styling: iStylingObject,
@@ -397,6 +436,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       });
   }
   private createHorAxisLabel(
+    chartContainerChild: ElementRef,
     chartObject: iChart,
     chartSelection: any,
     plotAreaWidth: number,
@@ -405,7 +445,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     screenSizeIndex: number
   ) : void {
     let x: number = plotAreaMarginLeft + plotAreaWidth / 2;
-    let y: number = this.alepNg2ChartContainerChild.nativeElement
+    let y: number = chartContainerChild.nativeElement
       .querySelector('.canvas .chart .horAxis .axis')
       .getBBox().height;
     let marginTop: number = styling.hAxis.label.marginTop[screenSizeIndex];
@@ -428,20 +468,21 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       });
   }
   private createLegend(
+    chartLegendChild: ElementRef,
+    chartObject: iChart,
     plotAreaMarginLeft: number,
     styling: iStylingObject,
     screenSizeIndex: number
   ) : void {
     let colors: string[] = styling.plotArea.paletteRange[screenSizeIndex];
-    let legendElement: HTMLElement =
-      this.alepNg2ChartLegendChild.nativeElement;
+    let legendElement: HTMLElement = chartLegendChild.nativeElement;
     let legendContainer: HTMLElement = document.createElement('div');
     legendContainer.classList.add('legend-container');
     legendElement.insertBefore(
       legendContainer,
       legendElement.childNodes[legendElement.childNodes.length - 1]
     );
-    let inputCollections: iChartColl[] = this.inputChartObject.collections;
+    let inputCollections: iChartColl[] = chartObject.collections;
     for (let i = 0; i < inputCollections.length; i++) {
       let colorIndex: number = i % (colors.length - 1);
       let legendEntry: HTMLElement = document.createElement('div');
@@ -485,16 +526,21 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let paletteScale: any = d3.scale.ordinal()
       .range(paletteRange);
     let strokeWidth: string =
-      styling.plotArea.strokeWidthDeselected[screenSizeIndex]
+      styling.plotArea.path.strokeWidthDeselected[screenSizeIndex]
         .toString() + 'px';
     let strokeWidthSelected: string =
-      styling.plotArea.strokeWidthSelected[screenSizeIndex]
+      styling.plotArea.path.strokeWidthSelected[screenSizeIndex]
         .toString() + 'px';
-    let strokeOpacity: number = styling.plotArea.strokeOpacity[screenSizeIndex];
+    let strokeOpacity: number =
+      styling.plotArea.path.strokeOpacity[screenSizeIndex];
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
       .attr('transform', `translate(${marginLeft} 0)`);
+    let dataPointDiameter: string =
+      styling.plotArea.dataPoint.diameterDeselected[screenSizeIndex] + 'px';
+    let dataPointDiameterSelected: string =
+      styling.plotArea.dataPoint.diameterSelected[screenSizeIndex] + 'px';
     // Create collections
     let lengthCollections: number = collections.length;
     for (let i = 0; i < lengthCollections; i++) {
@@ -540,11 +586,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           'cx': function(d, index) {return hScale(index)},
           'cy': function(d) { return vScale(d)},
           'fill': paletteScale(i + 1),
-          'r': '4px'
+          'r': dataPointDiameter
         })
         .on('mouseover', function(d, index) {
           // Increase radius
-          this.setAttribute('r', '6px');
+          this.setAttribute('r', dataPointDiameterSelected);
           // Show tooltip
           tooltipSelection.html(
             collections[i].name + newLine +
@@ -571,7 +617,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         })
         .on('mouseout', function(d) {
           // Decrease radius
-          this.setAttribute('r', '4px');
+          this.setAttribute('r', dataPointDiameter);
           // Fade out tooltip
           tooltipSelection.transition()
             .duration(500)
@@ -583,8 +629,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           // Deselect data point if selected
           let length: number = dataPointsSelection[0].length;
           for (let i = 0; i < length; i++) {
-            if (dataPointsSelection[0][i].getAttribute('r') === '6px') {
-              dataPointsSelection[0][i].setAttribute('r', '4px');
+            if (
+              dataPointsSelection[0][i].getAttribute('r') ===
+              dataPointDiameterSelected
+            ) {
+              dataPointsSelection[0][i].setAttribute('r', dataPointDiameter);
               break;
             }
           }
@@ -671,12 +720,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       });
   }
   private createVertAxisLabel(
+    chartContainerChild: ElementRef,
     chartObject: iChart,
     chartSelection: any,
     styling: iStylingObject,
     screenSizeIndex: number
   ) : void {
-    let height: number = this.alepNg2ChartContainerChild.nativeElement
+    let height: number = chartContainerChild.nativeElement
       .querySelector('.canvas .chart .vertAxis .axis')
       .getBBox().height;
     let marginLeft: number = styling.vAxis.label.marginLeft[screenSizeIndex];

@@ -26,11 +26,24 @@ export interface iStylingObject {
   marginTop: number[],
   mediumScreenSize: number,
   plotArea: {
+    bar: Object,
+    dataPoint: {
+      diameterDeselected: number[],
+      diameterSelected: number[]
+    },
     marginRight: number[],
     paletteRange: string[][],
-    strokeOpacity: number[],
-    strokeWidthDeselected: number[],
-    strokeWidthSelected: number[]
+    path: {
+      strokeOpacity: number[],
+      strokeWidthDeselected: number[],
+      strokeWidthSelected: number[]
+    },
+    slice: Object,
+  },
+  tooltip: {
+    fadeInDuration: number[],
+    fadeOutDuration: number[],
+    opacity: number[]
   },
   vAxis: {
     fontSize: number[],
