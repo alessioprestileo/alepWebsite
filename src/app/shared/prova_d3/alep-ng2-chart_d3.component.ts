@@ -100,9 +100,15 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       },
     },
     tooltip: {
+      backgroundColor: ['#1a1a1a'],
+      border: ['0px'],
+      borderRadius: ['8px'],
       fadeInDuration: [200],
       fadeOutDuration: [500],
-      opacity: [0.9]
+      font: ['12px sans-serif'],
+      fontColor: ['white'],
+      opacity: [0.9],
+      padding: ['5px']
     },
     vAxis: {
       fontSize: [9, 15],
@@ -192,6 +198,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartObject: iChart,
     styling: iStylingObject
   ) : void {
+    let chartType: string = chartObject.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
     let containerWidth: number = chartContainerChild.nativeElement.offsetWidth;
@@ -199,23 +206,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       (containerWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
       styling.hAxis.label.fontSize[screenSizeIndex] +
       styling.hAxis.label.marginTop[screenSizeIndex];
-    let tooltipSelection: any = d3.select(`body`)
-      .append('div')
-      .attr('class', 'alep-ng2-chart-tooltip')
-      .style({
-        'background': '#1a1a1a',
-        'border': '0px',
-        'border-radius': '8px',
-        'color': 'white',
-        'font': '12px sans-serif',
-        'left': '0px',
-        'opacity': 0,
-        'padding': '5px',
-        'top': '0px',
-        'position': 'absolute'
-      });
-    tooltipSelection[0][0].setAttribute(
-      'tooltip-id', chartContainerId
+    let tooltipSelection: any = this.getInitializedTooltip(
+      styling,
+      screenSizeIndex,
+      chartContainerId
     );
     let canvasSelection: any = d3.select(
       `.alep-ng2-chart-container[container-id="${chartContainerId}"`
@@ -237,63 +231,71 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Collections and scales
      */
-    let plotAreaMarginRight: number =
-      styling.plotArea.marginRight[screenSizeIndex];
-    let plotAreaMarginLeft: number =
-      styling.vAxis.label.marginLeft[screenSizeIndex] +
-      styling.vAxis.label.fontSize[screenSizeIndex] +
-      styling.vAxis.marginLeft[screenSizeIndex] +
-      styling.vAxis.fontSize[screenSizeIndex] * 2;
-    let plotAreaWidth: number =
-      containerWidth -
-      plotAreaMarginLeft -
-      plotAreaMarginRight;
-    let plotAreaHeight: number = plotAreaWidth / aspectRatio;
     let collections: iCollection[] = [];
-    let maxDataPointsLength: number = 0;
-    let maxVal: number = 0;
-    let minVal: number = 0;
-    // Fill collections array
-    for (let i = 0; i < chartObject.collections.length; i++) {
-      let dataPoints: any = chartObject.collections[i].dataSet.dataPoints;
-      let name: string = chartObject.collections[i].label;
-      let labels: string[] = [];
-      let values: number[] = [];
-      let dataPointsLength: number = 0;
-      for (let label in dataPoints) {
-        dataPointsLength ++;
-        maxVal = (dataPoints[label] > maxVal) ?
-          dataPoints[label] :
-          maxVal;
-        minVal = (dataPoints[label] < minVal) ?
-          dataPoints[label] :
-          minVal;
-        labels.push(label);
-        values.push(dataPoints[label]);
-      }
-      maxDataPointsLength = (dataPointsLength > maxDataPointsLength) ?
-        dataPointsLength :
-        maxDataPointsLength;
-      collections.push(
-        {
-          hScale: null,
-          labels: labels,
-          name: name,
-          values: values,
-          vScale: null
+    let plotAreaHeight: number;
+    let plotAreaMarginLeft: number;
+    let plotAreaWidth: number;
+    if ((chartType === 'Bar') ||
+        (chartType === 'Line')) {
+      let plotAreaMarginRight: number =
+        styling.plotArea.marginRight[screenSizeIndex];
+      plotAreaMarginLeft =
+        styling.vAxis.label.marginLeft[screenSizeIndex] +
+        styling.vAxis.label.fontSize[screenSizeIndex] +
+        styling.vAxis.marginLeft[screenSizeIndex] +
+        styling.vAxis.fontSize[screenSizeIndex] * 2;
+      plotAreaWidth =
+        containerWidth -
+        plotAreaMarginLeft -
+        plotAreaMarginRight;
+      plotAreaHeight = plotAreaWidth / aspectRatio;
+      let maxVal: number = 0;
+      let minVal: number = 0;
+      // Fill collections array
+      for (let i = 0; i < chartObject.collections.length; i++) {
+        let dataPoints: any = chartObject.collections[i].dataSet.dataPoints;
+        let name: string = chartObject.collections[i].label;
+        let labels: string[] = [];
+        let values: number[] = [];
+        for (let label in dataPoints) {
+          maxVal = (dataPoints[label] > maxVal) ?
+            dataPoints[label] :
+            maxVal;
+          minVal = (dataPoints[label] < minVal) ?
+            dataPoints[label] :
+            minVal;
+          labels.push(label);
+          values.push(dataPoints[label]);
         }
-      );
-    }
-    // Create scales
-    let hScale: any = d3.scale.linear()
-      .domain([0, maxDataPointsLength - 1])
-      .range([0, plotAreaWidth]);
-    let vScale: any = d3.scale.linear()
-      .domain([minVal, maxVal])
-      .range([plotAreaHeight, 0]);
-    for (let collection of collections) {
-      collection.hScale = hScale;
-      collection.vScale = vScale;
+        collections.push(
+          {
+            hScale: null,
+            labels: labels,
+            name: name,
+            values: values,
+            vScale: null
+          }
+        );
+      }
+      // Create scales
+      let hScale: any;
+      if (chartType === 'Bar') {
+        hScale = d3.scale.linear()
+          .domain([0, collections[0].labels.length])
+          .range([0, plotAreaWidth]);
+      }
+      else if (chartType === 'Line') {
+        hScale = d3.scale.linear()
+          .domain([0, collections[0].labels.length - 1])
+          .range([0, plotAreaWidth]);
+      }
+      let vScale: any = d3.scale.linear()
+        .domain([minVal, maxVal])
+        .range([plotAreaHeight, 0]);
+      for (let collection of collections) {
+        collection.hScale = hScale;
+        collection.vScale = vScale;
+      }
     }
     /*
      Vertical axis
@@ -301,7 +303,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.createVertAxis(
       styling,
       chartSelection,
-      vScale,
+      collections[0].vScale,
       plotAreaWidth,
       screenSizeIndex
     );
@@ -319,9 +321,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      Horizontal axis
      */
     this.createHorAxis(
+      chartType,
       styling,
       chartSelection,
-      hScale,
+      collections[0].hScale,
       collections[0].labels,
       plotAreaHeight,
       screenSizeIndex
@@ -342,6 +345,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      Plot Area
      */
     this.createPlotArea(
+      chartType,
       collections,
       chartSelection,
       plotAreaMarginLeft,
@@ -361,6 +365,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     );
   }
   private createHorAxis(
+    chartType: string,
     styling: iStylingObject,
     chartSelection: any,
     hScale: any,
@@ -368,6 +373,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     plotAreaHeight: number,
     screenSizeIndex: number
   ) : void {
+    let dataGroupWidth: number;
+    if (chartType === 'Bar') {
+      labels.push('');
+      let totDataPoints: number = labels.length - 1;
+      dataGroupWidth = hScale(totDataPoints) / totDataPoints;
+    }
     let hAxis: any = d3.svg.axis()
       .scale(hScale)
       .ticks(labels.length)
@@ -389,6 +400,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     // Create tick labels
     let fontSize: number = styling.vAxis.fontSize[screenSizeIndex];
     let labelsAngle: string = styling.hAxis.ticks.labelsAngle[screenSizeIndex];
+    let labelsHorShift: number = dataGroupWidth ? dataGroupWidth / 2 : 0;
     hAxisSelection.selectAll('.tick text')
       .data(labels)
       .text((d) => {return d})
@@ -396,7 +408,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         'font-size': fontSize,
         'text-anchor': 'end'
       })
-      .attr('transform', `rotate(${labelsAngle})`);
+      .attr({
+        'dy': 0,
+        'transform':
+        `translate(${labelsHorShift} ${fontSize}) rotate(${labelsAngle})`,
+        'y': 0
+      });
     // Styling axis
     let stroke: string = styling.hAxis.stroke[screenSizeIndex];
     let strokeWidth: string =
@@ -515,6 +532,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   }
   private createPlotArea(
+    chartType: string,
     collections: iCollection[],
     chartSelection: any,
     marginLeft: number,
@@ -525,119 +543,199 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let paletteRange = styling.plotArea.paletteRange[screenSizeIndex];
     let paletteScale: any = d3.scale.ordinal()
       .range(paletteRange);
-    let strokeWidth: string =
-      styling.plotArea.path.strokeWidthDeselected[screenSizeIndex]
-        .toString() + 'px';
-    let strokeWidthSelected: string =
-      styling.plotArea.path.strokeWidthSelected[screenSizeIndex]
-        .toString() + 'px';
-    let strokeOpacity: number =
-      styling.plotArea.path.strokeOpacity[screenSizeIndex];
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
       .attr('transform', `translate(${marginLeft} 0)`);
-    let dataPointDiameter: string =
-      styling.plotArea.dataPoint.diameterDeselected[screenSizeIndex] + 'px';
-    let dataPointDiameterSelected: string =
-      styling.plotArea.dataPoint.diameterSelected[screenSizeIndex] + 'px';
-    // Create collections
-    let lengthCollections: number = collections.length;
-    for (let i = 0; i < lengthCollections; i++) {
-      let hScale: any  = collections[i].hScale;
-      let vScale: any  = collections[i].vScale;
-      let values: number[] = collections[i].values;
-      let lineGenerator: any = d3.svg.line()
-        .x(function(d, index) {return hScale(index)})
-        .y(function(d) { return vScale(d)})
-        .interpolate('linear');
-      let collection: any = plotAreaSelection
-        .append('g')
-        .attr('class', 'collection');
-      // Path
-      let path: any = collection
-        .append('path')
-        .attr({
-          class: 'path',
-          d: lineGenerator(values)
-        })
-        .style({
-          fill: 'none',
-          stroke: paletteScale(i + 1),
-          'stroke-opacity': strokeOpacity,
-          'stroke-width': strokeWidth
-        })
-        .on('mouseover', function(d) {
-          this.style.strokeWidth = strokeWidthSelected
-        })
-        .on('mouseout', function(d) {
-          this.style.strokeWidth = strokeWidth
-        });
-      /*
-       Data points
-       */
-      let newLine: string = '<br/>';
-      let dataPointsSelection: any = collection.selectAll('circle')
-        .data(values)
-        .enter()
-        .append('circle')
-        .attr({
-          'class': 'dataPoint',
-          'cx': function(d, index) {return hScale(index)},
-          'cy': function(d) { return vScale(d)},
-          'fill': paletteScale(i + 1),
-          'r': dataPointDiameter
-        })
-        .on('mouseover', function(d, index) {
-          // Increase radius
-          this.setAttribute('r', dataPointDiameterSelected);
-          // Show tooltip
-          tooltipSelection.html(
-            collections[i].name + newLine +
-            collections[i].labels[index] + ': ' + d
-          );
-          // Tooltip
-          let width: number = tooltipSelection[0][0].offsetWidth;
-          tooltipSelection
-            .style('left', function() {
-              let plotAreaMarginLeft: number = plotAreaSelection[0][0]
-                .getBoundingClientRect().left;
-              let plotAreaWidth: number = plotAreaSelection[0][0]
-                .getBoundingClientRect().width;
-              let result: string =
-                (d3.event.pageX - plotAreaMarginLeft) < plotAreaWidth / 2 ?
-                d3.event.pageX + 'px' :
-                (d3.event.pageX - width) + 'px';
+    let tooltipFadeInDuration: number =
+      styling.tooltip.fadeInDuration[screenSizeIndex];
+    let tooltipFadeOutDuration: number =
+      styling.tooltip.fadeOutDuration[screenSizeIndex];
+    /*
+     Create collections
+     */
+    if (chartType === 'Bar') {
+      let length_Collections: number = collections.length;
+      let barGap: number = 2;
+      let totDataPoints: number = collections[0].labels.length;
+      let hScale: any = collections[0].hScale;
+      let dataGroupPadding: number = 6;
+      let dataGroupWidth: number = hScale(totDataPoints) / totDataPoints;
+      let barWidth: number =
+        (
+          dataGroupWidth -
+          2 * dataGroupPadding -
+          barGap * (length_Collections - 1)
+        ) / length_Collections;
+      for (let i = 0; i < length_Collections; i++) {
+        let hScale: any  = collections[i].hScale;
+        let vScale: any  = collections[i].vScale;
+        let values: number[] = collections[i].values;
+        let collection: any = plotAreaSelection
+          .append('g')
+          .attr('class', 'collection');
+        /*
+         Bars
+         */
+        let newLine: string = '<br/>';
+        let finalizeTooltip: Function = this.finalizeTooltip;
+        let barSelection: any = collection.selectAll('.bar')
+          .data(values)
+          .enter()
+          .append('rect')
+          .attr({
+            'class': 'bar',
+            'x': function(d, index) {
+              let result: number =
+                hScale(index) +
+                dataGroupPadding +
+                barGap * i +
+                barWidth * i;
               return result;
-            })
-            .style('top', (d3.event.pageY - 4 * 12) + 'px');
-          tooltipSelection.transition()
-            .duration(200)
-            .style('opacity', 0.9);
-        })
-        .on('mouseout', function(d) {
-          // Decrease radius
-          this.setAttribute('r', dataPointDiameter);
-          // Fade out tooltip
-          tooltipSelection.transition()
-            .duration(500)
-            .style('opacity', 0);
-        });
-      // If data point is selected, deselect it when user touches on body
-      d3.select('body')[0][0]
-        .addEventListener('touchstart', function() {
-          // Deselect data point if selected
-          let length: number = dataPointsSelection[0].length;
-          for (let i = 0; i < length; i++) {
-            if (
-              dataPointsSelection[0][i].getAttribute('r') ===
-              dataPointDiameterSelected
-            ) {
-              dataPointsSelection[0][i].setAttribute('r', dataPointDiameter);
-              break;
+            },
+            'y': function(d) { return vScale(d)},
+            'fill': paletteScale(i + 1),
+            'height': function(d) { return (vScale(0) - vScale(d))},
+            'width': barWidth + 'px'
+          })
+          .on('mouseover', function(d, index) {
+            // Add shadow
+            this.setAttribute('stroke', 'grey');
+            this.setAttribute('stroke-opacity', 0.5);
+            this.setAttribute('stroke-width', barGap * 2);
+            // Show tooltip
+            tooltipSelection.html(
+              collections[i].name + newLine +
+              collections[i].labels[index] + ': ' + d
+            );
+            // Finalize tooltip
+            finalizeTooltip(
+              tooltipSelection,
+              plotAreaSelection,
+              tooltipFadeInDuration
+            );
+          })
+          .on('mouseout', function(d) {
+            // Remove shadow
+            this.setAttribute('stroke', 'none');
+            // Fade out tooltip
+            tooltipSelection.transition()
+              .duration(tooltipFadeOutDuration)
+              .style('opacity', 0);
+          });
+        // If bar is selected, deselect it when user touches on body
+        d3.select('body')[0][0]
+          .addEventListener('touchstart', function() {
+            // Deselect bar if selected
+            let length: number = barSelection[0].length;
+            for (let i = 0; i < length; i++) {
+              if (barSelection[0][i].getAttribute('stroke') !== 'none') {
+                barSelection[0][i].setAttribute('stroke', 'none');
+                break;
+              }
             }
-          }
-        });
+          });
+      }
+    }
+    else if (chartType === 'Line') {
+      let dataPointDiameter: string =
+        styling.plotArea.dataPoint.diameterDeselected[screenSizeIndex] + 'px';
+      let dataPointDiameterSelected: string =
+        styling.plotArea.dataPoint.diameterSelected[screenSizeIndex] + 'px';
+      let strokeWidth: string =
+        styling.plotArea.path.strokeWidthDeselected[screenSizeIndex]
+          .toString() + 'px';
+      let strokeWidthSelected: string =
+        styling.plotArea.path.strokeWidthSelected[screenSizeIndex]
+          .toString() + 'px';
+      let strokeOpacity: number =
+        styling.plotArea.path.strokeOpacity[screenSizeIndex];
+      let length_Collections: number = collections.length;
+      for (let i = 0; i < length_Collections; i++) {
+        let hScale: any  = collections[i].hScale;
+        let vScale: any  = collections[i].vScale;
+        let values: number[] = collections[i].values;
+        let lineGenerator: any = d3.svg.line()
+          .x(function(d, index) {return hScale(index)})
+          .y(function(d) { return vScale(d)})
+          .interpolate('linear');
+        let collection: any = plotAreaSelection
+          .append('g')
+          .attr('class', 'collection');
+        // Path
+        let path: any = collection
+          .append('path')
+          .attr({
+            class: 'path',
+            d: lineGenerator(values)
+          })
+          .style({
+            fill: 'none',
+            stroke: paletteScale(i + 1),
+            'stroke-opacity': strokeOpacity,
+            'stroke-width': strokeWidth
+          })
+          .on('mouseover', function(d) {
+            this.style.strokeWidth = strokeWidthSelected
+          })
+          .on('mouseout', function(d) {
+            this.style.strokeWidth = strokeWidth
+          });
+        /*
+         Data points
+         */
+        let newLine: string = '<br/>';
+        let finalizeTooltip: Function = this.finalizeTooltip;
+        let dataPointsSelection: any = collection.selectAll('circle')
+          .data(values)
+          .enter()
+          .append('circle')
+          .attr({
+            'class': 'dataPoint',
+            'cx': function(d, index) {return hScale(index)},
+            'cy': function(d) { return vScale(d)},
+            'fill': paletteScale(i + 1),
+            'r': dataPointDiameter
+          })
+          .on('mouseover', function(d, index) {
+            // Increase radius
+            this.setAttribute('r', dataPointDiameterSelected);
+            // Show tooltip
+            tooltipSelection.html(
+              collections[i].name + newLine +
+              collections[i].labels[index] + ': ' + d
+            );
+            // Finalize tooltip
+            finalizeTooltip(
+              tooltipSelection,
+              plotAreaSelection,
+              tooltipFadeInDuration
+            );
+          })
+          .on('mouseout', function(d) {
+            // Decrease radius
+            this.setAttribute('r', dataPointDiameter);
+            // Fade out tooltip
+            tooltipSelection.transition()
+              .duration(tooltipFadeOutDuration)
+              .style('opacity', 0);
+          });
+        // If data point is selected, deselect it when user touches on body
+        d3.select('body')[0][0]
+          .addEventListener('touchstart', function() {
+            // Deselect data point if selected
+            let length: number = dataPointsSelection[0].length;
+            for (let i = 0; i < length; i++) {
+              if (
+                dataPointsSelection[0][i].getAttribute('r') ===
+                dataPointDiameterSelected
+              ) {
+                dataPointsSelection[0][i].setAttribute('r', dataPointDiameter);
+                break;
+              }
+            }
+          });
+      }
     }
     // Fade out active tooltip when user touches on body
     d3.select('body')[0][0]
@@ -645,7 +743,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         // Fade out tooltip if active
         if (tooltipSelection.style('opacity') === '0.9') {
           tooltipSelection.transition()
-            .duration(500)
+            .duration(tooltipFadeOutDuration)
             .style('opacity', 0);
         }
       });
@@ -768,6 +866,31 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     parentTooltip.removeChild(childTooltip);
 
   }
+  private getInitializedTooltip(
+    styling: iStylingObject,
+    screenSizeIndex: number,
+    chartContainerId: number
+  ) : any {
+    let tooltipSelection: any = d3.select(`body`)
+      .append('div')
+      .attr('class', 'alep-ng2-chart-tooltip')
+      .style({
+        'background': styling.tooltip.backgroundColor[screenSizeIndex],
+        'border': styling.tooltip.border[screenSizeIndex],
+        'border-radius': styling.tooltip.borderRadius[screenSizeIndex],
+        'color': styling.tooltip.fontColor[screenSizeIndex],
+        'font': styling.tooltip.font[screenSizeIndex],
+        'left': '0px',
+        'opacity': 0,
+        'padding': styling.tooltip.padding[screenSizeIndex],
+        'top': '0px',
+        'position': 'absolute'
+      });
+    tooltipSelection[0][0].setAttribute(
+      'tooltip-id', chartContainerId
+    );
+    return tooltipSelection;
+  }
   private getScreenSizeIndex(styling: iStylingObject) : number {
     let index: number;
     let width: number = window.innerWidth;
@@ -782,7 +905,29 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       index = 2;
     }
     return index;
-
+  }
+  private finalizeTooltip(
+    tooltipSelection: any,
+    plotAreaSelection: any,
+    tooltipFadeInDuration: number
+  ) : void {
+    let width: number = tooltipSelection[0][0].offsetWidth;
+    tooltipSelection
+      .style('left', function() {
+        let plotAreaMarginLeft: number = plotAreaSelection[0][0]
+          .getBoundingClientRect().left;
+        let plotAreaWidth: number = plotAreaSelection[0][0]
+          .getBoundingClientRect().width;
+        let result: string =
+          (d3.event.pageX - plotAreaMarginLeft) < plotAreaWidth / 2 ?
+          d3.event.pageX + 'px' :
+          (d3.event.pageX - width) + 'px';
+        return result;
+      })
+      .style('top', (d3.event.pageY - 4 * 12) + 'px');
+    tooltipSelection.transition()
+      .duration(tooltipFadeInDuration)
+      .style('opacity', 0.9);
   }
   private prepareContainer(chartContainerId: number) : void {
     this.alepNg2ChartContainerChild.nativeElement.setAttribute(

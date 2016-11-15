@@ -41,9 +41,15 @@ export interface iStylingObject {
     slice: Object,
   },
   tooltip: {
+    backgroundColor: string[],
+    border: string[],
+    borderRadius: string[],
     fadeInDuration: number[],
     fadeOutDuration: number[],
-    opacity: number[]
+    font: string[],
+    fontColor: string[],
+    opacity: number[],
+    padding: string[]
   },
   vAxis: {
     fontSize: number[],
