@@ -9,10 +9,18 @@
           </label>
         </div>
       </div>
-      <div class="row">
+      <div class="row"
+           style="margin-bottom: 10px">
         <div class="col-xs-12">
           <app-input-box [label]="'Name:'"
                          [inFormControl]="formGroup.controls['name']">
+          </app-input-box>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <app-input-box [label]="'Label:'"
+                         [inFormControl]="formGroup.controls['label']">
           </app-input-box>
         </div>
       </div>

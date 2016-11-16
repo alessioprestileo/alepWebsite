@@ -33,7 +33,6 @@ class CollectionInput {
 }
 
 @Component({
-  // moduleId: module.id,
   selector: 'app-chart-form',
   templateUrl: 'chart-form.component.html',
   styleUrls: ['chart-form.component.css'],
