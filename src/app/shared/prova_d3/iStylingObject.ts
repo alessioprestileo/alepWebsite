@@ -17,7 +17,7 @@ export interface iStylingObject {
       stroke: string[],
       strokeWidth: number[],
       ticks: {
-        labelsAngle: string[],
+        labelsAngle: number[],
         opacity: number[],
         stroke: string[],
         strokeWidth: number[]
@@ -70,11 +70,31 @@ export interface iStylingObject {
     }
   },
   largeScreenSize: number,
+  legend: {
+    legendEntry:{
+      symbol: {
+        height:  [number],
+        width:  [number],
+      },
+      text:{
+        fontSize: [number],
+        fontWeight: string[],
+        marginLeft: [number]
+      }
+    },
+    marginBottom: [number],
+    marginTop: [number]
+  },
   mediumScreenSize: number,
+  subtitle: {
+    fontSize: [number],
+    fontWeight: string[],
+    marginTop: [number],
+  },
   title: {
     fontSize: [number],
-    paddingBottom: [number],
-    paddingTop: [number],
+    fontWeight: string[],
+    marginTop: [number],
   },
   tooltip: {
     backgroundColor: string[],

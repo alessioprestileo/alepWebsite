@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs/Rx';
 
 // import { iChart } from '../../models/iChart'
 import { iChart } from './iChart'
-import { iChartColl } from "./iChartColl";
 import { iStylingObject } from './iStylingObject'
 
 declare var d3: any;
@@ -31,20 +30,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.emOnResize.emit();
   }
   @Input() private emUpdateChart: EventEmitter<any>;
-  @Input() private legendCssClass: string;
-  @Input() private titleCssClass: string;
-  @Input() private subtitleCssClass: string;
   @Input() private inputChartObject: iChart;
   @Input() private inputStyling: Object = {};
-  // @ViewChild(
-  //     'alepNg2ChartBody'
-  // ) private alepNg2ChartBodyChild: ElementRef;
   @ViewChild(
     'alepNg2ChartContainer'
   ) private alepNg2ChartContainerChild: ElementRef;
-  // @ViewChild(
-  //   'alepNg2ChartLegend'
-  // ) private alepNg2ChartLegendChild: ElementRef;
   private chartContainerId: number;
   private defaultStyling: iStylingObject = {
     aspectRatio: [1, 1, 2],
@@ -60,12 +50,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         label: {
           fontSize: [12, 20],
           fontWeight: ['normal'],
-          marginTop: [10]
+          marginTop: [0]
         },
         stroke: ['black'],
         strokeWidth: [2],
         ticks: {
-          labelsAngle: ['-30'],
+          labelsAngle: [-30],
           opacity: [1],
           stroke: ['black'],
           strokeWidth: [1]
@@ -74,11 +64,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       marginTop: [30],
       plotArea: {
         bar: {
-          barGap: [2],
-          dataGroupPadding: [6],
+          barGap: [1, 2, 2],
+          dataGroupPadding: [2, 6, 6],
           selectionOutline: {
-            color: ['grey'],
-            opacity: [0.5],
+            color: ['black'],
+            opacity: [0.7],
             width: [0]
           }
         },
@@ -86,7 +76,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           diameterDeselected: [4],
           diameterSelected: [6]
         },
-        marginRight: [30],
+        marginRight: [10, 30, 30],
         paletteRange: [
           [
             '#F15854',
@@ -131,11 +121,31 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     },
     largeScreenSize: 767,
+    legend: {
+      legendEntry:{
+        symbol: {
+          height:  [12, 15, 15],
+          width:  [28, 36, 36],
+        },
+        text:{
+          fontSize: [10],
+          fontWeight: ['normal'],
+          marginLeft: [10]
+        }
+      },
+      marginBottom: [10],
+      marginTop: [10]
+    },
     mediumScreenSize: 375,
+    subtitle: {
+      fontSize: [12, 20],
+      fontWeight: ['normal'],
+      marginTop: [10],
+    },
     title: {
-      fontSize: [25],
-      paddingBottom: [10],
-      paddingTop: [10],
+      fontSize: [15, 25],
+      fontWeight: ['bold'],
+      marginTop: [10],
     },
     tooltip: {
       backgroundColor: ['#1a1a1a'],
@@ -145,7 +155,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       fadeOutDuration: [500],
       font: ['12px sans-serif'],
       fontColor: ['white'],
-      opacity: [0.9],
+      opacity: [1],
       padding: ['5px']
     }
   };
@@ -175,7 +185,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   ngOnDestroy() {
     this.cancelSubs();
-    this.destroyComponentElements();
+    this.destroyCanvas();
   }
   private buildChart() : void {
     try {
@@ -189,13 +199,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       this.prepareContainer(this.chartContainerId);
       this.setFinalStyling(this.inputStyling, this.defaultStyling);
       this.responsiveStyling(this.finalStyling);
-      // this.createChart(
-      //   this.alepNg2ChartBodyChild,
-      //   this.alepNg2ChartLegendChild,
-      //   this.chartContainerId,
-      //   this.inputChartObject,
-      //   this.finalStyling
-      // );
       this.createChart(
         this.alepNg2ChartContainerChild,
         this.chartContainerId,
@@ -214,8 +217,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   }
   private createChart(
-    // chartBodyChild: ElementRef,
-    // chartLegendChild: ElementRef,
     chartContainerChild: ElementRef,
     chartContainerId: number,
     chartObject: iChart,
@@ -224,59 +225,48 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let chartType: string = chartObject.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
-    // let containerWidth: number = chartBodyChild.nativeElement.offsetWidth;
     let chartBodyWidth: number = chartContainerChild.nativeElement.offsetWidth;
-    let chartBodyHeight: number =
-      (chartBodyWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
-      styling.chartBody.hAxis.label.fontSize[screenSizeIndex] +
-      styling.chartBody.hAxis.label.marginTop[screenSizeIndex];
-    let tooltipSelection: any = this.getInitializedTooltip(
+    let tooltipSelection: any = this.createTooltip(
       styling,
       screenSizeIndex,
       chartContainerId
     );
+    // Canvas
     let canvasSelection: any = d3.select(
       `.alep-ng2-chart-container[container-id="${chartContainerId}"`
     )
       .append('svg')
       .attr('class', 'canvas')
-      .style('height', chartBodyHeight)
       .style('width', chartBodyWidth);
-    // For some reason, the command "chartContainerChild.nativeElement.offsetWidth"
-    // only gives the correct width after the canvas svg has been appended,
-    // hence the values updates in the following lines
-    // *************************************************************************
-    // containerWidth = chartBodyChild.nativeElement.offsetWidth;
-    chartBodyWidth = chartContainerChild.nativeElement.offsetWidth;
-    chartBodyHeight =
-      (chartBodyWidth / aspectRatio) * (1 + 0.05 * screenSizeIndex) +
-      styling.chartBody.hAxis.label.fontSize[screenSizeIndex] +
-      styling.chartBody.hAxis.label.marginTop[screenSizeIndex];
-    // *************************************************************************
+    // Background
     let backgroundSelection: any = canvasSelection
       .append('rect')
       .attr('class', 'background')
       .style('fill', styling.backgroundColor[screenSizeIndex])
-      .style('height', chartBodyHeight)
       .style('width', chartBodyWidth);
     /*
      Chart title
      */
-    let chartTitleSelection: any = canvasSelection
-      .append('g')
-      .attr('class', 'chart-title');
-    this.createTitle(
-      chartContainerChild.nativeElement.offsetWidth,
-      chartTitleSelection,
+    let chartTitleVPos: number = styling.title.marginTop[screenSizeIndex];
+    let chartTitleSelection: any = this.createTitle(
+      canvasSelection,
+      chartTitleVPos,
       chartObject,
       styling,
       screenSizeIndex);
     /*
      Chart subtitle
      */
-    let chartSubtitleSelection: any = canvasSelection
-      .append('g')
-      .attr('class', 'chart-subtitle');
+    let chartSubtitleVPos: number =
+      chartTitleSelection[0][0].getBBox().height +
+      chartTitleVPos +
+      styling.subtitle.marginTop[screenSizeIndex];
+    let chartSubtitleSelection: any = this.createSubtitle(
+      canvasSelection,
+      chartSubtitleVPos,
+      chartObject,
+      styling,
+      screenSizeIndex);
     /*
      Collections and scales
      */
@@ -349,58 +339,58 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Chart body
      */
-    let chartBodyVertPos: number =
-      styling.title.paddingTop[screenSizeIndex] +
-      chartTitleSelection[0][0].getBBox().height +
-      styling.title.paddingBottom[screenSizeIndex] +
+    let chartBodyVPos: number =
+      chartSubtitleVPos +
+      chartSubtitleSelection[0][0].getBBox().height +
       styling.chartBody.marginTop[screenSizeIndex];
     let chartBodySelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart-body')
       .attr(
         'transform',
-        `translate(0 ${chartBodyVertPos})`);
+        `translate(0 ${chartBodyVPos})`);
     /*
      Vertical axis
      */
-    this.createVertAxis(
-      styling,
+    let vAxisGroupSelection: any = this.createVAxis(
       chartBodySelection,
       collections[0].vScale,
       plotAreaWidth,
+      styling,
       screenSizeIndex
     );
     /*
      Vertical axis label
      */
-    this.createVertAxisLabel(
-      // chartBodyChild,
+    this.createVAxisLabel(
       chartObject,
-      chartBodySelection,
+      vAxisGroupSelection,
       styling,
       screenSizeIndex
     );
     /*
      Horizontal axis
      */
-    this.createHorAxis(
+    let hAxisGroupSelection: any = this.createHAxis(
       chartType,
-      styling,
       chartBodySelection,
       collections[0].hScale,
       collections[0].labels,
       plotAreaHeight,
+      styling,
       screenSizeIndex
     );
     /*
      Horizontal axis label
      */
-    this.createHorAxisLabel(
-      // chartBodyChild,
+    let hAxisGroupHeight: number =
+      hAxisGroupSelection[0][0].getBBox().height -
+      plotAreaHeight;
+    this.createHAxisLabel(
       chartObject,
       chartBodySelection,
+      hAxisGroupHeight,
       plotAreaWidth,
-      plotAreaMarginLeft,
       styling,
       screenSizeIndex
     );
@@ -412,46 +402,48 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       collections,
       chartBodySelection,
       plotAreaMarginLeft,
-      styling,
       tooltipSelection,
+      styling,
       screenSizeIndex
     );
     /*
      Legend
      */
-    let chartLegendSelection: any = canvasSelection
-      .append('g')
-      .attr('class', 'chart-legend');
-    // this.createLegend(
-    //   chartLegendChild,
-    //   chartObject,
-    //   plotAreaMarginLeft,
-    //   styling,
-    //   screenSizeIndex
-    // );
+    hAxisGroupHeight =
+      hAxisGroupSelection[0][0].getBBox().height -
+      plotAreaHeight;
+    let legendVPos: number =
+      chartBodyVPos +
+      plotAreaHeight +
+      hAxisGroupHeight +
+      styling.legend.marginTop[screenSizeIndex];
+    let chartLegendSelection: any = this.createLegend(
+      canvasSelection,
+      legendVPos,
+      collections,
+      plotAreaMarginLeft,
+      styling,
+      screenSizeIndex
+    );
     /*
-     Update height of canvas and background
+     Assign height to canvas and background
      */
     let canvasHeight: number =
-      styling.title.paddingTop[screenSizeIndex] +
-      chartTitleSelection[0][0].getBBox().height +
-      styling.title.paddingBottom[screenSizeIndex] +
-      chartSubtitleSelection[0][0].getBBox().height +
-      styling.chartBody.marginTop[screenSizeIndex] +
-      chartBodyHeight +
-      chartLegendSelection[0][0].getBBox().height;
+      legendVPos +
+      chartLegendSelection[0][0].getBBox().height +
+      styling.legend.marginBottom[screenSizeIndex];
     canvasSelection.style('height', canvasHeight);
     backgroundSelection.style('height', canvasHeight);
   }
-  private createHorAxis(
+  private createHAxis(
     chartType: string,
-    styling: iStylingObject,
     chartBodySelection: any,
     hScale: any,
     labels: string[],
     plotAreaHeight: number,
+    styling: iStylingObject,
     screenSizeIndex: number
-  ) : void {
+  ) : any {
     let dataGroupWidth: number;
     if (chartType === 'Bar') {
       labels.push('');
@@ -467,18 +459,18 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
       styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
       styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
-    let hAxisSelection: any = chartBodySelection
+    let hAxisGroupSelection: any = chartBodySelection
       .append('g')
       .attr('class', 'horAxis')
+      .attr('transform', `translate(${x} ${plotAreaHeight})`);
+    let hAxisSelection: any = hAxisGroupSelection
       .append('g')
       .call(hAxis)
-      .attr({
-        'class': 'axis',
-        'transform': `translate(${x} ${plotAreaHeight})`
-      });
+      .attr('class', 'axis');
     // Create tick labels
     let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
-    let labelsAngle: string = styling.chartBody.hAxis.ticks.labelsAngle[screenSizeIndex];
+    let labelsAngle: number =
+      styling.chartBody.hAxis.ticks.labelsAngle[screenSizeIndex];
     let labelsHorShift: number = dataGroupWidth ? dataGroupWidth / 2 : 0;
     hAxisSelection.selectAll('.tick text')
       .data(labels)
@@ -504,8 +496,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         'stroke-width': strokeWidth
       });
     // Styling tick lines
-    let tickOpacity: number = styling.chartBody.hAxis.ticks.opacity[screenSizeIndex];
-    let tickStroke: string = styling.chartBody.hAxis.ticks.stroke[screenSizeIndex];
+    let tickOpacity: number = styling.chartBody.hAxis
+      .ticks
+      .opacity[screenSizeIndex];
+    let tickStroke: string = styling.chartBody.hAxis
+      .ticks
+      .stroke[screenSizeIndex];
     let tickStrokeWidth: number =
       styling.chartBody.hAxis.ticks.strokeWidth[screenSizeIndex];
     hAxisSelection.selectAll('.tick line')
@@ -517,8 +513,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         'stroke-width': tickStrokeWidth
       });
     // Styling grid lines
-    let gridOpacity: number = styling.chartBody.hAxis.gridLines.opacity[screenSizeIndex];
-    let gridStroke: string = styling.chartBody.hAxis.gridLines.stroke[screenSizeIndex];
+    let gridOpacity: number = styling.chartBody.hAxis
+      .gridLines
+      .opacity[screenSizeIndex];
+    let gridStroke: string = styling.chartBody.hAxis
+      .gridLines
+      .stroke[screenSizeIndex];
     let gridStrokeWidth: number =
       styling.chartBody.hAxis.gridLines.strokeWidth[screenSizeIndex];
     hAxisSelection.selectAll('.tick')
@@ -530,26 +530,27 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         'stroke': gridStroke,
         'stroke-width': gridStrokeWidth
       });
+    return hAxisGroupSelection;
   }
-  private createHorAxisLabel(
-    // chartContainerChild: ElementRef,
+  private createHAxisLabel(
     chartObject: iChart,
     chartBodySelection: any,
+    hAxisHeight: number,
     plotAreaWidth: number,
-    plotAreaMarginLeft: number,
     styling: iStylingObject,
     screenSizeIndex: number
   ) : void {
-    let x: number = plotAreaMarginLeft + plotAreaWidth / 2;
-    // let y: number = chartContainerChild.nativeElement
-    //   .querySelector('.canvas .chart-body .horAxis .axis')
-    //   .getBBox().height;
-    let y: number = chartBodySelection[0][0]
-      .querySelector('.canvas .chart-body .horAxis .axis')
-      .getBBox().height;
-    let marginTop: number = styling.chartBody.hAxis.label.marginTop[screenSizeIndex];
-    let fontSize: number = styling.chartBody.hAxis.label.fontSize[screenSizeIndex];
-    let fontWeight: string = styling.chartBody.hAxis.label.fontWeight[screenSizeIndex];
+    let marginTop: number = styling.chartBody.hAxis
+      .label
+      .marginTop[screenSizeIndex];
+    let fontSize: number = styling.chartBody.hAxis
+      .label
+      .fontSize[screenSizeIndex];
+    let fontWeight: string = styling.chartBody.hAxis
+      .label
+      .fontWeight[screenSizeIndex];
+    let x: number = plotAreaWidth / 2;
+    let y: number = hAxisHeight + fontSize;
     let hAxisLabel = chartBodySelection.select('.horAxis')
       .append('g')
       .attr('class', 'label')
@@ -567,61 +568,73 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       });
   }
   private createLegend(
-    chartLegendChild: ElementRef,
-    chartObject: iChart,
+    canvasSelection: any,
+    legendVPos: number,
+    collections: iCollection[],
     plotAreaMarginLeft: number,
     styling: iStylingObject,
     screenSizeIndex: number
-  ) : void {
-    let colors: string[] = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
-    let legendElement: HTMLElement = chartLegendChild.nativeElement;
-    let legendContainer: HTMLElement = document.createElement('div');
-    legendContainer.classList.add('legend-container');
-    legendElement.insertBefore(
-      legendContainer,
-      legendElement.childNodes[legendElement.childNodes.length - 1]
-    );
-    let inputCollections: iChartColl[] = chartObject.collections;
-    for (let i = 0; i < inputCollections.length; i++) {
+  ) : any {
+    let chartLegendSelection: any = canvasSelection
+      .append('g')
+      .attr('class', 'chart-legend')
+      .attr('transform', `translate(0 ${legendVPos})`);
+    let colors: string[] = styling.chartBody
+      .plotArea
+      .paletteRange[screenSizeIndex];
+    for (let i = 0; i < collections.length; i++) {
       let colorIndex: number = i % (colors.length - 1);
-      let legendEntry: HTMLElement = document.createElement('div');
-      legendEntry.classList.add('legend-entry');
-      legendEntry.style.paddingLeft = plotAreaMarginLeft.toString() + 'px';
-      let entrySymbol: HTMLElement = document.createElement('div');
-      entrySymbol.classList.add('symbol');
-      entrySymbol.style.backgroundColor = colors[colorIndex];
-      entrySymbol.style.cssFloat = 'left';
-      entrySymbol.style.height= '15px';
-      entrySymbol.style.marginTop= '4px';
-      entrySymbol.style.width= '35px';
-      let entryText: HTMLElement = document.createElement('div');
-      entryText.classList.add('text');
-      entryText.innerText = inputCollections[i].label;
-      entryText.style.marginBottom = '5px';
-      entryText.style.marginLeft = '45px';
-      legendEntry.insertBefore(
-        entryText,
-        legendEntry.childNodes[legendEntry.childNodes.length - 1]
-      );
-      legendEntry.insertBefore(
-        entrySymbol,
-        legendEntry.childNodes[legendEntry.childNodes.length - 1]
-      );
-      legendContainer.insertBefore(
-        legendEntry,
-        legendContainer.childNodes[legendContainer.childNodes.length - 1]
-      );
+      let marginTop: number = styling.legend.marginTop[screenSizeIndex];
+      let fontSize: number = styling.legend.legendEntry
+        .text
+        .fontSize[screenSizeIndex];
+      let textMarginLeft: number = styling.legend.legendEntry
+        .text
+        .marginLeft[screenSizeIndex];
+      let symbolHeight: number = styling.legend.legendEntry
+        .symbol
+        .height[screenSizeIndex];
+      let symbolWidth: number = styling.legend.legendEntry
+        .symbol
+        .width[screenSizeIndex];
+      let legendEntryHeight: number = Math.max(symbolHeight, fontSize);
+      let legendEntryVPos: number = i * (marginTop + legendEntryHeight);
+      let legendEntry: any = chartLegendSelection
+        .append('g')
+        .attr('class', 'legend-entry')
+        .attr(
+          'transform',
+          `translate(${plotAreaMarginLeft} ${legendEntryVPos})`
+        );
+      legendEntry
+        .append('rect')
+        .attr('class', 'legend-entry-symbol')
+        .attr({
+          'fill': colors[colorIndex],
+          'height': symbolHeight,
+          'width': symbolWidth
+        });
+      legendEntry
+        .append('text')
+        .attr('class', 'legend-entry-text')
+        .text(collections[i].name)
+        .attr({
+          'font-size': fontSize,
+          'transform':
+            `translate(${symbolWidth + textMarginLeft} ${symbolHeight})`
+        });
     }
+    return chartLegendSelection;
   }
   private createPlotArea(
     chartType: string,
     collections: iCollection[],
     chartSelection: any,
     marginLeft: number,
-    styling: iStylingObject,
     tooltipSelection: any,
+    styling: iStylingObject,
     screenSizeIndex: number
-  ) {
+  ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
     let paletteScale: any = d3.scale.ordinal()
       .range(paletteRange);
@@ -638,7 +651,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      */
     if (chartType === 'Bar') {
       let length_Collections: number = collections.length;
-      let barGap: number = styling.chartBody.plotArea.bar.barGap[screenSizeIndex];
+      let barGap: number = styling.chartBody.plotArea
+        .bar.
+        barGap[screenSizeIndex];
       let totDataPoints: number = collections[0].labels.length;
       let hScale: any = collections[0].hScale;
       let dataGroupPadding: number =
@@ -685,18 +700,27 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             // Add shadow
             this.setAttribute(
               'stroke',
-              styling.chartBody.plotArea.bar.selectionOutline.color[screenSizeIndex]
+              styling.chartBody.plotArea
+                .bar
+                .selectionOutline
+                .color[screenSizeIndex]
             );
             this.setAttribute(
               'stroke-opacity',
-              styling.chartBody.plotArea.bar.selectionOutline.opacity[screenSizeIndex]
+              styling.chartBody.plotArea
+                .bar
+                .selectionOutline
+                .opacity[screenSizeIndex]
             );
             this.setAttribute(
               'stroke-width',
-              styling.chartBody.plotArea.bar.selectionOutline.width[screenSizeIndex] ||
+              styling.chartBody.plotArea
+                .bar
+                .selectionOutline
+                .width[screenSizeIndex] ||
               barGap * 2
             );
-            // Show tooltip
+            // Define tooltip info
             tooltipSelection.html(
               collections[i].name + newLine +
               collections[i].labels[index] + ': ' + d
@@ -705,7 +729,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             finalizeTooltip(
               tooltipSelection,
               plotAreaSelection,
-              tooltipFadeInDuration
+              tooltipFadeInDuration,
+              styling,
+              screenSizeIndex
             );
           })
           .on('mouseout', function(d) {
@@ -732,9 +758,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
     else if (chartType === 'Line') {
       let dataPointDiameter: string =
-        styling.chartBody.plotArea.dataPoint.diameterDeselected[screenSizeIndex] + 'px';
+        styling.chartBody.plotArea
+          .dataPoint
+          .diameterDeselected[screenSizeIndex] + 'px';
       let dataPointDiameterSelected: string =
-        styling.chartBody.plotArea.dataPoint.diameterSelected[screenSizeIndex] + 'px';
+        styling.chartBody.plotArea
+          .dataPoint
+          .diameterSelected[screenSizeIndex] + 'px';
       let strokeWidth: string =
         styling.chartBody.plotArea.path.strokeWidthDeselected[screenSizeIndex]
           .toString() + 'px';
@@ -802,7 +832,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             finalizeTooltip(
               tooltipSelection,
               plotAreaSelection,
-              tooltipFadeInDuration
+              tooltipFadeInDuration,
+              styling,
+              screenSizeIndex
             );
           })
           .on('mouseout', function(d) {
@@ -834,171 +866,70 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     d3.select('body')[0][0]
       .addEventListener('touchstart', function() {
         // Fade out tooltip if active
-        if (tooltipSelection.style('opacity') === '0.9') {
+        if (
+          tooltipSelection.style('opacity') ===
+          styling.tooltip.opacity[screenSizeIndex].toString()
+        ) {
           tooltipSelection.transition()
             .duration(tooltipFadeOutDuration)
             .style('opacity', 0);
         }
       });
+    return plotAreaSelection;
   }
-  private createTitle(
-    chartContainerWidth: number,
-    chartTitleSelection: any,
+  private createSubtitle(
+    canvasSelection: any,
+    vertPos: number,
     chartObjet: iChart,
     styling: iStylingObject,
     screenSizeIndex: number
-  ) : void {
-    let titleText: any = chartTitleSelection.append('text'),
-      vertPos: number = styling.title.paddingTop[screenSizeIndex];
+  ) : any {
+    let chartSubtitleSelection: any = canvasSelection
+      .append('g')
+      .attr('class', 'chart-subtitle');
+    let width: number = parseFloat(canvasSelection.style('width'));
+    let subtitleText: any = chartSubtitleSelection.append('text');
+    subtitleText.text(chartObjet.subtitle)
+      .attr({
+        'transform': `translate(0 ${vertPos})`,
+        'x': width / 2,
+        'y': styling.subtitle.fontSize[screenSizeIndex]
+      })
+      .style({
+        'font-size': styling.subtitle.fontSize[screenSizeIndex] + 'px',
+        'font-weight': styling.subtitle.fontWeight[screenSizeIndex],
+        'text-anchor': 'middle'
+      });
+    this.wrapText(subtitleText, width);
+    return chartSubtitleSelection;
+  }
+  private createTitle(
+    canvasSelection: any,
+    vertPos: number,
+    chartObjet: iChart,
+    styling: iStylingObject,
+    screenSizeIndex: number
+  ) : any {
+    let chartTitleSelection: any = canvasSelection
+      .append('g')
+      .attr('class', 'chart-title');
+    let width: number = parseFloat(canvasSelection.style('width'));
+    let titleText: any = chartTitleSelection.append('text');
     titleText.text(chartObjet.title)
       .attr({
-        'text-anchor': 'middle',
         'transform': `translate(0 ${vertPos})`,
-        'x': chartContainerWidth / 2,
+        'x': width / 2,
         'y': styling.title.fontSize[screenSizeIndex]
       })
       .style({
         'font-size': styling.title.fontSize[screenSizeIndex] + 'px',
-        'font-weight': 'bold'
+        'font-weight': styling.title.fontWeight[screenSizeIndex],
+        'text-anchor': 'middle'
       });
-    this.wrapText(titleText, chartContainerWidth);
+    this.wrapText(titleText, width);
+    return chartTitleSelection;
   }
-  private createVertAxis(
-    styling: iStylingObject,
-    chartSelection: any,
-    vScale: any,
-    plotAreaWidth: number,
-    screenSizeIndex: number
-  ) : void {
-    let vAxis: any = d3.svg.axis()
-      .scale(vScale)
-      .orient('left');
-    let x: number =
-      styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
-      styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
-      styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
-      styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
-    let y: number = 0;
-    let vAxisSelection: any = chartSelection
-      .append('g')
-      .attr('class', 'vertAxis')
-      .append('g')
-      .call(vAxis)
-      .attr({
-        'class': 'axis',
-        'transform': `translate(${x} ${y})`
-      });
-    // Styling axis
-    let stroke: string = styling.chartBody.vAxis.stroke[screenSizeIndex];
-    let strokeWidth: string =
-      styling.chartBody.vAxis.strokeWidth[screenSizeIndex].toString() + 'px';
-    vAxisSelection.select('.domain')
-      .style({
-        'fill': 'none',
-        'stroke': stroke,
-        'stroke-width': strokeWidth
-      });
-    // Styling tick lines
-    let tickOpacity: number = styling.chartBody.vAxis.ticks.opacity[screenSizeIndex];
-    let tickStroke: string = styling.chartBody.vAxis.ticks.stroke[screenSizeIndex];
-    let tickStrokeWidth: number =
-      styling.chartBody.vAxis.ticks.strokeWidth[screenSizeIndex];
-    vAxisSelection.selectAll('.tick line')
-      .attr('class', 'tick-line')
-      .attr('x2', -6)
-      .style({
-        'opacity': tickOpacity,
-        'stroke': tickStroke,
-        'stroke-width': tickStrokeWidth
-      });
-    // Styling tick labels
-    let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
-    vAxisSelection.selectAll('.tick text')
-      .style({
-        'font-size': fontSize
-      });
-    // Styling grid lines
-    let gridOpacity: number = styling.chartBody.vAxis.gridLines.opacity[screenSizeIndex];
-    let gridStroke: string = styling.chartBody.vAxis.gridLines.stroke[screenSizeIndex];
-    let gridStrokeWidth: number =
-      styling.chartBody.vAxis.gridLines.strokeWidth[screenSizeIndex];
-    vAxisSelection.selectAll('.tick')
-      .append('line')
-      .attr('class', 'grid-line')
-      .attr('x2', plotAreaWidth)
-      .style({
-        'opacity': gridOpacity,
-        'stroke': gridStroke,
-        'stroke-width': gridStrokeWidth
-      });
-  }
-  private createVertAxisLabel(
-    // chartContainerChild: ElementRef,
-    chartObject: iChart,
-    chartBodySelection: any,
-    styling: iStylingObject,
-    screenSizeIndex: number
-  ) : void {
-    // let height: number = chartContainerChild.nativeElement
-    //   .querySelector('.canvas .chart-body .vertAxis .axis')
-    //   .getBBox().height;
-    let height: number = chartBodySelection[0][0]
-      .querySelector('.canvas .chart-body .vertAxis .axis')
-      .getBBox().height;
-    let marginLeft: number = styling.chartBody.vAxis.label.marginLeft[screenSizeIndex];
-    let fontSize: number = styling.chartBody.vAxis.label.fontSize[screenSizeIndex];
-    let fontWeight: string = styling.chartBody.vAxis.label.fontWeight[screenSizeIndex];
-    let dy: number = 0.75 * fontSize;
-    let y: number = height / 2;
-    let vAxisLabel = chartBodySelection.select('.vertAxis')
-      .append('g')
-      .attr('class', 'label')
-      .append('text')
-      .text(chartObject.vAxisLabel)
-      .attr({
-        'dy': dy,
-        'text-anchor': 'middle',
-        'transform': `rotate(-90 ${marginLeft} ${y})`,
-        'x': marginLeft,
-        'y': y
-      })
-      .style({
-        'font-size': fontSize,
-        'font-weight': fontWeight
-      });
-  }
-  private destroyComponentElements() : void {
-    let chartContainer: HTMLElement =
-      this.alepNg2ChartContainerChild.nativeElement;
-    let chartTitle: Element =
-      chartContainer.getElementsByClassName('.chart-title')[0];
-    chartContainer.removeChild(chartTitle);
-    let chartSubtitle: Element =
-      chartContainer.getElementsByClassName('.chart-subtitle')[0];
-    chartContainer.removeChild(chartSubtitle);
-    let chartBody: Element =
-      chartContainer.getElementsByClassName('.chart-body')[0];
-    chartContainer.removeChild(chartBody);
-    let chartLegend: Element =
-      chartContainer.getElementsByClassName('.chart-legend')[0];
-    chartContainer.removeChild(chartLegend);
-
-    // // Destroy chart
-    // let parentChart: HTMLElement = this.alepNg2ChartBodyChild.nativeElement;
-    // let childChart: SVGSVGElement = parentChart.getElementsByTagName('svg')[0];
-    // parentChart.removeChild(childChart);
-    // // Destroy legend
-    // let parentLegend: HTMLElement = this.alepNg2ChartLegendChild.nativeElement;
-    // let childLegend: Element =
-    //   parentLegend.getElementsByClassName('legend-container')[0];
-    // parentLegend.removeChild(childLegend);
-    // // Destroy tooltip
-    // let parentTooltip: HTMLElement = document.querySelector('body');
-    // let childTooltip: Element =
-    //   parentTooltip.getElementsByClassName('alep-ng2-chart-tooltip')[0];
-    // parentTooltip.removeChild(childTooltip);
-  }
-  private getInitializedTooltip(
+  private createTooltip(
     styling: iStylingObject,
     screenSizeIndex: number,
     chartContainerId: number
@@ -1023,6 +954,127 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     );
     return tooltipSelection;
   }
+  private createVAxis(
+    chartSelection: any,
+    vScale: any,
+    plotAreaWidth: number,
+    styling: iStylingObject,
+    screenSizeIndex: number
+  ) : any {
+    let vAxis: any = d3.svg.axis()
+      .scale(vScale)
+      .orient('left');
+    let x: number =
+      styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
+      styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
+      styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
+    let y: number = 0;
+    let vAxisGroupSelection: any = chartSelection
+      .append('g')
+      .attr('class', 'vertAxis');
+    let vAxisSelection: any = vAxisGroupSelection
+      .append('g')
+      .call(vAxis)
+      .attr({
+        'class': 'axis',
+        'transform': `translate(${x} ${y})`
+      });
+    // Styling axis
+    let stroke: string = styling.chartBody.vAxis.stroke[screenSizeIndex];
+    let strokeWidth: string =
+      styling.chartBody.vAxis.strokeWidth[screenSizeIndex].toString() + 'px';
+    vAxisSelection.select('.domain')
+      .style({
+        'fill': 'none',
+        'stroke': stroke,
+        'stroke-width': strokeWidth
+      });
+    // Styling tick lines
+    let tickOpacity: number = styling.chartBody.vAxis
+      .ticks
+      .opacity[screenSizeIndex];
+    let tickStroke: string = styling.chartBody.vAxis
+      .ticks
+      .stroke[screenSizeIndex];
+    let tickStrokeWidth: number =
+      styling.chartBody.vAxis.ticks.strokeWidth[screenSizeIndex];
+    vAxisSelection.selectAll('.tick line')
+      .attr('class', 'tick-line')
+      .attr('x2', -6)
+      .style({
+        'opacity': tickOpacity,
+        'stroke': tickStroke,
+        'stroke-width': tickStrokeWidth
+      });
+    // Styling tick labels
+    let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
+    vAxisSelection.selectAll('.tick text')
+      .style({
+        'font-size': fontSize
+      });
+    // Styling grid lines
+    let gridOpacity: number = styling.chartBody.vAxis
+      .gridLines
+      .opacity[screenSizeIndex];
+    let gridStroke: string = styling.chartBody.vAxis
+      .gridLines
+      .stroke[screenSizeIndex];
+    let gridStrokeWidth: number =
+      styling.chartBody.vAxis.gridLines.strokeWidth[screenSizeIndex];
+    vAxisSelection.selectAll('.tick')
+      .append('line')
+      .attr('class', 'grid-line')
+      .attr('x2', plotAreaWidth)
+      .style({
+        'opacity': gridOpacity,
+        'stroke': gridStroke,
+        'stroke-width': gridStrokeWidth
+      });
+    return vAxisGroupSelection;
+  }
+  private createVAxisLabel(
+    chartObject: iChart,
+    vAxisGroupSelection: any,
+    styling: iStylingObject,
+    screenSizeIndex: number
+  ) : any {
+    let height: number = vAxisGroupSelection[0][0].getBBox().height;
+    let marginLeft: number = styling.chartBody.vAxis
+      .label
+      .marginLeft[screenSizeIndex];
+    let fontSize: number = styling.chartBody.vAxis
+      .label
+      .fontSize[screenSizeIndex];
+    let fontWeight: string = styling.chartBody.vAxis
+      .label
+      .fontWeight[screenSizeIndex];
+    let dy: number = 0.75 * fontSize;
+    let y: number = height / 2;
+    let vAxisLabel = vAxisGroupSelection
+      .append('g')
+      .attr('class', 'label')
+      .append('text')
+      .text(chartObject.vAxisLabel)
+      .attr({
+        'dy': dy,
+        'text-anchor': 'middle',
+        'transform': `rotate(-90 ${marginLeft} ${y})`,
+        'x': marginLeft,
+        'y': y
+      })
+      .style({
+        'font-size': fontSize,
+        'font-weight': fontWeight
+      });
+    return vAxisLabel;
+  }
+  private destroyCanvas() : void {
+    let chartContainer: HTMLElement =
+      this.alepNg2ChartContainerChild.nativeElement;
+    let canvas: SVGSVGElement = chartContainer.getElementsByTagName('svg')[0];
+    chartContainer.removeChild(canvas);
+  }
   private getScreenSizeIndex(styling: iStylingObject) : number {
     let index: number;
     let width: number = window.innerWidth;
@@ -1041,7 +1093,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private finalizeTooltip(
     tooltipSelection: any,
     plotAreaSelection: any,
-    tooltipFadeInDuration: number
+    tooltipFadeInDuration: number,
+    styling: iStylingObject,
+    screenSizeIndex: number
   ) : void {
     let width: number = tooltipSelection[0][0].offsetWidth;
     tooltipSelection
@@ -1059,7 +1113,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .style('top', (d3.event.pageY - 4 * 12) + 'px');
     tooltipSelection.transition()
       .duration(tooltipFadeInDuration)
-      .style('opacity', 0.9);
+      .style(
+        'opacity',
+        styling.tooltip.opacity[screenSizeIndex]
+      );
   }
   private prepareContainer(chartContainerId: number) : void {
     this.alepNg2ChartContainerChild.nativeElement.setAttribute(
@@ -1134,7 +1191,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.finalStyling = (<iStylingObject>temp);
   }
   private updateChart() : void {
-    this.destroyComponentElements();
+    this.destroyCanvas();
     this.buildChart();
   }
   // Wrap Svg text element in different Svg tspan elements

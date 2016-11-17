@@ -124,12 +124,10 @@
   <!--</div>-->
   <div class="row">
     <div class="col-xs-12">
-      <div *ngIf="previewMode">
-        <alep-ng2-chart-d3
-          [emUpdateChart]="emUpdateChartPreview"
-          [inputChartObject]="currentChart">
-        </alep-ng2-chart-d3>
-      </div>
+      <alep-ng2-chart-d3 *ngIf="previewMode"
+        [emUpdateChart]="emUpdateChartPreview"
+        [inputChartObject]="currentChart">
+      </alep-ng2-chart-d3>
     </div>
   </div>
 </div>
