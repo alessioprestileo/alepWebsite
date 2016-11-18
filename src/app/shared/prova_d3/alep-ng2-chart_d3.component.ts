@@ -325,50 +325,60 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       plotAreaDimensions
     );
     /*
-     Vertical axis
+     Axes (only for chartTypes 'Bar' and 'Line')
      */
-    let vAxisGroupSelection: any = this.createVAxis(
-      chartBodySelection,
-      collections[0].vScale,
-      plotAreaDimensions.width,
-      styling,
-      screenSizeIndex
-    );
-    /*
-     Vertical axis label
-     */
-    this.createVAxisLabel(
-      chartObject,
-      vAxisGroupSelection,
-      styling,
-      screenSizeIndex
-    );
-    /*
-     Horizontal axis
-     */
-    let hAxisGroupSelection: any = this.createHAxis(
-      chartType,
-      chartBodySelection,
-      collections[0].hScale,
-      collections[0].labels,
-      plotAreaDimensions.height,
-      styling,
-      screenSizeIndex
-    );
-    /*
-     Horizontal axis label
-     */
-    let hAxisGroupHeight: number =
-      hAxisGroupSelection[0][0].getBBox().height -
-      plotAreaDimensions.height;
-    this.createHAxisLabel(
-      chartObject,
-      chartBodySelection,
-      hAxisGroupHeight,
-      plotAreaDimensions.width,
-      styling,
-      screenSizeIndex
-    );
+    let hAxisGroupHeight: number = 0;
+    let hAxisGroupSelection: any;
+    if ((chartType === 'Bar') || (chartType === 'Line')) {
+      /*
+       Vertical axis
+       */
+      let vAxisGroupSelection: any= this.createVAxis(
+        chartBodySelection,
+        collections[0].vScale,
+        plotAreaDimensions.width,
+        styling,
+        screenSizeIndex
+      );
+      /*
+       Vertical axis label
+       */
+      this.createVAxisLabel(
+        chartObject,
+        vAxisGroupSelection,
+        styling,
+        screenSizeIndex
+      );
+      /*
+       Horizontal axis
+       */
+      hAxisGroupSelection = this.createHAxis(
+        chartType,
+        chartBodySelection,
+        collections[0].hScale,
+        collections[0].labels,
+        plotAreaDimensions.height,
+        styling,
+        screenSizeIndex
+      );
+      /*
+       Horizontal axis label
+       */
+      hAxisGroupHeight =
+        hAxisGroupSelection[0][0].getBBox().height -
+        plotAreaDimensions.height;
+      this.createHAxisLabel(
+        chartObject,
+        chartBodySelection,
+        hAxisGroupHeight,
+        plotAreaDimensions.width,
+        styling,
+        screenSizeIndex
+      );
+      hAxisGroupHeight =
+        hAxisGroupSelection[0][0].getBBox().height -
+        plotAreaDimensions.height;
+    }
     /*
      Plot Area
      */
@@ -384,9 +394,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Legend
      */
-    hAxisGroupHeight =
-      hAxisGroupSelection[0][0].getBBox().height -
-      plotAreaDimensions.height;
     let legendVPos: number =
       chartBodyVPos +
       plotAreaDimensions.height +
@@ -422,7 +429,8 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let marginRight: number;
     let width: number;
     if ((chartType === 'Bar') ||
-      (chartType === 'Line')) {
+      (chartType === 'Line') ||
+      (chartType === 'Pie')) {
       marginRight = styling.chartBody.plotArea.marginRight[screenSizeIndex];
       marginLeft = styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
         styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
@@ -454,7 +462,8 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let maxVal: number = 0;
     let minVal: number = 0;
     if ((chartType === 'Bar') ||
-      (chartType === 'Line')) {
+      (chartType === 'Line') ||
+      (chartType === 'Pie')) {
       // Fill collections array
       for (let i = 0; i < collectionsSrc.length; i++) {
         let dataPoints: any = collectionsSrc[i].dataSet.dataPoints;
@@ -659,6 +668,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     styling: iStylingObject,
     screenSizeIndex: number
   ) : any {
+    let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
+    let paletteScale = this.createPaletteScale(
+      collections.length,
+      paletteRange
+    );
     let chartLegendSelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart-legend')
@@ -667,7 +681,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .plotArea
       .paletteRange[screenSizeIndex];
     for (let i = 0; i < collections.length; i++) {
-      let colorIndex: number = i % (colors.length - 1);
       let marginTop: number = styling.legend.marginTop[screenSizeIndex];
       let fontSize: number = styling.legend.legendEntry
         .text
@@ -694,7 +707,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         .append('rect')
         .attr('class', 'legend-entry-symbol')
         .attr({
-          'fill': colors[colorIndex],
+          'fill': paletteScale(i),
           'height': symbolHeight,
           'width': symbolWidth
         });
@@ -710,6 +723,19 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
     return chartLegendSelection;
   }
+  private createPaletteScale(
+    domainLength: number,
+    range: string[]
+  ) : any {
+    let domain: number[] = [];
+    for (let i = 0; i < domainLength; i++) {
+      domain.push(i);
+    }
+    let paletteScale: any = d3.scale.ordinal()
+      .domain(domain)
+      .range(range);
+    return paletteScale;
+  }
   private createPlotArea(
     chartType: string,
     collections: iCollection[],
@@ -720,8 +746,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     screenSizeIndex: number
   ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
-    let paletteScale: any = d3.scale.ordinal()
-      .range(paletteRange);
+    let paletteScale = this.createPaletteScale(
+      collections.length,
+      paletteRange
+    );
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
@@ -773,7 +801,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
               return result;
             },
             'y': function(d) { return vScale(d)},
-            'fill': paletteScale(i + 1),
+            'fill': paletteScale(i),
             'height': function(d) { return (vScale(0) - vScale(d))},
             'width': barWidth + 'px'
           })
@@ -875,7 +903,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           })
           .style({
             fill: 'none',
-            stroke: paletteScale(i + 1),
+            stroke: paletteScale(i),
             'stroke-opacity': strokeOpacity,
             'stroke-width': strokeWidth
           })
@@ -896,7 +924,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             'class': 'dataPoint',
             'cx': function(d, index) {return hScale(index)},
             'cy': function(d) { return vScale(d)},
-            'fill': paletteScale(i + 1),
+            'fill': paletteScale(i),
             'r': dataPointDiameter
           })
           .on('mouseover', function(d, index) {
@@ -940,6 +968,35 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             }
           });
       }
+    }
+    else if (chartType === 'Pie') {
+      let collection: iCollection = collections[0];
+      let innerRadius: number = 0;
+      let outerRadius: number = 100;
+      let sliceArc: any = d3.svg.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+      let sliceLabel = d3.svg.arc()
+        .outerRadius(outerRadius - 40)
+        .innerRadius(outerRadius - 40);
+      let pieLayout: any = d3.layout.pie()
+        .sort(null)
+        .value(function(d) {return d});
+      let sliceSelection: any = plotAreaSelection.selectAll(".slice")
+        .data(pieLayout(collection.values))
+        .enter()
+        .append("g")
+        .attr("class", "slice");
+      sliceSelection.append("path")
+        .attr("class", "arc")
+        .attr("d", sliceArc)
+        .style("fill", function(d, index) {return paletteScale(index)});
+      sliceSelection.append("text")
+        .attr("transform", function(d) {
+          return "translate(" + sliceLabel.centroid(d) + ")";
+        })
+        .attr("dy", ".35em")
+        .text(function(d, index) {return collection.labels[index]});
     }
     // Fade out active tooltip when user touches on body
     d3.select('body')[0][0]
