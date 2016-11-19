@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Rx';
 // import { iChart } from '../../models/iChart'
 import { iChart } from './iChart';
 import {iChartColl} from "./iChartColl";
-import { iStylingObject } from './iStylingObject';
+import { iChartStyling } from './iChartStyling';
 
 declare var d3: any;
 
@@ -20,6 +20,11 @@ interface iCollection {
   name: string;
   values: number[],
   vScale: any
+}
+interface iDefaultChartStylings {
+  barStyling: iChartStyling,
+  lineStyling: iChartStyling,
+  pieStyling: iChartStyling
 }
 interface iPlotAreaDimensions {
   aspectRatio: number,
@@ -40,137 +45,316 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.emOnResize.emit();
   }
   @Input() private emUpdateChart: EventEmitter<any>;
-  @Input() private inputChartObject: iChart;
+  @Input() private inputChart: iChart;
   @Input() private inputStyling: Object = {};
   @ViewChild(
     'alepNg2ChartContainer'
   ) private alepNg2ChartContainerChild: ElementRef;
   private chartContainerId: number;
-  private defaultStyling: iStylingObject = {
-    aspectRatio: [1, 1, 2],
-    backgroundColor: ['white'],
-    chartBody: {
-      hAxis: {
-        fontSize: [9, 15],
-        gridLines: {
-          opacity: [0.3],
-          stroke: ['none'],
-          strokeWidth: [1]
-        },
-        label: {
-          fontSize: [12, 20],
-          fontWeight: ['normal'],
-          marginTop: [0]
-        },
-        stroke: ['black'],
-        strokeWidth: [2],
-        ticks: {
-          labelsAngle: [-30],
-          opacity: [1],
+  private defaultChartStylings: iDefaultChartStylings = {
+    barStyling: {
+      aspectRatio: [1, 1, 2],
+      backgroundColor: ['white'],
+      chartBody: {
+        hAxis: {
+          fontSize: [9, 15],
+          gridLines: {
+            opacity: [0.3],
+            stroke: ['none'],
+            strokeWidth: [1]
+          },
+          label: {
+            fontSize: [12, 20],
+            fontWeight: ['normal'],
+            marginTop: [0]
+          },
           stroke: ['black'],
-          strokeWidth: [1]
-        }
-      },
-      marginTop: [30],
-      plotArea: {
-        bar: {
-          barGap: [1, 2, 2],
-          dataGroupPadding: [2, 6, 6],
-          selectionOutline: {
-            color: ['black'],
-            opacity: [0.7],
-            width: [0]
+          strokeWidth: [2],
+          ticks: {
+            labelsAngle: [-30],
+            opacity: [1],
+            stroke: ['black'],
+            strokeWidth: [1]
           }
         },
-        dataPoint: {
-          diameterDeselected: [4],
-          diameterSelected: [6]
-        },
-        marginRight: [10, 30, 30],
-        paletteRange: [
-          [
-            '#F15854',
-            '#5DA5DA',
-            '#FAA43A',
-            '#60BD68',
-            '#F17CB0',
-            '#B2912F',
-            '#B276B2',
-            '#DECF3F',
-            '#4D4D4D'
-          ]
-        ],
-        path: {
-          strokeOpacity: [1],
-          strokeWidthDeselected: [3],
-          strokeWidthSelected: [5],
-        },
-        slice: {
-        },
-      },
-      vAxis: {
-        fontSize: [9, 15],
-        gridLines: {
-          opacity: [0.3],
-          stroke: ['grey'],
-          strokeWidth: [1]
-        },
-        label: {
-          fontSize: [12, 20],
-          fontWeight: ['normal'],
-          marginLeft: [10]
-        },
         marginLeft: [10],
-        stroke: ['black'],
-        strokeWidth: [2],
-        ticks: {
-          opacity: [1],
+        marginRight: [10, 30, 30],
+        marginTop: [30],
+        plotArea: {
+          bar: {
+            barGap: [1, 2, 2],
+            dataGroupPadding: [2, 6, 6],
+            selectionOutline: {
+              color: ['black'],
+              opacity: [0.7],
+              width: [0]
+            }
+          },
+          dataPoint: null,
+          paletteRange: [
+            [
+              '#F15854',
+              '#5DA5DA',
+              '#FAA43A',
+              '#60BD68',
+              '#F17CB0',
+              '#B2912F',
+              '#B276B2',
+              '#DECF3F',
+              '#4D4D4D'
+            ]
+          ],
+          path: null,
+          slice: null,
+        },
+        vAxis: {
+          fontSize: [9, 15],
+          gridLines: {
+            opacity: [0.3],
+            stroke: ['grey'],
+            strokeWidth: [1]
+          },
+          label: {
+            fontSize: [12, 20],
+            fontWeight: ['normal']
+          },
+          marginLeft: [10],
           stroke: ['black'],
-          strokeWidth: [1]
+          strokeWidth: [2],
+          ticks: {
+            opacity: [1],
+            stroke: ['black'],
+            strokeWidth: [1]
+          }
         }
+      },
+      largeScreenSize: 767,
+      legend: {
+        legendEntry:{
+          symbol: {
+            height:  [12, 15, 15],
+            width:  [28, 36, 36],
+          },
+          text:{
+            fontSize: [10],
+            fontWeight: ['normal'],
+            marginLeft: [10]
+          }
+        },
+        marginBottom: [10],
+        marginTop: [10]
+      },
+      mediumScreenSize: 450,
+      subtitle: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginTop: [10],
+      },
+      title: {
+        fontSize: [15, 25],
+        fontWeight: ['bold'],
+        marginTop: [10],
+      },
+      tooltip: {
+        backgroundColor: ['#1a1a1a'],
+        border: ['0px'],
+        borderRadius: ['8px'],
+        fadeInDuration: [200],
+        fadeOutDuration: [500],
+        font: ['12px sans-serif'],
+        fontColor: ['white'],
+        opacity: [1],
+        padding: ['5px']
       }
     },
-    largeScreenSize: 767,
-    legend: {
-      legendEntry:{
-        symbol: {
-          height:  [12, 15, 15],
-          width:  [28, 36, 36],
+    lineStyling: {
+      aspectRatio: [1, 1, 2],
+      backgroundColor: ['white'],
+      chartBody: {
+        hAxis: {
+          fontSize: [9, 15],
+          gridLines: {
+            opacity: [0.3],
+            stroke: ['none'],
+            strokeWidth: [1]
+          },
+          label: {
+            fontSize: [12, 20],
+            fontWeight: ['normal'],
+            marginTop: [0]
+          },
+          stroke: ['black'],
+          strokeWidth: [2],
+          ticks: {
+            labelsAngle: [-30],
+            opacity: [1],
+            stroke: ['black'],
+            strokeWidth: [1]
+          }
         },
-        text:{
-          fontSize: [10],
-          fontWeight: ['normal'],
-          marginLeft: [10]
+        marginLeft: [10],
+        marginRight: [10, 30, 30],
+        marginTop: [30],
+        plotArea: {
+          bar: null,
+          dataPoint: {
+            diameterDeselected: [4],
+            diameterSelected: [6]
+          },
+          paletteRange: [
+            [
+              '#F15854',
+              '#5DA5DA',
+              '#FAA43A',
+              '#60BD68',
+              '#F17CB0',
+              '#B2912F',
+              '#B276B2',
+              '#DECF3F',
+              '#4D4D4D'
+            ]
+          ],
+          path: {
+            strokeOpacity: [1],
+            strokeWidthDeselected: [3],
+            strokeWidthSelected: [5],
+          },
+          slice: null,
+        },
+        vAxis: {
+          fontSize: [9, 15],
+          gridLines: {
+            opacity: [0.3],
+            stroke: ['grey'],
+            strokeWidth: [1]
+          },
+          label: {
+            fontSize: [12, 20],
+            fontWeight: ['normal']
+          },
+          marginLeft: [10],
+          stroke: ['black'],
+          strokeWidth: [2],
+          ticks: {
+            opacity: [1],
+            stroke: ['black'],
+            strokeWidth: [1]
+          }
         }
       },
-      marginBottom: [10],
-      marginTop: [10]
+      largeScreenSize: 767,
+      legend: {
+        legendEntry:{
+          symbol: {
+            height:  [12, 15, 15],
+            width:  [28, 36, 36],
+          },
+          text:{
+            fontSize: [10],
+            fontWeight: ['normal'],
+            marginLeft: [10]
+          }
+        },
+        marginBottom: [10],
+        marginTop: [10]
+      },
+      mediumScreenSize: 450,
+      subtitle: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginTop: [10],
+      },
+      title: {
+        fontSize: [15, 25],
+        fontWeight: ['bold'],
+        marginTop: [10],
+      },
+      tooltip: {
+        backgroundColor: ['#1a1a1a'],
+        border: ['0px'],
+        borderRadius: ['8px'],
+        fadeInDuration: [200],
+        fadeOutDuration: [500],
+        font: ['12px sans-serif'],
+        fontColor: ['white'],
+        opacity: [1],
+        padding: ['5px']
+      }
     },
-    mediumScreenSize: 450,
-    subtitle: {
-      fontSize: [12, 20],
-      fontWeight: ['normal'],
-      marginTop: [10],
-    },
-    title: {
-      fontSize: [15, 25],
-      fontWeight: ['bold'],
-      marginTop: [10],
-    },
-    tooltip: {
-      backgroundColor: ['#1a1a1a'],
-      border: ['0px'],
-      borderRadius: ['8px'],
-      fadeInDuration: [200],
-      fadeOutDuration: [500],
-      font: ['12px sans-serif'],
-      fontColor: ['white'],
-      opacity: [1],
-      padding: ['5px']
+    pieStyling: {
+      aspectRatio: [1, 1, 2],
+      backgroundColor: ['white'],
+      chartBody: {
+        hAxis: null,
+        marginLeft: [0],
+        marginRight: [0],
+        marginTop: [30],
+        plotArea: {
+          bar: null,
+          dataPoint: null,
+          paletteRange: [
+            [
+              '#F15854',
+              '#5DA5DA',
+              '#FAA43A',
+              '#60BD68',
+              '#F17CB0',
+              '#B2912F',
+              '#B276B2',
+              '#DECF3F',
+              '#4D4D4D'
+            ]
+          ],
+          path: null,
+          slice: {
+            innerRadius: [0],
+            outerRadius: null
+          },
+        },
+        vAxis: null
+      },
+      largeScreenSize: 767,
+      legend: {
+        legendEntry:{
+          symbol: {
+            height:  [12, 15, 15],
+            width:  [28, 36, 36],
+          },
+          text:{
+            fontSize: [10],
+            fontWeight: ['normal'],
+            marginLeft: [10]
+          }
+        },
+        marginBottom: [10],
+        marginTop: [10]
+      },
+      mediumScreenSize: 450,
+      subtitle: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginTop: [10],
+      },
+      title: {
+        fontSize: [15, 25],
+        fontWeight: ['bold'],
+        marginTop: [10],
+      },
+      tooltip: {
+        backgroundColor: ['#1a1a1a'],
+        border: ['0px'],
+        borderRadius: ['8px'],
+        fadeInDuration: [200],
+        fadeOutDuration: [500],
+        font: ['12px sans-serif'],
+        fontColor: ['white'],
+        opacity: [1],
+        padding: ['5px']
+      }
     }
   };
   private emOnResize: EventEmitter<any> = new EventEmitter();
-  private finalStyling: iStylingObject;
+  private finalStyling: iChartStyling;
   private hasValidInput: boolean = true;
   private initializationCompleted: boolean;
   private subUpdateChart: Subscription;
@@ -202,7 +386,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
 
   private buildChart() : void {
     try {
-      this.checkInputValidity(this.inputChartObject.type, this.validTypes);
+      this.checkInputValidity(this.inputChart.type, this.validTypes);
     }
     catch (error) {
       this.hasValidInput = false;
@@ -210,12 +394,16 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
     if (this.hasValidInput === true) {
       this.prepareContainer(this.chartContainerId);
-      this.setFinalStyling(this.inputStyling, this.defaultStyling);
+      this.setFinalStyling(
+        this.inputChart.type,
+        this.inputStyling,
+        this.defaultChartStylings
+      );
       this.responsiveStyling(this.finalStyling);
       this.createChart(
         this.alepNg2ChartContainerChild,
         this.chartContainerId,
-        this.inputChartObject,
+        this.inputChart,
         this.finalStyling
       );
     }
@@ -233,7 +421,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartContainerChild: ElementRef,
     chartContainerId: number,
     chartObject: iChart,
-    styling: iStylingObject
+    styling: iChartStyling
   ) : void {
     let chartType: string = chartObject.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
@@ -292,20 +480,28 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       chartSubtitleVPos,
       chartObject,
       styling,
-      screenSizeIndex);
+      screenSizeIndex
+    );
     /*
      Chart body
      */
+    let outerRadius: number = 0;
+    if (chartType === 'Pie') {
+      outerRadius = styling.chartBody.plotArea.slice.outerRadius ?
+        styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
+        chartBodyWidth / 2;
+    }
     let chartBodyVPos: number =
       chartSubtitleVPos +
       chartSubtitleSelection[0][0].getBBox().height +
-      styling.chartBody.marginTop[screenSizeIndex];
+      styling.chartBody.marginTop[screenSizeIndex] +
+      outerRadius;
     let chartBodySelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart-body')
       .attr(
         'transform',
-        `translate(0 ${chartBodyVPos})`);
+        `translate(${outerRadius} ${chartBodyVPos})`);
     /*
      Plot area dimensions
      */
@@ -386,7 +582,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       chartType,
       collections,
       chartBodySelection,
-      plotAreaDimensions.marginLeft,
+      plotAreaDimensions,
       tooltipSelection,
       styling,
       screenSizeIndex
@@ -420,35 +616,38 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private calculatePlotAreaDimensions(
     chartType: string,
     chartBodyWidth: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : iPlotAreaDimensions {
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
     let height: number;
     let marginLeft: number;
     let marginRight: number;
+    let vAxisWidth: number = 0;
     let width: number;
     if ((chartType === 'Bar') ||
-      (chartType === 'Line') ||
-      (chartType === 'Pie')) {
-      marginRight = styling.chartBody.plotArea.marginRight[screenSizeIndex];
-      marginLeft = styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
+       (chartType === 'Line')) {
+      vAxisWidth =
         styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
         styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
         styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
-      width =
-        chartBodyWidth -
-        marginLeft -
-        marginRight;
-      height = width / aspectRatio;
-      return {
-        aspectRatio: aspectRatio,
-        height: height,
-        marginLeft: marginLeft,
-        marginRight: marginRight,
-        width: width
-      };
     }
+    marginRight = styling.chartBody.marginRight[screenSizeIndex];
+    marginLeft =
+      styling.chartBody.marginLeft[screenSizeIndex] +
+      vAxisWidth;
+    width =
+      chartBodyWidth -
+      marginLeft -
+      marginRight;
+    height = width / aspectRatio;
+    return {
+      aspectRatio: aspectRatio,
+      height: height,
+      marginLeft: marginLeft,
+      marginRight: marginRight,
+      width: width
+    };
   }
   private createCollectionsAndScales(
     chartType: string,
@@ -533,7 +732,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     hScale: any,
     labels: string[],
     plotAreaHeight: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let dataGroupWidth: number;
@@ -547,7 +746,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .ticks(labels.length)
       .orient('bottom');
     let x: number =
-      styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.chartBody.marginLeft[screenSizeIndex] +
       styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
       styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
       styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
@@ -629,7 +828,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartBodySelection: any,
     hAxisHeight: number,
     plotAreaWidth: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let marginTop: number = styling.chartBody.hAxis
@@ -665,7 +864,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     legendVPos: number,
     collections: iCollection[],
     plotAreaMarginLeft: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
@@ -740,9 +939,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartType: string,
     collections: iCollection[],
     chartSelection: any,
-    marginLeft: number,
+    plotAreaDimensions: iPlotAreaDimensions,
     tooltipSelection: any,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
@@ -750,6 +949,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       collections.length,
       paletteRange
     );
+    let marginLeft: number = plotAreaDimensions.marginLeft;
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
@@ -971,8 +1171,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
     else if (chartType === 'Pie') {
       let collection: iCollection = collections[0];
-      let innerRadius: number = 0;
-      let outerRadius: number = 100;
+      let innerRadius: number = styling.chartBody.plotArea
+        .slice
+        .innerRadius[screenSizeIndex];
+      let outerRadius: number =
+        styling.chartBody.plotArea.slice.outerRadius ?
+        styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
+        plotAreaDimensions.width / 2;
       let sliceArc: any = d3.svg.arc()
         .outerRadius(outerRadius)
         .innerRadius(innerRadius);
@@ -1017,7 +1222,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     canvasSelection: any,
     vPos: number,
     chartObject: iChart,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let chartSubtitleSelection: any = canvasSelection
@@ -1043,7 +1248,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     canvasSelection: any,
     vPos: number,
     chartObject: iChart,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let chartTitleSelection: any = canvasSelection
@@ -1066,7 +1271,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return chartTitleSelection;
   }
   private createTooltip(
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number,
     chartContainerId: number
   ) : any {
@@ -1094,14 +1299,14 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartSelection: any,
     vScale: any,
     plotAreaWidth: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let vAxis: any = d3.svg.axis()
       .scale(vScale)
       .orient('left');
     let x: number =
-      styling.chartBody.vAxis.label.marginLeft[screenSizeIndex] +
+      styling.chartBody.marginLeft[screenSizeIndex] +
       styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
       styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
       styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
@@ -1172,13 +1377,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createVAxisLabel(
     chartObject: iChart,
     vAxisGroupSelection: any,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
     let height: number = vAxisGroupSelection[0][0].getBBox().height;
-    let marginLeft: number = styling.chartBody.vAxis
-      .label
-      .marginLeft[screenSizeIndex];
+    let marginLeft: number = styling.chartBody.marginLeft[screenSizeIndex];
     let fontSize: number = styling.chartBody.vAxis
       .label
       .fontSize[screenSizeIndex];
@@ -1211,7 +1414,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let canvas: SVGSVGElement = chartContainer.getElementsByTagName('svg')[0];
     chartContainer.removeChild(canvas);
   }
-  private getScreenSizeIndex(styling: iStylingObject) : number {
+  private getScreenSizeIndex(styling: iChartStyling) : number {
     let index: number;
     let width: number = window.innerWidth;
     if (width < styling.mediumScreenSize) {
@@ -1230,7 +1433,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     tooltipSelection: any,
     plotAreaSelection: any,
     tooltipFadeInDuration: number,
-    styling: iStylingObject,
+    styling: iChartStyling,
     screenSizeIndex: number
   ) : void {
     let width: number = tooltipSelection[0][0].offsetWidth;
@@ -1262,7 +1465,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   private recursiveMergeStyling (
     inputStyling: Object,
-    defaultStyling: iStylingObject,
+    defaultStyling: iChartStyling,
     temp: Object
   ) : void {
     for (let prop in defaultStyling) {
@@ -1288,9 +1491,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     }
   }
-  private responsiveStyling(styling: iStylingObject) : void {
+  private responsiveStyling(styling: iChartStyling) : void {
     for (let prop in styling) {
-      if (
+      if (styling[prop] === null) {
+        continue;
+      }
+      else if (
         Object.prototype
           .toString
           .call(styling[prop]) === '[object Object]'
@@ -1320,12 +1526,25 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.chartContainerId = containerId;
   }
   private setFinalStyling(
+    chartType: string,
     inputStyling: Object,
-    defaultStyling: iStylingObject
+    defaultChartStylings: iDefaultChartStylings
   ) : void {
     let temp: Object = {};
+    let defaultStyling: iChartStyling;
+    switch(chartType) {
+      case 'Bar':
+        defaultStyling = defaultChartStylings.barStyling;
+        break;
+      case 'Line':
+        defaultStyling = defaultChartStylings.lineStyling;
+        break;
+      case 'Pie':
+        defaultStyling = defaultChartStylings.pieStyling;
+        break;
+    }
     this.recursiveMergeStyling(inputStyling, defaultStyling, temp);
-    this.finalStyling = (<iStylingObject>temp);
+    this.finalStyling = (<iChartStyling>temp);
   }
   private updateChart() : void {
     this.destroyCanvas();

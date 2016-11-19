@@ -1,4 +1,4 @@
-export interface iStylingObject {
+export interface iChartStyling {
   aspectRatio: number[],
   backgroundColor: string[],
   chartBody: {
@@ -23,6 +23,8 @@ export interface iStylingObject {
         strokeWidth: number[]
       }
     },
+    marginLeft: number[],
+    marginRight: number[],
     marginTop: number[],
     plotArea: {
       bar: {
@@ -38,14 +40,16 @@ export interface iStylingObject {
         diameterDeselected: number[],
         diameterSelected: number[]
       },
-      marginRight: number[],
       paletteRange: string[][],
       path: {
         strokeOpacity: number[],
         strokeWidthDeselected: number[],
         strokeWidthSelected: number[]
       },
-      slice: Object,
+      slice: {
+        innerRadius: number[],
+        outerRadius: number[]
+      },
     },
     vAxis: {
       fontSize: number[],
@@ -56,8 +60,7 @@ export interface iStylingObject {
       },
       label: {
         fontSize: number[],
-        fontWeight: string[],
-        marginLeft: number[]
+        fontWeight: string[]
       },
       marginLeft: number[],
       stroke: string[],
