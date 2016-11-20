@@ -48,6 +48,11 @@ export interface iChartStyling {
       },
       slice: {
         innerRadius: number[],
+        selectionOutline: {
+          color: string[],
+          opacity: number[],
+          width: number[]
+        },
         outerRadius: number[]
       },
     },

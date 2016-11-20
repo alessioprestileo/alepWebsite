@@ -308,6 +308,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           path: null,
           slice: {
             innerRadius: [0],
+            selectionOutline: {
+              color: ['black'],
+              opacity: [0.7],
+              width: [4]
+            },
             outerRadius: null
           },
         },
@@ -961,6 +966,8 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Draw collections
      */
+    let newLine: string = '<br/>';
+    let finalizeTooltip: Function = this.finalizeTooltip;
     if (chartType === 'Bar') {
       let length_Collections: number = collections.length;
       let barGap: number = styling.chartBody.plotArea
@@ -984,8 +991,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         let collection: any = plotAreaSelection
           .append('g')
           .attr('class', 'collection');
-        let newLine: string = '<br/>';
-        let finalizeTooltip: Function = this.finalizeTooltip;
         let barSelection: any = collection.selectAll('.bar')
           .data(values)
           .enter()
@@ -1114,8 +1119,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             this.style.strokeWidth = strokeWidth
           });
         // Data points
-        let newLine: string = '<br/>';
-        let finalizeTooltip: Function = this.finalizeTooltip;
         let dataPointsSelection: any = collection.selectAll('circle')
           .data(values)
           .enter()
@@ -1181,9 +1184,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       let sliceArc: any = d3.svg.arc()
         .outerRadius(outerRadius)
         .innerRadius(innerRadius);
-      let sliceLabel = d3.svg.arc()
-        .outerRadius(outerRadius - 40)
-        .innerRadius(outerRadius - 40);
       let pieLayout: any = d3.layout.pie()
         .sort(null)
         .value(function(d) {return d});
@@ -1195,13 +1195,66 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       sliceSelection.append("path")
         .attr("class", "arc")
         .attr("d", sliceArc)
-        .style("fill", function(d, index) {return paletteScale(index)});
-      sliceSelection.append("text")
-        .attr("transform", function(d) {
-          return "translate(" + sliceLabel.centroid(d) + ")";
+        .style("fill", function(d, index) {return paletteScale(index)})
+        .on('mouseover', function(d, index) {
+          // Add shadow
+          this.setAttribute(
+            'stroke',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .color[screenSizeIndex]
+          );
+          this.setAttribute(
+            'stroke-opacity',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .opacity[screenSizeIndex]
+          );
+          this.setAttribute(
+            'stroke-width',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .width[screenSizeIndex]
+          );
+          // Define tooltip info
+          tooltipSelection.html(
+            collection.name + newLine +
+            collection.labels[index] + ': ' + d.value
+          );
+          // Finalize tooltip
+          finalizeTooltip(
+            tooltipSelection,
+            plotAreaSelection,
+            tooltipFadeInDuration,
+            styling,
+            screenSizeIndex
+          );
         })
-        .attr("dy", ".35em")
-        .text(function(d, index) {return collection.labels[index]});
+        .on('mouseout', function(d) {
+          // Remove shadow
+          this.setAttribute('stroke', 'none');
+          // Fade out tooltip
+          tooltipSelection.transition()
+            .duration(tooltipFadeOutDuration)
+            .style('opacity', 0);
+        });
+      // If slice is selected, deselect it when user touches on body
+      d3.select('body')[0][0]
+        .addEventListener('touchstart', function() {
+          // Deselect slice if selected
+          let length: number = sliceSelection[0].length;
+          for (let i = 0; i < length; i++) {
+            let sliceArcSelection: any = sliceSelection[0][i]
+              .querySelector('.arc');
+            if (sliceArcSelection.getAttribute('stroke') !== 'none') {
+              sliceArcSelection.setAttribute('stroke', 'none');
+              break;
+            }
+          }
+        });
     }
     // Fade out active tooltip when user touches on body
     d3.select('body')[0][0]
@@ -1492,6 +1545,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   }
   private responsiveStyling(styling: iChartStyling) : void {
+
     for (let prop in styling) {
       if (styling[prop] === null) {
         continue;
