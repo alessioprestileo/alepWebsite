@@ -12,30 +12,79 @@ import { iChartStyling } from './iChartStyling';
 
 declare var d3: any;
 
-class Chart {
-  private d3SelectionCanvas: any;
-  private d3SelectionBody: any;
+class Canvas {
+  private d3Selection: any;
+  private d3SelectionBackground: any;
+  private d3SelectionChartBody: any;
   private d3SelectionLegend: any;
-  private d3SelectionTitle: any;
   private d3SelectionSubtitle: any;
+  private d3SelectionTitle: any;
 
-  constructor (
-    parentD3SelectionCanvas: any,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling)
-  {
-    parentD3SelectionCanvas = parentD3SelectionCanvas;
+  private createBackground(): any {
 
   }
 
   private createTitle(
     parentD3SelectionCanvas: any,
     inputChart: iAlepNg2InputChart,
-    styling: iChartStyling
-  ) {
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ): any {
+
+  }
+}
+class Visualization {
+  private d3SelectionCanvas: any;
+  private d3SelectionContainer: any;
+  private d3SelectionDocumentBody: any;
+  private d3SelectionTooltip: any;
+
+  constructor (
+    parentD3SelectionContainer: any,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number,
+    tooltip: any)
+  {
+    this.d3SelectionContainer = parentD3SelectionContainer;
+    this.d3SelectionTooltip = tooltip.d3Selection;
+  }
+
+  private createTooltip(
+    parentD3SelectionBody: any,
+    chartContainerId: number,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
 
   }
 
+}
+class Tooltip {
+  private d3Selection: any;
+
+  constructor(
+    parentD3SelectionBody: any,
+    chartContainerId: number,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    this.d3Selection = this.initialize(
+      parentD3SelectionBody,
+      chartContainerId,
+      styling,
+      screenSizeIndex
+    )
+  }
+
+  private initialize(
+    parentD3SelectionBody: any,
+    chartContainerId: number,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+
+  }
 }
 
 interface iCollection {
