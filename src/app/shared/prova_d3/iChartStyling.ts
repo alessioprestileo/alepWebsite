@@ -106,13 +106,17 @@ export interface iChartStyling {
   },
   tooltip: {
     backgroundColor: string[],
-    border: string[],
-    borderRadius: string[],
+    borderColor: string[],
+    borderRadius: number[],
+    borderWidth: number[],
     fadeInDuration: number[],
     fadeOutDuration: number[],
-    font: string[],
+    fontSize: number[],
     fontColor: string[],
     opacity: number[],
-    padding: string[]
+    paddingBottom: number[],
+    paddingLeft: number[],
+    paddingRight: number[],
+    paddingTop: number[],
   },
 }

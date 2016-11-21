@@ -5,12 +5,38 @@ import {
 
 import { Subscription } from 'rxjs/Rx';
 
-// import { iChart } from '../../models/iChart'
-import { iChart } from './iChart';
-import {iChartColl} from "./iChartColl";
+// import { iAlepNg2InputChart } from '../../models/iAlepNg2InputChart'
+import { iAlepNg2InputChart } from './iAlepNg2InputChart';
+import {iAlepNg2InputChartColl} from "./iAlepNg2InputChartColl";
 import { iChartStyling } from './iChartStyling';
 
 declare var d3: any;
+
+class Chart {
+  private d3SelectionCanvas: any;
+  private d3SelectionBody: any;
+  private d3SelectionLegend: any;
+  private d3SelectionTitle: any;
+  private d3SelectionSubtitle: any;
+
+  constructor (
+    parentD3SelectionCanvas: any,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling)
+  {
+    parentD3SelectionCanvas = parentD3SelectionCanvas;
+
+  }
+
+  private createTitle(
+    parentD3SelectionCanvas: any,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling
+  ) {
+
+  }
+
+}
 
 interface iCollection {
   hScale: any,
@@ -23,14 +49,14 @@ interface iCollection {
 }
 interface iDefaultChartStylings {
   barStyling: iChartStyling,
+  donutStyling: iChartStyling,
   lineStyling: iChartStyling,
   pieStyling: iChartStyling
 }
 interface iPlotAreaDimensions {
   aspectRatio: number,
   height: number,
-  marginLeft: number,
-  marginRight: number,
+  hPos: number,
   width: number
 }
 
@@ -45,7 +71,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.emOnResize.emit();
   }
   @Input() private emUpdateChart: EventEmitter<any>;
-  @Input() private inputChart: iChart;
+  @Input() private inputChart: iAlepNg2InputChart;
   @Input() private inputStyling: Object = {};
   @ViewChild(
     'alepNg2ChartContainer'
@@ -157,14 +183,98 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       },
       tooltip: {
         backgroundColor: ['#1a1a1a'],
-        border: ['0px'],
-        borderRadius: ['8px'],
+        borderColor: ['none'],
+        borderRadius: [8],
+        borderWidth: [0],
         fadeInDuration: [200],
         fadeOutDuration: [500],
-        font: ['12px sans-serif'],
+        fontSize: [12],
         fontColor: ['white'],
         opacity: [1],
-        padding: ['5px']
+        paddingBottom: [5],
+        paddingLeft: [5],
+        paddingRight: [5],
+        paddingTop: [5]
+      }
+    },
+    donutStyling: {
+      aspectRatio: [1, 1, 1],
+      backgroundColor: ['white'],
+      chartBody: {
+        hAxis: null,
+        marginLeft: [10, 20,200],
+        marginRight: [10, 20,200],
+        marginTop: [30],
+        plotArea: {
+          bar: null,
+          dataPoint: null,
+          paletteRange: [
+            [
+              '#F15854',
+              '#5DA5DA',
+              '#FAA43A',
+              '#60BD68',
+              '#F17CB0',
+              '#B2912F',
+              '#B276B2',
+              '#DECF3F',
+              '#4D4D4D'
+            ]
+          ],
+          path: null,
+          slice: {
+            innerRadius: null,
+            selectionOutline: {
+              color: ['black'],
+              opacity: [0.7],
+              width: [2]
+            },
+            outerRadius: null
+          },
+        },
+        vAxis: null
+      },
+      largeScreenSize: 767,
+      legend: {
+        legendEntry:{
+          symbol: {
+            height:  [12, 15, 15],
+            width:  [28, 36, 36],
+          },
+          text:{
+            fontSize: [10],
+            fontWeight: ['normal'],
+            marginLeft: [10]
+          }
+        },
+        marginBottom: [10],
+        marginTop: [10]
+      },
+      mediumScreenSize: 450,
+      subtitle: {
+        fontSize: [12, 20],
+        fontWeight: ['normal'],
+        marginTop: [10],
+      },
+      title: {
+        fontSize: [15, 25],
+        fontWeight: ['bold'],
+        marginTop: [10],
+      },
+      tooltip: {
+        backgroundColor: ['#1a1a1a'],
+        borderColor: ['none'],
+        borderRadius: [8],
+        borderWidth: [0],
+        fadeInDuration: [200],
+        fadeOutDuration: [500],
+        fontSize: [12],
+        fontColor: ['white'],
+        opacity: [1],
+        paddingBottom: [5],
+        paddingLeft: [5],
+        paddingRight: [5],
+        paddingTop: [5]
       }
     },
     lineStyling: {
@@ -271,23 +381,27 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       },
       tooltip: {
         backgroundColor: ['#1a1a1a'],
-        border: ['0px'],
-        borderRadius: ['8px'],
+        borderColor: ['none'],
+        borderRadius: [8],
+        borderWidth: [0],
         fadeInDuration: [200],
         fadeOutDuration: [500],
-        font: ['12px sans-serif'],
+        fontSize: [12],
         fontColor: ['white'],
         opacity: [1],
-        padding: ['5px']
+        paddingBottom: [5],
+        paddingLeft: [5],
+        paddingRight: [5],
+        paddingTop: [5]
       }
     },
     pieStyling: {
-      aspectRatio: [1, 1, 2],
+      aspectRatio: [1, 1, 1],
       backgroundColor: ['white'],
       chartBody: {
         hAxis: null,
-        marginLeft: [0],
-        marginRight: [0],
+        marginLeft: [10, 20,200],
+        marginRight: [10, 20,200],
         marginTop: [30],
         plotArea: {
           bar: null,
@@ -311,7 +425,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
             selectionOutline: {
               color: ['black'],
               opacity: [0.7],
-              width: [4]
+              width: [2]
             },
             outerRadius: null
           },
@@ -347,14 +461,18 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       },
       tooltip: {
         backgroundColor: ['#1a1a1a'],
-        border: ['0px'],
-        borderRadius: ['8px'],
+        borderColor: ['none'],
+        borderRadius: [8],
+        borderWidth: [0],
         fadeInDuration: [200],
         fadeOutDuration: [500],
-        font: ['12px sans-serif'],
+        fontSize: [12],
         fontColor: ['white'],
         opacity: [1],
-        padding: ['5px']
+        paddingBottom: [5],
+        paddingLeft: [5],
+        paddingRight: [5],
+        paddingTop: [5]
       }
     }
   };
@@ -425,12 +543,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createChart(
     chartContainerChild: ElementRef,
     chartContainerId: number,
-    chartObject: iChart,
+    chartObject: iAlepNg2InputChart,
     styling: iChartStyling
   ) : void {
     let chartType: string = chartObject.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
-    let chartBodyWidth: number = chartContainerChild.nativeElement.offsetWidth;
+    let canvasWidth: number = chartContainerChild.nativeElement.offsetWidth;
     /*
      Tooltip
      */
@@ -448,13 +566,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .append('svg')
       .attr('class', 'canvas')
       .style('height', window.innerHeight)
-      .style('width', chartBodyWidth);
-    // Get correct value for chartBodyWidth. For some reason the correct value
+      .style('width', canvasWidth);
+    // Get correct value for canvasWidth. For some reason the correct value
     // is given only after appending the canvas, and only if the height of the
     // canvas is a large enough value.
-    chartBodyWidth = chartContainerChild.nativeElement.offsetWidth;
+    canvasWidth = chartContainerChild.nativeElement.offsetWidth;
     // Update canvas width
-    canvasSelection.style('width', chartBodyWidth);
+    canvasSelection.style('width', canvasWidth);
     /*
      Background
      */
@@ -462,7 +580,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .append('rect')
       .attr('class', 'background')
       .style('fill', styling.backgroundColor[screenSizeIndex])
-      .style('width', chartBodyWidth);
+      .style('width', canvasWidth);
     /*
      Chart title
      */
@@ -490,8 +608,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Chart body
      */
+    let chartBodyWidth: number =
+      canvasWidth -
+      styling.chartBody.marginLeft[screenSizeIndex] -
+      styling.chartBody.marginRight[screenSizeIndex];
     let outerRadius: number = 0;
-    if (chartType === 'Pie') {
+    if (chartType === 'Donut' ||
+        chartType === 'Pie') {
       outerRadius = styling.chartBody.plotArea.slice.outerRadius ?
         styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
         chartBodyWidth / 2;
@@ -501,12 +624,15 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       chartSubtitleSelection[0][0].getBBox().height +
       styling.chartBody.marginTop[screenSizeIndex] +
       outerRadius;
+    let chartBodyHPos: number =
+      styling.chartBody.marginLeft[screenSizeIndex] +
+      outerRadius;
     let chartBodySelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart-body')
       .attr(
         'transform',
-        `translate(${outerRadius} ${chartBodyVPos})`);
+        `translate(${chartBodyHPos} ${chartBodyVPos})`);
     /*
      Plot area dimensions
      */
@@ -596,15 +722,16 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
      Legend
      */
     let legendVPos: number =
-      chartBodyVPos +
+      chartBodyVPos - outerRadius +
       plotAreaDimensions.height +
       hAxisGroupHeight +
       styling.legend.marginTop[screenSizeIndex];
     let chartLegendSelection: any = this.createLegend(
+      chartType,
       canvasSelection,
       legendVPos,
       collections,
-      plotAreaDimensions.marginLeft,
+      plotAreaDimensions.hPos,
       styling,
       screenSizeIndex
     );
@@ -627,7 +754,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
     let height: number;
     let marginLeft: number;
-    let marginRight: number;
+    let marginRight: number = 0;
     let vAxisWidth: number = 0;
     let width: number;
     if ((chartType === 'Bar') ||
@@ -637,9 +764,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
         styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
     }
-    marginRight = styling.chartBody.marginRight[screenSizeIndex];
+    // marginRight = styling.chartBody.marginRight[screenSizeIndex];
     marginLeft =
-      styling.chartBody.marginLeft[screenSizeIndex] +
+      // styling.chartBody.hPos[screenSizeIndex] +
       vAxisWidth;
     width =
       chartBodyWidth -
@@ -649,14 +776,13 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return {
       aspectRatio: aspectRatio,
       height: height,
-      marginLeft: marginLeft,
-      marginRight: marginRight,
+      hPos: marginLeft,
       width: width
     };
   }
   private createCollectionsAndScales(
     chartType: string,
-    collectionsSrc: iChartColl[],
+    collectionsSrc: iAlepNg2InputChartColl[],
     plotAreaDimensions: iPlotAreaDimensions
   ) : iCollection[] {
     /*
@@ -665,9 +791,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let collections: iCollection[] = [];
     let maxVal: number = 0;
     let minVal: number = 0;
-    if ((chartType === 'Bar') ||
-      (chartType === 'Line') ||
-      (chartType === 'Pie')) {
+    if (chartType === 'Bar' ||
+        chartType === 'Donut' ||
+        chartType === 'Line' ||
+        chartType === 'Pie') {
       // Fill collections array
       for (let i = 0; i < collectionsSrc.length; i++) {
         let dataPoints: any = collectionsSrc[i].dataSet.dataPoints;
@@ -829,7 +956,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return hAxisGroupSelection;
   }
   private createHAxisLabel(
-    chartObject: iChart,
+    chartObject: iAlepNg2InputChart,
     chartBodySelection: any,
     hAxisHeight: number,
     plotAreaWidth: number,
@@ -865,10 +992,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return hAxisLabel;
   }
   private createLegend(
+    chartType: string,
     canvasSelection: any,
     legendVPos: number,
     collections: iCollection[],
-    plotAreaMarginLeft: number,
+    plotAreaHPos: number,
     styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
@@ -877,53 +1005,101 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       collections.length,
       paletteRange
     );
+    let legendHPos: number =
+      styling.chartBody.marginLeft[screenSizeIndex] +
+      plotAreaHPos;
     let chartLegendSelection: any = canvasSelection
       .append('g')
       .attr('class', 'chart-legend')
-      .attr('transform', `translate(0 ${legendVPos})`);
-    let colors: string[] = styling.chartBody
-      .plotArea
-      .paletteRange[screenSizeIndex];
-    for (let i = 0; i < collections.length; i++) {
-      let marginTop: number = styling.legend.marginTop[screenSizeIndex];
-      let fontSize: number = styling.legend.legendEntry
-        .text
-        .fontSize[screenSizeIndex];
-      let textMarginLeft: number = styling.legend.legendEntry
-        .text
-        .marginLeft[screenSizeIndex];
-      let symbolHeight: number = styling.legend.legendEntry
-        .symbol
-        .height[screenSizeIndex];
-      let symbolWidth: number = styling.legend.legendEntry
-        .symbol
-        .width[screenSizeIndex];
-      let legendEntryHeight: number = Math.max(symbolHeight, fontSize);
-      let legendEntryVPos: number = i * (marginTop + legendEntryHeight);
-      let legendEntry: any = chartLegendSelection
-        .append('g')
-        .attr('class', 'legend-entry')
-        .attr(
-          'transform',
-          `translate(${plotAreaMarginLeft} ${legendEntryVPos})`
-        );
-      legendEntry
-        .append('rect')
-        .attr('class', 'legend-entry-symbol')
-        .attr({
-          'fill': paletteScale(i),
-          'height': symbolHeight,
-          'width': symbolWidth
-        });
-      legendEntry
-        .append('text')
-        .attr('class', 'legend-entry-text')
-        .text(collections[i].name)
-        .attr({
-          'font-size': fontSize,
-          'transform':
-            `translate(${symbolWidth + textMarginLeft} ${symbolHeight})`
-        });
+      .attr('transform', `translate(${legendHPos} ${legendVPos})`);
+    if (chartType === 'Bar' ||
+        chartType === 'Line') {
+      for (let i = 0; i < collections.length; i++) {
+        let marginTop: number = styling.legend.marginTop[screenSizeIndex];
+        let fontSize: number = styling.legend.legendEntry
+          .text
+          .fontSize[screenSizeIndex];
+        let textMarginLeft: number = styling.legend.legendEntry
+          .text
+          .marginLeft[screenSizeIndex];
+        let symbolHeight: number = styling.legend.legendEntry
+          .symbol
+          .height[screenSizeIndex];
+        let symbolWidth: number = styling.legend.legendEntry
+          .symbol
+          .width[screenSizeIndex];
+        let legendEntryHeight: number = Math.max(symbolHeight, fontSize);
+        let legendEntryVPos: number = i * (marginTop + legendEntryHeight);
+        let legendEntry: any = chartLegendSelection
+          .append('g')
+          .attr('class', 'legend-entry')
+          .attr(
+            'transform',
+            `translate(0 ${legendEntryVPos})`
+          );
+        legendEntry
+          .append('rect')
+          .attr('class', 'legend-entry-symbol')
+          .attr({
+            'fill': paletteScale(i),
+            'height': symbolHeight,
+            'width': symbolWidth
+          });
+        legendEntry
+          .append('text')
+          .attr('class', 'legend-entry-text')
+          .text(collections[i].name)
+          .attr({
+            'font-size': fontSize,
+            'transform':
+              `translate(${symbolWidth + textMarginLeft} ${symbolHeight})`
+          });
+      }
+    }
+    else if (chartType === 'Donut' ||
+             chartType === 'Pie') {
+      let collection = collections[0];
+      for (let i = 0; i < collection.values.length; i++) {
+        let marginTop: number = styling.legend.marginTop[screenSizeIndex];
+        let fontSize: number = styling.legend.legendEntry
+          .text
+          .fontSize[screenSizeIndex];
+        let textMarginLeft: number = styling.legend.legendEntry
+          .text
+          .marginLeft[screenSizeIndex];
+        let symbolHeight: number = styling.legend.legendEntry
+          .symbol
+          .height[screenSizeIndex];
+        let symbolWidth: number = styling.legend.legendEntry
+          .symbol
+          .width[screenSizeIndex];
+        let legendEntryHeight: number = Math.max(symbolHeight, fontSize);
+        let legendEntryVPos: number = i * (marginTop + legendEntryHeight);
+        let legendEntry: any = chartLegendSelection
+          .append('g')
+          .attr('class', 'legend-entry')
+          .attr(
+            'transform',
+            `translate(${plotAreaHPos} ${legendEntryVPos})`
+          );
+        legendEntry
+          .append('rect')
+          .attr('class', 'legend-entry-symbol')
+          .attr({
+            'fill': paletteScale(i),
+            'height': symbolHeight,
+            'width': symbolWidth
+          });
+        legendEntry
+          .append('text')
+          .attr('class', 'legend-entry-text')
+          .text(collection.labels[i])
+          .attr({
+            'font-size': fontSize,
+            'transform':
+              `translate(${symbolWidth + textMarginLeft} ${symbolHeight})`
+          });
+      }
     }
     return chartLegendSelection;
   }
@@ -954,11 +1130,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       collections.length,
       paletteRange
     );
-    let marginLeft: number = plotAreaDimensions.marginLeft;
+    let hPos: number = plotAreaDimensions.hPos;
     let plotAreaSelection: any = chartSelection
       .append('g')
       .attr('class', 'plotArea')
-      .attr('transform', `translate(${marginLeft} 0)`);
+      .attr('transform', `translate(${hPos} 0)`);
     let tooltipFadeInDuration: number =
       styling.tooltip.fadeInDuration[screenSizeIndex];
     let tooltipFadeOutDuration: number =
@@ -1070,6 +1246,98 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           });
       }
     }
+    else if (chartType === 'Donut' ||
+      chartType === 'Pie') {
+      let collection: iCollection = collections[0];
+      let outerRadius: number =
+        styling.chartBody.plotArea.slice.outerRadius ?
+          styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
+        plotAreaDimensions.width / 2;
+      let innerRadius: number;
+      if (chartType === 'Donut') {
+        innerRadius =
+          styling.chartBody.plotArea.slice.innerRadius ?
+            styling.chartBody.plotArea.slice.innerRadius[screenSizeIndex] :
+          outerRadius / 3;
+      }
+      else {
+        innerRadius = 0;
+      }
+      let sliceArc: any = d3.svg.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+      let pieLayout: any = d3.layout.pie()
+        .sort(null)
+        .value(function(d) {return d});
+      let sliceSelection: any = plotAreaSelection.selectAll(".slice")
+        .data(pieLayout(collection.values))
+        .enter()
+        .append("g")
+        .attr("class", "slice");
+      sliceSelection.append("path")
+        .attr("class", "arc")
+        .attr("d", sliceArc)
+        .style("fill", function(d, index) {return paletteScale(index)})
+        .on('mouseover', function(d, index) {
+          // Add shadow
+          this.setAttribute(
+            'stroke',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .color[screenSizeIndex]
+          );
+          this.setAttribute(
+            'stroke-opacity',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .opacity[screenSizeIndex]
+          );
+          this.setAttribute(
+            'stroke-width',
+            styling.chartBody.plotArea
+              .slice
+              .selectionOutline
+              .width[screenSizeIndex]
+          );
+          // Define tooltip info
+          tooltipSelection.html(
+            collection.name + newLine +
+            collection.labels[index] + ': ' + d.value
+          );
+          // Finalize tooltip
+          finalizeTooltip(
+            tooltipSelection,
+            plotAreaSelection,
+            tooltipFadeInDuration,
+            styling,
+            screenSizeIndex
+          );
+        })
+        .on('mouseout', function(d) {
+          // Remove shadow
+          this.setAttribute('stroke', 'none');
+          // Fade out tooltip
+          tooltipSelection.transition()
+            .duration(tooltipFadeOutDuration)
+            .style('opacity', 0);
+        });
+      // If slice is selected, deselect it when user touches on body
+      d3.select('body')[0][0]
+        .addEventListener('touchstart', function() {
+          // Deselect slice if selected
+          let length: number = sliceSelection[0].length;
+          for (let i = 0; i < length; i++) {
+            let sliceArcSelection: any = sliceSelection[0][i]
+              .querySelector('.arc');
+            if (sliceArcSelection.getAttribute('stroke') !== 'none') {
+              sliceArcSelection.setAttribute('stroke', 'none');
+              break;
+            }
+          }
+        });
+    }
     else if (chartType === 'Line') {
       let dataPointDiameter: string =
         styling.chartBody.plotArea
@@ -1172,90 +1440,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
           });
       }
     }
-    else if (chartType === 'Pie') {
-      let collection: iCollection = collections[0];
-      let innerRadius: number = styling.chartBody.plotArea
-        .slice
-        .innerRadius[screenSizeIndex];
-      let outerRadius: number =
-        styling.chartBody.plotArea.slice.outerRadius ?
-        styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
-        plotAreaDimensions.width / 2;
-      let sliceArc: any = d3.svg.arc()
-        .outerRadius(outerRadius)
-        .innerRadius(innerRadius);
-      let pieLayout: any = d3.layout.pie()
-        .sort(null)
-        .value(function(d) {return d});
-      let sliceSelection: any = plotAreaSelection.selectAll(".slice")
-        .data(pieLayout(collection.values))
-        .enter()
-        .append("g")
-        .attr("class", "slice");
-      sliceSelection.append("path")
-        .attr("class", "arc")
-        .attr("d", sliceArc)
-        .style("fill", function(d, index) {return paletteScale(index)})
-        .on('mouseover', function(d, index) {
-          // Add shadow
-          this.setAttribute(
-            'stroke',
-            styling.chartBody.plotArea
-              .slice
-              .selectionOutline
-              .color[screenSizeIndex]
-          );
-          this.setAttribute(
-            'stroke-opacity',
-            styling.chartBody.plotArea
-              .slice
-              .selectionOutline
-              .opacity[screenSizeIndex]
-          );
-          this.setAttribute(
-            'stroke-width',
-            styling.chartBody.plotArea
-              .slice
-              .selectionOutline
-              .width[screenSizeIndex]
-          );
-          // Define tooltip info
-          tooltipSelection.html(
-            collection.name + newLine +
-            collection.labels[index] + ': ' + d.value
-          );
-          // Finalize tooltip
-          finalizeTooltip(
-            tooltipSelection,
-            plotAreaSelection,
-            tooltipFadeInDuration,
-            styling,
-            screenSizeIndex
-          );
-        })
-        .on('mouseout', function(d) {
-          // Remove shadow
-          this.setAttribute('stroke', 'none');
-          // Fade out tooltip
-          tooltipSelection.transition()
-            .duration(tooltipFadeOutDuration)
-            .style('opacity', 0);
-        });
-      // If slice is selected, deselect it when user touches on body
-      d3.select('body')[0][0]
-        .addEventListener('touchstart', function() {
-          // Deselect slice if selected
-          let length: number = sliceSelection[0].length;
-          for (let i = 0; i < length; i++) {
-            let sliceArcSelection: any = sliceSelection[0][i]
-              .querySelector('.arc');
-            if (sliceArcSelection.getAttribute('stroke') !== 'none') {
-              sliceArcSelection.setAttribute('stroke', 'none');
-              break;
-            }
-          }
-        });
-    }
     // Fade out active tooltip when user touches on body
     d3.select('body')[0][0]
       .addEventListener('touchstart', function() {
@@ -1274,7 +1458,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createSubtitle(
     canvasSelection: any,
     vPos: number,
-    chartObject: iChart,
+    chartObject: iAlepNg2InputChart,
     styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
@@ -1300,7 +1484,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createTitle(
     canvasSelection: any,
     vPos: number,
-    chartObject: iChart,
+    chartObject: iAlepNg2InputChart,
     styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
@@ -1333,13 +1517,16 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       .attr('class', 'alep-ng2-chart-tooltip')
       .style({
         'background': styling.tooltip.backgroundColor[screenSizeIndex],
-        'border': styling.tooltip.border[screenSizeIndex],
-        'border-radius': styling.tooltip.borderRadius[screenSizeIndex],
+        'border-color': styling.tooltip.borderColor[screenSizeIndex],
+        'border-radius': styling.tooltip.borderRadius[screenSizeIndex] + 'px',
         'color': styling.tooltip.fontColor[screenSizeIndex],
-        'font': styling.tooltip.font[screenSizeIndex],
+        'font-size': styling.tooltip.fontSize[screenSizeIndex] + 'px',
         'left': '0px',
         'opacity': 0,
-        'padding': styling.tooltip.padding[screenSizeIndex],
+        'padding-bottom': styling.tooltip.paddingBottom[screenSizeIndex] + 'px',
+        'padding-left': styling.tooltip.paddingLeft[screenSizeIndex] + 'px',
+        'padding-right': styling.tooltip.paddingRight[screenSizeIndex] + 'px',
+        'padding-top': styling.tooltip.paddingTop[screenSizeIndex] + 'px',
         'top': '0px',
         'position': 'absolute'
       });
@@ -1428,7 +1615,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return vAxisGroupSelection;
   }
   private createVAxisLabel(
-    chartObject: iChart,
+    chartObject: iAlepNg2InputChart,
     vAxisGroupSelection: any,
     styling: iChartStyling,
     screenSizeIndex: number
@@ -1589,6 +1776,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     switch(chartType) {
       case 'Bar':
         defaultStyling = defaultChartStylings.barStyling;
+        break;
+      case 'Donut':
+        defaultStyling = defaultChartStylings.donutStyling;
         break;
       case 'Line':
         defaultStyling = defaultChartStylings.lineStyling;

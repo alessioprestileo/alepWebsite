@@ -2,7 +2,7 @@ import {
     Component, ElementRef, EventEmitter, HostListener, Input, OnInit, ViewChild
 } from '@angular/core'
 
-// import { iChart } from '../../models/iChart'
+// import { iAlepNg2InputChart } from '../../models/iAlepNg2InputChart'
 import { iChart } from './iChart'
 
 declare var uv: any;
@@ -36,7 +36,7 @@ export class AlepNg2ChartComponent implements OnInit {
   @Input() private inputType: string = 'Bar';
   /****************************************************************************/
   /*
-    Input properties defined using the iChart interface. When this object is
+    Input properties defined using the iAlepNg2InputChart interface. When this object is
     given, its properties override the corresponding properties defined using
     the uvCharts API
   *****************************************************************************/
@@ -258,7 +258,7 @@ export class AlepNg2ChartComponent implements OnInit {
   }
   /*
    Merge input properties received, overriding the properties defined using the
-   uvCharts API with the corresponding properties defined using the iChart
+   uvCharts API with the corresponding properties defined using the iAlepNg2InputChart
    interface. Define CSS selector for the chart container.
    Copy caption and subcaption data and take them out of the influence of the
    uvCHarts API.
@@ -275,7 +275,7 @@ export class AlepNg2ChartComponent implements OnInit {
       this.finalGraphDef[prop] = inputGraphDef[prop];
     }
     this.finalType = inputType;
-    // Absorb properties defined with iChart interface
+    // Absorb properties defined with iAlepNg2InputChart interface
     if (inputChart) {
       // Override Type
       this.finalType = inputChart.type;
