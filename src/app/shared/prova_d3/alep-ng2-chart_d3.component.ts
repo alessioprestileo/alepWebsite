@@ -12,87 +12,957 @@ import { iChartStyling } from './iChartStyling';
 
 declare var d3: any;
 
-class Canvas {
-  private d3Selection: any;
+class Chart {
+  private canvas: Canvas;
   private d3SelectionBackground: any;
-  private d3SelectionChartBody: any;
-  private d3SelectionLegend: any;
-  private d3SelectionSubtitle: any;
-  private d3SelectionTitle: any;
+  private legend: any;
+  private subtitle: any;
+  private title: any;
+  private visualization: Visualization;
 
-  private createBackground(): any {
-
-  }
-
-  private createTitle(
-    parentD3SelectionCanvas: any,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ): any {
-
-  }
-}
-class Visualization {
-  private d3SelectionCanvas: any;
-  private d3SelectionContainer: any;
-  private d3SelectionDocumentBody: any;
-  private d3SelectionTooltip: any;
-
-  constructor (
-    parentD3SelectionContainer: any,
+  constructor(
+    parentD3SelectionChartContainer: any,
     inputChart: iAlepNg2InputChart,
     styling: iChartStyling,
     screenSizeIndex: number,
-    tooltip: any)
-  {
-    this.d3SelectionContainer = parentD3SelectionContainer;
-    this.d3SelectionTooltip = tooltip.d3Selection;
+    tooltip: Tooltip
+  ) {
+    this.canvas = new Canvas(parentD3SelectionChartContainer);
+    this.d3SelectionBackground = this.createD3SelectionBackground(
+      this.canvas,
+      styling,
+      screenSizeIndex
+    );
+    this.title = new Title(
+      this.canvas,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
+    this.subtitle = new Subtitle(
+      this.canvas,
+      this.title,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
+    this.visualization = new Visualization(
+      this.canvas,
+      this.title,
+      this.subtitle,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
   }
 
-  private createTooltip(
-    parentD3SelectionBody: any,
-    chartContainerId: number,
+  private createD3SelectionBackground(
+    parentCanvas: Canvas,
     styling: iChartStyling,
     screenSizeIndex: number
   ) : any {
+    let d3SelectionBackground: any = parentCanvas.d3Selection
+      .append('rect')
+      .attr('class', 'background')
+      .style('fill', styling.backgroundColor[screenSizeIndex])
+      .style('width', parentCanvas.getWidth());
+    return d3SelectionBackground;
+  }
+}
+class Canvas {
+  public d3Selection: any;
 
+  constructor(parentD3SelectionChartContainer: any) {
+    this.d3Selection = this.createD3Selection(parentD3SelectionChartContainer);
   }
 
+  private createD3Selection(parentD3SelectionChartContainer: any) : any {
+    let canvasWidth: number = parentD3SelectionChartContainer[0][0]
+      .getBBox().width;
+    let d3Selection = parentD3SelectionChartContainer
+      .append('svg')
+      .attr('class', 'canvas')
+      .style('height', window.innerHeight)
+      .style('width', canvasWidth);
+    // Get correct value for canvasWidth. For some reason the correct value
+    // is given only after appending the canvas, and only if the height of the
+    // canvas is a large enough value.
+    canvasWidth = parentD3SelectionChartContainer[0][0].getBBox().width;
+    // Update canvas width
+    d3Selection.style('width', canvasWidth);
+    return d3Selection;
+  }
+  public getWidth() : number {
+    return this.d3Selection[0][0].getBBox().width;
+  }
+}
+abstract class ChartBody {
+  public collections: iCollection[];
+  public d3Selection: any;
+  public hPos: number;
+  public plotArea: any;
+  public vPos: number;
+  public width: number;
+
+  constructor(
+    parentCanvas: Canvas,
+    subtitle: Subtitle,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    this.setDimensions(
+      parentCanvas,
+      subtitle,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  protected createD3Selection(
+    parentCanvas: Canvas,
+    hPos: number,
+    vPos: number
+  ) : any {
+    let d3Selection: any = parentCanvas.d3Selection
+      .append('g')
+      .attr('class', 'chart-body')
+      .attr(
+        'transform',
+        `translate(${hPos} ${vPos})`);
+    return d3Selection;
+  }
+  private setDimensions(
+    parentCanvas: Canvas,
+    subtitle: Subtitle,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : void {
+    this.width =
+      parentCanvas.getWidth() -
+      styling.chartBody.marginLeft[screenSizeIndex] -
+      styling.chartBody.marginRight[screenSizeIndex];
+    this.vPos =
+      subtitle.vPos +
+      subtitle.d3Selection[0][0].getBBox().height +
+      styling.chartBody.marginTop[screenSizeIndex];
+    this.hPos =
+      styling.chartBody.marginLeft[screenSizeIndex];
+  }
+}
+abstract class ChartBodyFactory {
+  public static createChartBody (
+    parentCanvas: Canvas,
+    subtitle: Subtitle,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    let chartType: string = inputChart.type;
+    switch(chartType) {
+      case 'Bar':
+        return new ChartBodyOrthogonal(
+          parentCanvas,
+          subtitle,
+          inputChart,
+          styling,
+          screenSizeIndex
+        );
+      case 'Donut':
+        return new ChartBodyCircular(
+          parentCanvas,
+          subtitle,
+          inputChart,
+          styling,
+          screenSizeIndex
+        );
+      case 'Line':
+        return new ChartBodyOrthogonal(
+          parentCanvas,
+          subtitle,
+          inputChart,
+          styling,
+          screenSizeIndex
+        );
+      case 'Pie':
+        return new ChartBodyCircular(
+          parentCanvas,
+          subtitle,
+          inputChart,
+          styling,
+          screenSizeIndex
+        );
+    }
+  }
+}
+class ChartBodyOrthogonal extends ChartBody {
+  public hAxis: any;
+  public vAxisLeft: any;
+  public vAxisRight: any;
+
+  constructor(
+    parentCanvas: Canvas,
+    subtitle: Subtitle,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(
+      parentCanvas,
+      subtitle,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
+    this.d3Selection = this.createD3Selection(
+      parentCanvas,
+      this.hPos,
+      this.vPos
+    );
+    this.collections = this.getCollectionsFromSrc(inputChart.collections);
+    this.hAxis = HAxisFactory.createHAxis(
+      inputChart.type,
+      this,
+      inputChart.hAxisLabel,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  private getCollectionsFromSrc(
+    collectionsSrc: iAlepNg2InputChartColl[]
+  ) : iCollection[] {
+    let collections: iCollection[] = [];
+    let maxVal: number = 0;
+    let minVal: number = 0;
+    for (let i = 0; i < collectionsSrc.length; i++) {
+      let dataPoints: any = collectionsSrc[i].dataSet.dataPoints;
+      let name: string = collectionsSrc[i].label;
+      let labels: string[] = [];
+      let values: number[] = [];
+      for (let label in dataPoints) {
+        maxVal = (dataPoints[label] > maxVal) ?
+          dataPoints[label] :
+          maxVal;
+        minVal = (dataPoints[label] < minVal) ?
+          dataPoints[label] :
+          minVal;
+        labels.push(label);
+        values.push(dataPoints[label]);
+      }
+      collections.push(
+        {
+          labels: labels,
+          maxVal: maxVal,
+          minVal: minVal,
+          name: name,
+          values: values
+        }
+      );
+    }
+    return collections;
+  }
+}
+class ChartBodyCircular extends ChartBody {
+  private innerRadius: number;
+  private outerRadius: number;
+
+  constructor(
+    parentCanvas: Canvas,
+    subtitle: Subtitle,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(
+      parentCanvas,
+      subtitle,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
+    this.adjustDimensions(
+      styling,
+      screenSizeIndex
+    );
+    this.createD3Selection(
+      parentCanvas,
+      this.hPos,
+      this.vPos
+    );
+  }
+
+  private adjustDimensions(
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : void {
+    this.outerRadius = styling.chartBody.plotArea.slice.outerRadius ?
+      styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
+    this.width / 2;
+    this.vPos += this.outerRadius;
+    this.hPos += this.outerRadius;
+  }
+}
+abstract class HAxis {
+  public d3SelectionAxis: any;
+  public d3SelectionAxisGroup: any;
+  public d3SelectionLabel: any;
+  public d3Scale: any;
+  public height: number;
+  public hPos: number;
+  public vPos: number;
+
+  constructor(
+    chartBody: ChartBodyOrthogonal
+  ) {
+    this.setPosition(
+      chartBody.plotArea.dimensions.hPos,
+      chartBody.plotArea.dimensions.height,
+    );
+    this.d3SelectionAxisGroup = this.createD3SelectionAxisGroup(
+      chartBody,
+      this.hPos,
+      this.vPos
+    );
+  }
+
+  protected appendAxis(
+    d3SelectionAxisGroup: any,
+    plotAreaHeight: number,
+    d3Scale: any,
+    labels: string[],
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    let hAxis: any = d3.svg.axis()
+      .scale(d3Scale)
+      .ticks(labels.length)
+      .orient('bottom');
+    let d3SelectionAxis: any = d3SelectionAxisGroup
+      .append('g')
+      .call(hAxis)
+      .attr('class', 'axis');
+    // Create tick labels
+    let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
+    let labelsAngle: number =
+      styling.chartBody.hAxis.ticks.labelsAngle[screenSizeIndex];
+    d3SelectionAxis.selectAll('.tick text')
+      .data(labels)
+      .text((d) => {return d})
+      .style({
+        'font-size': fontSize,
+        'text-anchor': 'end'
+      })
+      .attr({
+        'dy': 0,
+        'transform':
+          `translate(0 ${fontSize}) rotate(${labelsAngle})`,
+        'y': 0
+      });
+    // Styling axis
+    let stroke: string = styling.chartBody.hAxis.stroke[screenSizeIndex];
+    let strokeWidth: string =
+      styling.chartBody.hAxis.strokeWidth[screenSizeIndex].toString() + 'px';
+    d3SelectionAxis.select('.domain')
+      .style({
+        'fill': 'none',
+        'stroke': stroke,
+        'stroke-width': strokeWidth
+      });
+    // Styling tick lines
+    let tickOpacity: number = styling.chartBody.hAxis
+      .ticks
+      .opacity[screenSizeIndex];
+    let tickStroke: string = styling.chartBody.hAxis
+      .ticks
+      .stroke[screenSizeIndex];
+    let tickStrokeWidth: number =
+      styling.chartBody.hAxis.ticks.strokeWidth[screenSizeIndex];
+    d3SelectionAxis.selectAll('.tick line')
+      .attr('class', 'tick-line')
+      .attr('y2', 6)
+      .style({
+        'opacity': tickOpacity,
+        'stroke': tickStroke,
+        'stroke-width': tickStrokeWidth
+      });
+    // Styling grid lines
+    let gridOpacity: number = styling.chartBody.hAxis
+      .gridLines
+      .opacity[screenSizeIndex];
+    let gridStroke: string = styling.chartBody.hAxis
+      .gridLines
+      .stroke[screenSizeIndex];
+    let gridStrokeWidth: number =
+      styling.chartBody.hAxis.gridLines.strokeWidth[screenSizeIndex];
+    d3SelectionAxis.selectAll('.tick')
+      .append('line')
+      .attr('class', 'grid-line')
+      .attr('y2', -plotAreaHeight)
+      .style({
+        'opacity': gridOpacity,
+        'stroke': gridStroke,
+        'stroke-width': gridStrokeWidth
+      });
+  }
+  protected appendLabel(
+    d3SelectionAxisGroup: any,
+    axisGroupHeight: number,
+    plotAreaWidth: number,
+    text: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    let marginTop: number = styling.chartBody.hAxis
+      .label
+      .marginTop[screenSizeIndex];
+    let fontSize: number = styling.chartBody.hAxis
+      .label
+      .fontSize[screenSizeIndex];
+    let fontWeight: string = styling.chartBody.hAxis
+      .label
+      .fontWeight[screenSizeIndex];
+    let x: number = plotAreaWidth / 2;
+    let y: number = axisGroupHeight + fontSize;
+    let d3SelectionLabel = d3SelectionAxisGroup
+      .append('g')
+      .attr('class', 'label')
+      .append('text')
+      .text(text)
+      .attr({
+        'dy': marginTop,
+        'text-anchor': 'middle',
+        'x': x,
+        'y': y
+      })
+      .style({
+        'font-size': fontSize,
+        'font-weight': fontWeight
+      });
+    return d3SelectionLabel;
+  }
+  private createD3SelectionAxisGroup(
+    chartBody: ChartBodyOrthogonal,
+    hPos: number,
+    vPos: number
+  ) : any {
+    let hAxisGroupSelection: any = chartBody.d3Selection
+      .append('g')
+      .attr('class', 'horAxis')
+      .attr('transform', `translate(${hPos} ${vPos})`);
+    return hAxisGroupSelection;
+  }
+  protected createD3Scale(
+    collections: iCollection[],
+    width: number
+  ) : any {
+    let hScale: any = d3.scale.linear()
+      .domain([0, collections[0].labels.length - 1])
+      .range([0, width]);
+    return hScale;
+  }
+  public getHeight() : number {
+    return this.d3SelectionAxisGroup[0][0].getBBox().height;
+  }
+  private setPosition(hPos: number, vPos: number) : void {
+    this.hPos = hPos;
+    this.vPos = vPos;
+  }
+}
+class HAxisBar extends HAxis {
+  constructor(
+    chartBody: ChartBodyOrthogonal,
+    labelText: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(chartBody);
+    this.d3Scale = this.createD3Scale(
+      chartBody.collections,
+      chartBody.plotArea.width
+    );
+    this.adjustScaleDomain(this.d3Scale);
+    this.d3SelectionAxis = this.appendAxis(
+      this.d3SelectionAxisGroup,
+      chartBody.plotArea.dimensions.height,
+      this.d3Scale,
+      chartBody.collections[0].labels,
+      styling,
+      screenSizeIndex
+    );
+    this.adjustTickLabelsPosition(
+      this.d3SelectionAxis.selectAll('.tick text'),
+      chartBody.collections[0].labels,
+      chartBody.plotArea.dimensions.width,
+      styling,
+      screenSizeIndex
+    );
+    this.d3SelectionLabel = this.appendLabel(
+      this.d3SelectionAxisGroup,
+      this.d3SelectionAxisGroup[0][0].getBBox().height,
+      chartBody.plotArea.dimensions.width,
+      labelText,
+      styling,
+      screenSizeIndex
+    );
+  }
+  private adjustScaleDomain(d3Scale: any) : void {
+    let new_max: number = d3Scale.domain()[1] + 1;
+    d3Scale.domain([0, new_max]);
+  }
+  private adjustTickLabelsPosition(
+    d3SelectionTickLabels: any,
+    labels: string[],
+    plotAreaWidth: number,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : void {
+    let totDataPoints: number = labels.length;
+    let dataGroupWidth: number = plotAreaWidth / totDataPoints;
+    let labelsHorShift: number = dataGroupWidth / 2;
+    let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
+    let labelsAngle: number = styling.chartBody.hAxis
+      .ticks
+      .labelsAngle[screenSizeIndex];
+    d3SelectionTickLabels.attr(
+      'transform',
+      `translate(${labelsHorShift} ${fontSize}) rotate(${labelsAngle})`
+    );
+  }
+}
+abstract class HAxisFactory {
+  public static createHAxis(
+    chartType: string,
+    chartBody: ChartBodyOrthogonal,
+    labelText: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    switch(chartType) {
+      case 'Bar':
+        return new HAxisBar(
+          chartBody,
+          labelText,
+          styling,
+          screenSizeIndex
+        );
+      case 'Line':
+        return new HAxisLine(
+          chartBody,
+          labelText,
+          styling,
+          screenSizeIndex
+        );
+    }
+  }
+}
+class HAxisLine extends HAxis {
+  constructor(
+    chartBody: ChartBodyOrthogonal,
+    labelText: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(chartBody);
+    this.d3Scale = this.createD3Scale(
+      chartBody.collections,
+      chartBody.plotArea.width
+    );
+    this.d3SelectionAxis = this.appendAxis(
+      this.d3SelectionAxisGroup,
+      chartBody.plotArea.dimensions.height,
+      this.d3Scale,
+      chartBody.collections[0].labels,
+      styling,
+      screenSizeIndex
+    );
+    this.d3SelectionLabel = this.appendLabel(
+      this.d3SelectionAxisGroup,
+      this.d3SelectionAxisGroup[0][0].getBBox().height,
+      chartBody.plotArea.dimensions.width,
+      labelText,
+      styling,
+      screenSizeIndex
+    );
+  }
+}
+class VAxis {
+
+}
+abstract class PlotArea {
+  public d3Selection: any;
+  public dimensions: iPlotAreaDimensions;
+
+  constructor(
+    chartBody: ChartBody,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    this.setDimensions(
+      chartBody.width,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  protected createD3Selection(
+    d3SelectionChartBody: any,
+    hPos: number
+  ) : any {
+    let d3Selection: any = d3SelectionChartBody
+      .append('g')
+      .attr('class', 'plotArea')
+      .attr('transform', `translate(${hPos} 0)`);
+    return d3Selection;
+  }
+  public abstract drawData() : void;
+  private setDimensions(
+    chartBodyWidth: number,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : void {
+    let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
+    let height: number = chartBodyWidth / aspectRatio;
+    this.dimensions = {
+      aspectRatio: aspectRatio,
+      height: height,
+      hPos: 0,
+      width: chartBodyWidth
+    };
+  }
+}
+abstract class PlotAreaCircular extends PlotArea {
+  constructor(
+    chartBody: ChartBody,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(
+      chartBody,
+      styling,
+      screenSizeIndex
+    );
+    this.d3Selection = this.createD3Selection(
+      chartBody.d3Selection,
+      this.dimensions.hPos
+    );
+  }
+  public abstract drawData() : void;
+}
+abstract class PlotAreaOrthogonal extends PlotArea {
+  constructor(
+    chartBody: ChartBody,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(
+      chartBody,
+      styling,
+      screenSizeIndex
+    );
+    this.adjustDimensions(
+      styling,
+      screenSizeIndex
+    );
+    this.d3Selection = this.createD3Selection(
+      chartBody.d3Selection,
+      this.dimensions.hPos
+    );
+  }
+
+  private adjustDimensions(
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : void {
+    let vAxisLeftWidth : number =
+      styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
+      styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
+      styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
+    let vAxisRightWidth : number = 0;
+    this.dimensions.hPos += vAxisLeftWidth;
+    this.dimensions.width -= (vAxisLeftWidth + vAxisRightWidth);
+  }
+  public abstract drawData() : void;
+}
+class PlotAreaBar extends PlotAreaOrthogonal {
+  constructor(
+    chartBody: ChartBody,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super(
+      chartBody,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  public drawData() : void {}
+}
+abstract class PlotAreaFactory {
+  public static createPlotArea(
+    chartType: string,
+    chartBody: ChartBody,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    switch(chartType) {
+      case 'Bar':
+        return new PlotAreaBar(
+          chartBody,
+          styling,
+          screenSizeIndex
+        );
+    }
+  }
+}
+class WrappableD3TextElement {
+  constructor() {}
+
+  protected wrap(d3SelectionText: any, width: number) : void {
+    let words = d3SelectionText.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      x = d3SelectionText.attr("x"),
+      y = d3SelectionText.attr("y"),
+      dy = 0,
+      fontSize = 1 + 'em',
+      fontWeight = d3SelectionText.style('font-weight'),
+      tSpan = d3SelectionText.text(null)
+        .append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", dy + "em")
+        .style({
+          'font-size': fontSize,
+          'font-weight': fontWeight
+        });
+    while (word = words.pop()) {
+      line.push(word);
+      tSpan.text(line.join(" "));
+      if (tSpan.node().getComputedTextLength() > width) {
+        line.pop();
+        tSpan.text(line.join(" "));
+        line = [word];
+        tSpan = d3SelectionText.append("tspan")
+          .text(word)
+          .attr("x", x)
+          .attr("y", y)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .style({
+            'font-size': fontSize,
+            'font-weight': fontWeight
+          });
+      }
+    }
+  }
+}
+class Subtitle extends WrappableD3TextElement {
+  public d3Selection: any;
+  public text: string;
+  public vPos: number;
+  public width: number;
+
+  constructor(
+    parentCanvas: Canvas,
+    title: Title,
+    text: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super();
+    this.text = text;
+    this.vPos =
+      title.d3Selection[0][0].getBBox().height +
+      title.vPos +
+      styling.subtitle.marginTop[screenSizeIndex];
+    this.width = parentCanvas.getWidth();
+    this.d3Selection = this.create(
+      parentCanvas,
+      this.vPos,
+      this.width,
+      this.text,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  private create(
+    parentCanvas: Canvas,
+    vPos: number,
+    width: number,
+    text: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    let d3Selection: any = parentCanvas.d3Selection.append('text')
+      .text(text)
+      .attr('class', 'chart-subtitle')
+      .attr({
+        'transform': `translate(0 ${vPos})`,
+        'x': width / 2,
+        'y': styling.subtitle.fontSize[screenSizeIndex]
+      })
+      .style({
+        'font-size': styling.subtitle.fontSize[screenSizeIndex] + 'px',
+        'font-weight': styling.subtitle.fontWeight[screenSizeIndex],
+        'text-anchor': 'middle'
+      });
+    this.wrap(this.d3Selection, width);
+    return d3Selection;
+  }
+}
+class Title extends WrappableD3TextElement {
+  public d3Selection: any;
+  public text: string;
+  public vPos: number;
+  public width: number;
+
+  constructor(
+    parentCanvas: Canvas,
+    text: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) {
+    super();
+    this.text = text;
+    this.vPos = styling.title.marginTop[screenSizeIndex];
+    this.width = parentCanvas.getWidth();
+    this.d3Selection = this.create(
+      parentCanvas,
+      this.vPos,
+      this.width,
+      this.text,
+      styling,
+      screenSizeIndex
+    );
+  }
+
+  private create(
+    parentCanvas: Canvas,
+    vPos: number,
+    width: number,
+    text: string,
+    styling: iChartStyling,
+    screenSizeIndex: number
+  ) : any {
+    let d3Selection: any = parentCanvas.d3Selection.append('text')
+      .attr('class', 'chart-title')
+      .text(text)
+      .attr({
+        'transform': `translate(0 ${vPos})`,
+        'x': width / 2,
+        'y': styling.title.fontSize[screenSizeIndex]
+      })
+      .style({
+        'font-size': styling.title.fontSize[screenSizeIndex] + 'px',
+        'font-weight': styling.title.fontWeight[screenSizeIndex],
+        'text-anchor': 'middle'
+      });
+    this.wrap(d3Selection, width);
+    return d3Selection;
+  }
 }
 class Tooltip {
   private d3Selection: any;
 
   constructor(
-    parentD3SelectionBody: any,
+    parentD3SelectionDocumentBody: any,
     chartContainerId: number,
     styling: iChartStyling,
     screenSizeIndex: number
   ) {
-    this.d3Selection = this.initialize(
-      parentD3SelectionBody,
+    this.d3Selection = this.create(
+      parentD3SelectionDocumentBody,
       chartContainerId,
       styling,
       screenSizeIndex
     )
   }
 
-  private initialize(
-    parentD3SelectionBody: any,
+  private create(
+    parentD3SelectionDocumentBody: any,
     chartContainerId: number,
     styling: iChartStyling,
     screenSizeIndex: number
   ) {
-
+    let tooltipSelection: any = parentD3SelectionDocumentBody
+      .append('div')
+      .attr('class', 'alep-ng2-chart-tooltip')
+      .style({
+        'background': styling.tooltip.backgroundColor[screenSizeIndex],
+        'border-color': styling.tooltip.borderColor[screenSizeIndex],
+        'border-radius': styling.tooltip.borderRadius[screenSizeIndex] + 'px',
+        'color': styling.tooltip.fontColor[screenSizeIndex],
+        'font-size': styling.tooltip.fontSize[screenSizeIndex] + 'px',
+        'left': '0px',
+        'opacity': 0,
+        'padding-bottom': styling.tooltip.paddingBottom[screenSizeIndex] + 'px',
+        'padding-left': styling.tooltip.paddingLeft[screenSizeIndex] + 'px',
+        'padding-right': styling.tooltip.paddingRight[screenSizeIndex] + 'px',
+        'padding-top': styling.tooltip.paddingTop[screenSizeIndex] + 'px',
+        'top': '0px',
+        'position': 'absolute'
+      });
+    tooltipSelection[0][0].setAttribute(
+      'tooltip-id', chartContainerId
+    );
+    return tooltipSelection;
   }
 }
+class Visualization {
+  private chartBody: any;
+  private legend: any;
 
+  constructor(
+    canvas: Canvas,
+    title: Title,
+    subtitle: Subtitle,
+    inputChart: iAlepNg2InputChart,
+    styling: iChartStyling,
+    screenSizeIndex: number,
+  ) {
+    this.chartBody = ChartBodyFactory.createChartBody(
+      canvas,
+      subtitle,
+      inputChart,
+      styling,
+      screenSizeIndex
+    );
+    /*
+     Legend
+     */
+    let legendVPos: number =
+      chartBodyVPos - outerRadius +
+      plotAreaDimensions.height +
+      hAxisGroupHeight +
+      styling.legend.marginTop[screenSizeIndex];
+    let chartLegendSelection: any = this.createLegend(
+      chartType,
+      canvasSelection,
+      legendVPos,
+      collections,
+      plotAreaDimensions.hPos,
+      styling,
+      screenSizeIndex
+    );
+  }
+}
 interface iCollection {
+  labels: string[],
+  maxVal: number,
+  minVal: number,
+  name: string,
+  values: number[]
+}
+interface iCollection_old {
   hScale: any,
   labels: string[],
   maxVal: number,
   minVal: number,
-  name: string;
+  name: string,
   values: number[],
   vScale: any
 }
@@ -107,6 +977,31 @@ interface iPlotAreaDimensions {
   height: number,
   hPos: number,
   width: number
+}
+
+
+class A {
+  public propA: any;
+  public propB: any;
+}
+
+class B  extends A {
+  public propC: any;
+
+  constructor() {
+    super();
+  }
+}
+
+class C {
+  private a: A;
+  private downCasted: A | B;
+
+  constructor(b: B) {
+    this.a = b;
+    this.downCasted = /*this.a;*/(<B>this.a);
+    this.downCasted.prop
+  }
 }
 
 @Component({
@@ -565,7 +1460,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       console.log('Error: ', error.message, '\n', error.stack);
     }
     if (this.hasValidInput === true) {
-      this.prepareContainer(this.chartContainerId);
+      this.assignIdToChartContainer(this.chartContainerId);
       this.setFinalStyling(
         this.inputChart.type,
         this.inputStyling,
@@ -592,10 +1487,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createChart(
     chartContainerChild: ElementRef,
     chartContainerId: number,
-    chartObject: iAlepNg2InputChart,
+    inputChart: iAlepNg2InputChart,
     styling: iChartStyling
   ) : void {
-    let chartType: string = chartObject.type;
+    let chartType: string = inputChart.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
     let canvasWidth: number = chartContainerChild.nativeElement.offsetWidth;
     /*
@@ -607,7 +1502,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       chartContainerId
     );
     /*
-     Canvas
+     Chart
      */
     let canvasSelection: any = d3.select(
       `.alep-ng2-chart-container[container-id="${chartContainerId}"`
@@ -637,7 +1532,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let chartTitleSelection: any = this.createTitle(
       canvasSelection,
       chartTitleVPos,
-      chartObject,
+      inputChart,
       styling,
       screenSizeIndex);
     /*
@@ -650,7 +1545,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let chartSubtitleSelection: any = this.createSubtitle(
       canvasSelection,
       chartSubtitleVPos,
-      chartObject,
+      inputChart,
       styling,
       screenSizeIndex
     );
@@ -695,9 +1590,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     /*
      Collections and scales
      */
-    let collections: iCollection[] = this.createCollectionsAndScales(
+    let collections: iCollection_old[] = this.createCollectionsAndScales(
       chartType,
-      chartObject.collections,
+      inputChart.collections,
       plotAreaDimensions
     );
     /*
@@ -720,7 +1615,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
        Vertical axis label
        */
       this.createVAxisLabel(
-        chartObject,
+        inputChart,
         vAxisGroupSelection,
         styling,
         screenSizeIndex
@@ -744,7 +1639,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         hAxisGroupSelection[0][0].getBBox().height -
         plotAreaDimensions.height;
       this.createHAxisLabel(
-        chartObject,
+        inputChart,
         chartBodySelection,
         hAxisGroupHeight,
         plotAreaDimensions.width,
@@ -833,11 +1728,11 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartType: string,
     collectionsSrc: iAlepNg2InputChartColl[],
     plotAreaDimensions: iPlotAreaDimensions
-  ) : iCollection[] {
+  ) : iCollection_old[] {
     /*
      Labels and values
      */
-    let collections: iCollection[] = [];
+    let collections: iCollection_old[] = [];
     let maxVal: number = 0;
     let minVal: number = 0;
     if (chartType === 'Bar' ||
@@ -1044,7 +1939,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartType: string,
     canvasSelection: any,
     legendVPos: number,
-    collections: iCollection[],
+    collections: iCollection_old[],
     plotAreaHPos: number,
     styling: iChartStyling,
     screenSizeIndex: number
@@ -1167,7 +2062,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   private createPlotArea(
     chartType: string,
-    collections: iCollection[],
+    collections: iCollection_old[],
     chartSelection: any,
     plotAreaDimensions: iPlotAreaDimensions,
     tooltipSelection: any,
@@ -1297,7 +2192,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
     else if (chartType === 'Donut' ||
       chartType === 'Pie') {
-      let collection: iCollection = collections[0];
+      let collection: iCollection_old = collections[0];
       let outerRadius: number =
         styling.chartBody.plotArea.slice.outerRadius ?
           styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
@@ -1746,7 +2641,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         styling.tooltip.opacity[screenSizeIndex]
       );
   }
-  private prepareContainer(chartContainerId: number) : void {
+  private assignIdToChartContainer(chartContainerId: number) : void {
     this.alepNg2ChartContainerChild.nativeElement.setAttribute(
       'container-id',
       chartContainerId
