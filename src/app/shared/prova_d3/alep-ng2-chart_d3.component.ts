@@ -13,54 +13,35 @@ import { iChartStyling } from './iChartStyling';
 declare var d3: any;
 
 class Chart {
-  private canvas: Canvas;
-  private d3SelectionBackground: any;
-  private subtitle: any;
-  private title: any;
-  private visualization: Visualization;
+  public canvas: Canvas;
+  public d3SelectionParentContainer: any;
+  public d3SelectionBackground: any;
+  public inputChart: iAlepNg2InputChart;
+  public styling: iChartStyling;
+  public subtitle: any;
+  public title: any;
+  public visualization: Visualization;
 
   constructor(
-    parentD3SelectionChartContainer: any,
+    d3SelectionParentContainer: any,
     inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
+    styling: iChartStyling
   ) {
-    this.canvas = new Canvas(parentD3SelectionChartContainer);
-    this.d3SelectionBackground = this.createD3SelectionBackground(
-      this.canvas,
-      styling,
-      screenSizeIndex
-    );
-    this.title = new Title(
-      this.canvas,
-      inputChart.title,
-      styling,
-      screenSizeIndex
-    );
-    this.subtitle = new Subtitle(
-      this.canvas,
-      this.title,
-      inputChart.subtitle,
-      styling,
-      screenSizeIndex
-    );
-    this.visualization = new Visualization(
-      this.canvas,
-      this.subtitle,
-      inputChart,
-      styling,
-      screenSizeIndex
-    );
-
+    this.d3SelectionParentContainer = d3SelectionParentContainer;
+    this.inputChart = inputChart;
+    this.styling = styling;
+    this.canvas = new Canvas(this);
+    this.d3SelectionBackground = this.createD3SelectionBackground();
+    this.title = new Title(this);
+    this.subtitle = new Subtitle(this);
+    this.visualization = new Visualization(this);
   }
 
-  private adjustHeight(
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void {
+  private adjustHeight() : void {
+    let chartBodyHeight: number = this.visualization.ch
     let titleHeight: number = this.title.d3Selection.getBBox().height;
     let subtitleHeight: number = this.subtitle.d3Selection.getBBox().height;
-    let chartBodyHeight: number = this.visualization.ch
+    let styling: iChartStyling = this.styling;
 
 
     let height: number =
@@ -69,30 +50,34 @@ class Chart {
     canvasSelection.style('height', canvasHeight);
     backgroundSelection.style('height', canvasHeight);
   }
-  private createD3SelectionBackground(
-    parentCanvas: Canvas,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : any {
+  private createD3SelectionBackground() : any {
+    let parentCanvas: any = this.canvas;
+    let styling: iChartStyling = this.styling;
+
     let d3SelectionBackground: any = parentCanvas.d3Selection
       .append('rect')
       .attr('class', 'background')
-      .style('fill', styling.backgroundColor[screenSizeIndex])
+      .style('fill', styling.backgroundColor[0])
       .style('width', parentCanvas.getWidth());
     return d3SelectionBackground;
   }
 }
 class Canvas {
   public d3Selection: any;
+  public parentChart: Chart;
 
-  constructor(parentD3SelectionChartContainer: any) {
-    this.d3Selection = this.createD3Selection(parentD3SelectionChartContainer);
+  constructor(parentChart: Chart) {
+    this.parentChart = parentChart;
+    this.d3Selection = this.createD3Selection();
   }
 
-  private createD3Selection(parentD3SelectionChartContainer: any) : any {
-    let canvasWidth: number = parentD3SelectionChartContainer[0][0]
+  private createD3Selection() : any {
+    let d3SelectionParentChartContainer: any = this.parentChart
+      .d3SelectionParentContainer;
+
+    let canvasWidth: number = d3SelectionParentChartContainer[0][0]
       .getBBox().width;
-    let d3Selection = parentD3SelectionChartContainer
+    let d3Selection = d3SelectionParentChartContainer
       .append('svg')
       .attr('class', 'canvas')
       .style('height', window.innerHeight)
@@ -100,7 +85,7 @@ class Canvas {
     // Get correct value for canvasWidth. For some reason the correct value
     // is given only after appending the canvas, and only if the height of the
     // canvas is a large enough value.
-    canvasWidth = parentD3SelectionChartContainer[0][0].getBBox().width;
+    canvasWidth = d3SelectionParentChartContainer[0][0].getBBox().width;
     // Update canvas width
     d3Selection.style('width', canvasWidth);
     return d3Selection;
@@ -113,155 +98,24 @@ abstract class ChartBody {
   public collections: iCollection[];
   public d3Selection: any;
   public hPos: number;
+  public parentCanvas: Canvas;
   public plotArea: any;
   public vPos: number;
   public width: number;
 
-  constructor(
-    parentCanvas: Canvas,
-    subtitle: Subtitle,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) {
-    this.setDimensions(
-      parentCanvas,
-      subtitle,
-      styling,
-      screenSizeIndex
-    );
-    this.plotArea = PlotAreaFactory.createPlotArea(
-      inputChart.type,
-      this,
-      styling,
-      screenSizeIndex
-    );
+  constructor(parentCanvas: Canvas) {
+    this.collections = this.getCollectionsFromSrc();
+    this.parentCanvas = parentCanvas;
+    this.setDimensions();
+    this.plotArea = PlotAreaFactory.createPlotArea();
   }
 
-  protected createD3Selection(
-    parentCanvas: Canvas,
-    hPos: number,
-    vPos: number
-  ) : any {
-    let d3Selection: any = parentCanvas.d3Selection
-      .append('g')
-      .attr('class', 'chart-body')
-      .attr(
-        'transform',
-        `translate(${hPos} ${vPos})`);
-    return d3Selection;
-  }
-  private setDimensions(
-    parentCanvas: Canvas,
-    subtitle: Subtitle,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void {
-    this.width =
-      parentCanvas.getWidth() -
-      styling.chartBody.marginLeft[screenSizeIndex] -
-      styling.chartBody.marginRight[screenSizeIndex];
-    this.vPos =
-      subtitle.vPos +
-      subtitle.d3Selection[0][0].getBBox().height +
-      styling.chartBody.marginTop[screenSizeIndex];
-    this.hPos =
-      styling.chartBody.marginLeft[screenSizeIndex];
-  }
-}
-abstract class ChartBodyFactory {
-  public static createChartBody (
-    parentCanvas: Canvas,
-    subtitle: Subtitle,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : any {
-    let chartType: string = inputChart.type;
-    switch(chartType) {
-      case 'Bar':
-        return new ChartBodyOrthogonal(
-          parentCanvas,
-          subtitle,
-          inputChart,
-          styling,
-          screenSizeIndex
-        );
-      case 'Donut':
-        return new ChartBodyCircular(
-          parentCanvas,
-          subtitle,
-          inputChart,
-          styling,
-          screenSizeIndex
-        );
-      case 'Line':
-        return new ChartBodyOrthogonal(
-          parentCanvas,
-          subtitle,
-          inputChart,
-          styling,
-          screenSizeIndex
-        );
-      case 'Pie':
-        return new ChartBodyCircular(
-          parentCanvas,
-          subtitle,
-          inputChart,
-          styling,
-          screenSizeIndex
-        );
-    }
-  }
-}
-class ChartBodyOrthogonal extends ChartBody {
-  public hAxis: any;
-  public vAxisLeft: any;
-  public vAxisRight: any = null;
+  private getCollectionsFromSrc() : iCollection[] {
+    let collectionsSrc: iAlepNg2InputChartColl[] = this.parentCanvas
+      .parentChart
+      .inputChart
+      .collections;
 
-  constructor(
-    parentCanvas: Canvas,
-    subtitle: Subtitle,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) {
-    super(
-      parentCanvas,
-      subtitle,
-      inputChart,
-      styling,
-      screenSizeIndex
-    );
-    this.d3Selection = this.createD3Selection(
-      parentCanvas,
-      this.hPos,
-      this.vPos
-    );
-    this.collections = this.getCollectionsFromSrc(inputChart.collections);
-    this.vAxisLeft = new VAxis(
-      this,
-      inputChart.vAxisLabel,
-      this.getCollectionsMinVal(this.collections),
-      this.getCollectionsMaxVal(this.collections),
-      styling,
-      screenSizeIndex
-    );
-    this.hAxis = HAxisFactory.createHAxis(
-      inputChart.type,
-      this,
-      inputChart.hAxisLabel,
-      0,
-      this.collections[0].labels.length,
-      styling,
-      screenSizeIndex
-    );
-    this.plotArea.drawData();
-  }
-
-  private getCollectionsFromSrc(
-    collectionsSrc: iAlepNg2InputChartColl[]
-  ) : iCollection[] {
     let collections: iCollection[] = [];
     let maxVal: number = 0;
     let minVal: number = 0;
@@ -292,7 +146,25 @@ class ChartBodyOrthogonal extends ChartBody {
     }
     return collections;
   }
-  private getCollectionsMaxVal(collections: iCollection[]) : number {
+  private setDimensions() : void {
+    let parentCanvas: Canvas = this.parentCanvas;
+
+    let styling: iChartStyling = parentCanvas.parentChart.styling;
+    let chartSubtitle: Subtitle = parentCanvas.parentChart.subtitle;
+    this.width =
+      parentCanvas.getWidth() -
+      styling.chartBody.marginLeft[0] -
+      styling.chartBody.marginRight[0];
+    this.vPos =
+      chartSubtitle.vPos +
+      chartSubtitle.d3Selection[0][0].getBBox().height +
+      styling.chartBody.marginTop[0];
+    this.hPos =
+      styling.chartBody.marginLeft[0];
+  }
+  public getCollectionsMaxVal() : number {
+    let collections: iCollection[] = this.collections;
+
     let maxVal: number = collections[0].values[0];
     for (let collection of collections) {
       for (let val of collection.values) {
@@ -303,7 +175,22 @@ class ChartBodyOrthogonal extends ChartBody {
     }
     return maxVal;
   }
-  private getCollectionsMinVal(collections: iCollection[]) : number {
+  protected createD3Selection() : any {
+    let hPos: number = this.hPos;
+    let parentCanvas: Canvas = this.parentCanvas;
+    let vPos: number = this.vPos;
+
+    let d3Selection: any = parentCanvas.d3Selection
+      .append('g')
+      .attr('class', 'chart-body')
+      .attr(
+        'transform',
+        `translate(${hPos} ${vPos})`);
+    return d3Selection;
+  }
+  public getCollectionsMinVal() : number {
+    let collections: iCollection[] = this.collections;
+
     let minVal: number = collections[0].values[0];
     for (let collection of collections) {
       for (let val of collection.values) {
@@ -315,41 +202,49 @@ class ChartBodyOrthogonal extends ChartBody {
     return minVal;
   }
 }
+abstract class ChartBodyFactory {
+  public static createChartBody (parentCanvas: Canvas) : any {
+    let chartType: string = parentCanvas.parentChart.inputChart.type;
+    switch(chartType) {
+      case 'Bar':
+        return new ChartBodyOrthogonal(parentCanvas);
+      case 'Donut':
+        return new ChartBodyCircular(parentCanvas);
+      case 'Line':
+        return new ChartBodyOrthogonal(parentCanvas);
+      case 'Pie':
+        return new ChartBodyCircular(parentCanvas);
+    }
+  }
+}
+class ChartBodyOrthogonal extends ChartBody {
+  public hAxis: any;
+  public vAxisLeft: any;
+  public vAxisRight: any = null;
+
+  constructor(parentCanvas: Canvas) {
+    super(parentCanvas);
+    this.d3Selection = this.createD3Selection();
+    this.vAxisLeft = new VAxis(this);
+    this.hAxis = HAxisFactory.createHAxis(this);
+    this.plotArea.drawData();
+  }
+}
 class ChartBodyCircular extends ChartBody {
   private innerRadius: number;
   private outerRadius: number;
 
-  constructor(
-    parentCanvas: Canvas,
-    subtitle: Subtitle,
-    inputChart: iAlepNg2InputChart,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) {
-    super(
-      parentCanvas,
-      subtitle,
-      inputChart,
-      styling,
-      screenSizeIndex
-    );
-    this.adjustDimensions(
-      styling,
-      screenSizeIndex
-    );
-    this.createD3Selection(
-      parentCanvas,
-      this.hPos,
-      this.vPos
-    );
+  constructor(parentCanvas: Canvas) {
+    super(parentCanvas);
+    this.adjustDimensions();
+    this.createD3Selection();
   }
 
-  private adjustDimensions(
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void {
+  private adjustDimensions() : void {
+    let styling: iChartStyling = this.parentCanvas.parentChart.styling;
+
     this.outerRadius = styling.chartBody.plotArea.slice.outerRadius ?
-      styling.chartBody.plotArea.slice.outerRadius[screenSizeIndex] :
+      styling.chartBody.plotArea.slice.outerRadius[0] :
     this.width / 2;
     this.vPos += this.outerRadius;
     this.hPos += this.outerRadius;
@@ -365,7 +260,7 @@ abstract class HAxis {
   public vPos: number;
 
   constructor(
-    chartBody: ChartBodyOrthogonal,
+    parentChartBody: ChartBodyOrthogonal,
     minVal: number,
     maxVal: number,
   ) {
@@ -591,32 +486,28 @@ class HAxisBar extends HAxis {
 }
 abstract class HAxisFactory {
   public static createHAxis(
-    chartType: string,
-    chartBody: ChartBodyOrthogonal,
-    labelText: string,
+    parentChartBody: ChartBodyOrthogonal,
     minVal: number,
-    maxVal: number,
-    styling: iChartStyling,
-    screenSizeIndex: number
+    maxVal: number
   ) : any {
+    let chartType: string = parentChartBody
+      .parentCanvas
+      .parentChart
+      .inputChart
+      .type;
+
     switch(chartType) {
       case 'Bar':
         return new HAxisBar(
-          chartBody,
-          labelText,
+          parentChartBody,
           minVal,
-          maxVal + 1,
-          styling,
-          screenSizeIndex
+          maxVal + 1
         );
       case 'Line':
         return new HAxisLine(
-          chartBody,
-          labelText,
+          parentChartBody,
           minVal,
-          maxVal,
-          styling,
-          screenSizeIndex
+          maxVal
         );
     }
   }
@@ -1665,14 +1556,7 @@ class VAxis {
   public hPos: number;
   public vPos: number;
 
-  constructor(
-    chartBody: ChartBodyOrthogonal,
-    labelText: string,
-    minVal: number,
-    maxVal: number,
-    styling: iChartStyling,
-    screenIndex: number
-  ) {
+  constructor(parentChartBody: ChartBodyOrthogonal) {
     this.d3SelectionAxisGroup = this.createD3SelectionAxisGroup(chartBody);
     this.d3Scale = this.createD3Scale(
       minVal,
@@ -1912,11 +1796,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   @Input() private emUpdateChart: EventEmitter<any>;
   @Input() private inputChart: iAlepNg2InputChart;
-  @Input() private inputStyling: Object = {};
+  @Input() private inputChartStyling: Object = {};
   @ViewChild(
     'alepNg2ChartContainer'
   ) private alepNg2ChartContainerChild: ElementRef;
   private chartContainerId: number;
+  private chartStyling: iChartStyling;
   private defaultChartStylings: iDefaultChartStylings = {
     barStyling: {
       aspectRatio: [1, 1, 2],
@@ -2317,8 +2202,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   };
   private emOnWindowResize: EventEmitter<any> = new EventEmitter();
-  private finalStyling: iChartStyling;
-  private hasValidInput: boolean = true;
   private subOnWindowResize: Subscription;
   private subUpdateChart: Subscription;
   private validTypes: string[] = [
@@ -2336,7 +2219,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     this.setChartContainerId();
     if (this.inputIsValid()) {
       this.assignIdToChartContainer();
-      this.setFinalStyling();
+      this.setChartStyling();
       this.createChart();
     }
   }
@@ -2366,13 +2249,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createChart() : void {
     let chartContainerId: number = this.chartContainerId;
     let inputChart: iAlepNg2InputChart = this.inputChart;
-    let styling: iChartStyling = this.finalStyling;
+    let styling: iChartStyling = this.chartStyling;
 
     new Chart(
       d3.select(`.alep-ng2-chart-container[container-id="${chartContainerId}"`),
       inputChart,
-      styling,
-      this.getScreenSizeIndex(styling)
+      styling
     );
   }
   private createSubs(): void {
@@ -2399,48 +2281,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let canvas: SVGSVGElement = chartContainer.getElementsByTagName('svg')[0];
     chartContainer.removeChild(canvas);
   }
-  private getResponsiveStyling(styling: iChartStyling) : iChartStyling {
-    let result: Object = {};
-    this.getResponsiveStyling_recursivePart(styling, result);
-    return (<iChartStyling>result);
-  }
-  private getResponsiveStyling_recursivePart(
-    styling: iChartStyling,
-    result: Object
-  ) : void {
-    for (let prop in styling) {
-      if (styling[prop] === null) {
-        continue;
-      }
-      else if (this.isObject(styling[prop])) {
-        result[prop] = {};
-        this.getResponsiveStyling_recursivePart(styling[prop], result[prop]);
-      }
-      else {
-        if (styling[prop].length === 1) {
-          result[prop] = [
-            styling[prop][0],
-            styling[prop][0],
-            styling[prop][0]
-          ];
-        }
-        else if (styling[prop].length === 2) {
-          result[prop] = [
-            styling[prop][0],
-            styling[prop][1],
-            styling[prop][1]
-          ];
-        }
-        else if (styling[prop].length === 3) {
-          result[prop] = [
-            styling[prop][0],
-            styling[prop][1],
-            styling[prop][2]
-          ];
-        }
-      }
-    }
-  }
   private getScreenSizeIndex(styling: iChartStyling) : number {
     let index: number;
     let width: number = window.innerWidth;
@@ -2455,6 +2295,48 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       index = 2;
     }
     return index;
+  }
+  private getChartStylingForCurrentScreenSize(
+    responsiveStyling: iChartStyling
+  ) : iChartStyling {
+    let screenSizeIndex: number = this.getScreenSizeIndex(responsiveStyling);
+    let result: Object = {};
+    this.getChartStylingForCurrentScreenSize_recursivePart(
+      responsiveStyling,
+      result,
+      screenSizeIndex
+    );
+    return (<iChartStyling>result);
+  }
+  private getChartStylingForCurrentScreenSize_recursivePart(
+    styling: iChartStyling,
+    result: Object,
+    screenSizeIndex: number
+  ) : void {
+    for (let prop in styling) {
+      if (styling[prop] === null) {
+        continue;
+      }
+      else if (this.isObject(styling[prop])) {
+        result[prop] = {};
+        this.getChartStylingForCurrentScreenSize_recursivePart(
+          styling[prop],
+          result[prop],
+          screenSizeIndex
+      );
+      }
+      else {
+        if (styling[prop].length === 0) {
+          result[prop] = [null];
+        }
+        else if (styling[prop].length < (screenSizeIndex + 1)) {
+          result[prop] = styling[prop][styling[prop].length - 1];
+        }
+        else {
+          result[prop] = styling[prop][screenSizeIndex];
+        }
+      }
+    }
   }
   private inputIsValid() : boolean {
     let type: string = this.inputChart.type;
@@ -2472,42 +2354,15 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private isObject(entity: any) : boolean {
     return Object.prototype.toString.call(entity) === '[object Object]';
   }
-  private processInputStyling() : void {
-    let chartType: string = this.inputChart.type;
-    let defaultChartStylings: iDefaultChartStylings = this.defaultChartStylings;
-    let inputStyling: Object = this.inputStyling;
-
-    let defaultStyling: iChartStyling;
-    switch(chartType) {
-      case 'Bar':
-        defaultStyling = defaultChartStylings.barStyling;
-        break;
-      case 'Donut':
-        defaultStyling = defaultChartStylings.donutStyling;
-        break;
-      case 'Line':
-        defaultStyling = defaultChartStylings.lineStyling;
-        break;
-      case 'Pie':
-        defaultStyling = defaultChartStylings.pieStyling;
-        break;
-    }
-    let mergedStyling: iChartStyling = this.mergeStylings(
-      inputStyling,
-      defaultStyling
-    );
-    let responsiveStyling: iChartStyling = mergedStyling;
-    this.getResponsiveStyling(responsiveStyling);
-  }
-  private mergeStylings (
+  private mergeChartStylings (
     inputStyling: Object,
     defaultStyling: iChartStyling
   ) : iChartStyling {
     let result: Object = {};
-    this.mergeStylings_recursivePart(inputStyling, defaultStyling, result);
+    this.mergeChartStylings_recursivePart(inputStyling, defaultStyling, result);
     return (<iChartStyling>result);
   }
-  private mergeStylings_recursivePart(
+  private mergeChartStylings_recursivePart(
     inputStyling: Object,
     defaultStyling: iChartStyling,
     result: Object
@@ -2516,7 +2371,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       if (inputStyling[prop]) {
         if (this.isObject(defaultStyling[prop])) {
           result[prop] = {};
-          this.mergeStylings_recursivePart(
+          this.mergeChartStylings_recursivePart(
             inputStyling[prop],
             defaultStyling[prop],
             result[prop]
@@ -2531,10 +2386,34 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     }
   }
-  private getStylingByScreenSize(
-    reponsiveStyling: iChartStyling
-  ) : iChartStyling {
-    let screenSizeIndex: number = this.getScreenSizeIndex()
+  private processInputChartStyling() : iChartStyling {
+    let chartType: string = this.inputChart.type;
+    let defaultStylings: iDefaultChartStylings = this.defaultChartStylings;
+    let inputStyling: Object = this.inputChartStyling;
+
+    let defaultStyling: iChartStyling;
+    switch(chartType) {
+      case 'Bar':
+        defaultStyling = defaultStylings.barStyling;
+        break;
+      case 'Donut':
+        defaultStyling = defaultStylings.donutStyling;
+        break;
+      case 'Line':
+        defaultStyling = defaultStylings.lineStyling;
+        break;
+      case 'Pie':
+        defaultStyling = defaultStylings.pieStyling;
+        break;
+    }
+    let mergedStyling: iChartStyling = this.mergeChartStylings(
+      inputStyling,
+      defaultStyling
+    );
+    return this.getChartStylingForCurrentScreenSize(mergedStyling);
+  }
+  private setChartStyling() : void {
+    this.chartStyling = this.processInputChartStyling();
   }
   private setChartContainerId() : void {
     if (!window['alep-ng2-chart']) {
@@ -2547,12 +2426,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         window['alep-ng2-chart']['nextChartContainerId'] ++;
     this.chartContainerId = containerId;
   }
-  private setFinalStyling() : void {
-    this.processInputStyling();
-    this.getResponsiveStyling();
-  }
   private updateChart() : void {
     this.destroyCanvas();
+    this.setChartStyling();
     this.createChart();
   }
 }
