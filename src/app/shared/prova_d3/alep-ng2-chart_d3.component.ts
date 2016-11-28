@@ -8,7 +8,8 @@ import { Subscription } from 'rxjs/Rx';
 // import { iAlepNg2InputChart } from '../../models/iAlepNg2InputChart'
 import { iAlepNg2InputChart } from './iAlepNg2InputChart';
 import {iAlepNg2InputChartColl} from "./iAlepNg2InputChartColl";
-import { iChartStyling } from './iChartStyling';
+import { iStylingChart } from './iChartStyling';
+import {Chart} from "../models/Chart";
 
 declare var d3: any;
 
@@ -17,7 +18,7 @@ class Chart {
   private d3SelectionParentContainer: any;
   private d3SelectionBackground: any;
   private inputChart: iAlepNg2InputChart;
-  private styling: iChartStyling;
+  private styling: iStylingChart;
   private subtitle: Subtitle;
   private title: Title;
   private visualization: Visualization;
@@ -25,7 +26,7 @@ class Chart {
   constructor(
     d3SelectionParentContainer: any,
     inputChart: iAlepNg2InputChart,
-    styling: iChartStyling
+    styling: iStylingChart
   ) {
     this.d3SelectionParentContainer = d3SelectionParentContainer;
     this.inputChart = inputChart;
@@ -41,7 +42,7 @@ class Chart {
     let chartBodyHeight: number = this.visualization.ch
     let titleHeight: number = this.title.d3Selection.getBBox().height;
     let subtitleHeight: number = this.subtitle.d3Selection.getBBox().height;
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let height: number =
       styling.title.marginTop +
@@ -51,7 +52,7 @@ class Chart {
   }
   private createD3SelectionBackground() : any {
     let parentCanvas: any = this.canvas;
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let d3SelectionBackground: any = parentCanvas.d3Selection
       .append('rect')
@@ -73,7 +74,7 @@ class Chart {
   public getInputChart() : iAlepNg2InputChart {
     return this.inputChart;
   }
-  public getStyling() : iChartStyling {
+  public getStyling() : iStylingChart {
     return this.styling;
   }
   public getSubtitle() : Subtitle {
@@ -159,7 +160,8 @@ abstract class ChartBody extends D3Element {
   }
   /* Private methods */
   private getCollectionsFromSrc() : iCollection[] {
-    let collectionsSrc: iAlepNg2InputChartColl[] = this.parentCanvas
+    let collectionsSrc: iAlepNg2InputChartColl[] = this.parentVisualization
+      .getParentCanvas()
       .getParentChart()
       .getInputChart()
       .collections;
@@ -200,7 +202,7 @@ abstract class ChartBody extends D3Element {
   }
   /* Protected methods */
   protected createD3Selection() : any {
-    let parentCanvas: Canvas = this.parentCanvas;
+    let parentCanvas: Canvas = this.parentVisualization.getParentCanvas();
     let xPos: number = this.getXPos();
     let yPos: number = this.getYPos();
 
@@ -249,16 +251,16 @@ abstract class ChartBody extends D3Element {
     return this.plotArea;
   }
   public getXPos() : number {
-    let parentCanvas: Canvas = this.parentCanvas;
+    let parentCanvas: Canvas = this.parentVisualization.getParentCanvas();
 
-    let styling: iChartStyling = parentCanvas.getParentChart().getStyling();
+    let styling: iStylingChart = parentCanvas.getParentChart().getStyling();
     let xPos: number = styling.chartBody.marginLeft[0];
     return xPos;
   }
   public getYPos() : number {
-    let parentCanvas: Canvas = this.parentCanvas;
+    let parentCanvas: Canvas = this.parentVisualization.getParentCanvas();
 
-    let styling: iChartStyling = parentCanvas.getParentChart().getStyling();
+    let styling: iStylingChart = parentCanvas.getParentChart().getStyling();
     let yPos: number = styling.chartBody.marginTop[0];
     return yPos;
   }
@@ -284,13 +286,13 @@ abstract class ChartBodyFactory {
 }
 class ChartBodyOrthogonal extends ChartBody {
   protected labelsAxis: any;
-  protected valuesAxisLeft: ValuesAxis;
-  protected valuesAxisRight: ValuesAxis = null;
+  protected valuesAxisLeft: ValuesAxisGroup;
+  protected valuesAxisRight: ValuesAxisGroup = null;
 
-  constructor(parentCanvas: Canvas) {
-    super(parentCanvas);
+  constructor(parentVisualization: Visualization) {
+    super(parentVisualization);
     this.d3Selection = this.createD3Selection();
-    this.valuesAxisLeft = new ValuesAxis(this);
+    this.valuesAxisLeft = new ValuesAxisGroup(this);
     this.labelsAxis = LabelsAxisGroupFactory.createLabelsAxis(this);
     this.plotArea.drawData();
   }
@@ -298,52 +300,62 @@ class ChartBodyOrthogonal extends ChartBody {
   public getLabelsAxis(): any {
     return this.labelsAxis;
   }
-  public getValuesAxisLeft(): ValuesAxis {
+  public getValuesAxisLeft(): ValuesAxisGroup {
     return this.valuesAxisLeft;
   }
-  public getValuesAxisRight(): ValuesAxis {
+  public getValuesAxisRight(): ValuesAxisGroup {
     return this.valuesAxisRight;
   }
 }
 class ChartBodyCircular extends ChartBody {
-  private innerRadius: number;
   private outerRadius: number;
 
-  constructor(parentCanvas: Canvas) {
-    super(parentCanvas);
+  constructor(parentVisualization: Visualization) {
+    super(parentVisualization);
     this.setOuterRadius();
-    this.translatePositionInfoToCenterOfCircle();
     this.createD3Selection();
   }
   /* Private methods */
-  private translatePositionInfoToCenterOfCircle() : void {
-    this.geomInfo.xPos += this.outerRadius;
-    this.geomInfo.yPos += this.outerRadius;
-  }
   private setOuterRadius() : void {
-    let styling: iChartStyling = this.parentCanvas
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
       .getParentChart()
       .getStyling();
 
     this.outerRadius = styling.chartBody.plotArea.slice.outerRadius ?
       styling.chartBody.plotArea.slice.outerRadius[0] :
-      this.getGeomInfo().width / 2;
+      this.getWidth() / 2;
   }
   /* Public methods */
-  public getInnerRadius() : number {
-    return this.innerRadius;
-  }
   public getOuterRadius() : number {
     return this.outerRadius;
   }
+  public getXPos() : number {
+    let outerRadius: number = this.outerRadius;
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling();
+
+    let xPos: number = styling.chartBody.marginLeft[0] + outerRadius;
+    return xPos;
+  }
+  public getYPos() : number {
+    let outerRadius: number = this.outerRadius;
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling();
+
+    let yPos: number = styling.chartBody.marginTop[0] + outerRadius;
+    return yPos;
+  }
 }
 abstract class LabelsAxisGroup extends D3Element {
+  protected d3Scale: any;
+  protected d3SelectionAxis: any;
+  protected d3SelectionLabel: any;
   protected parentChartBody: ChartBodyOrthogonal;
-
-  public d3Selection: any;
-  public d3SelectionAxis: any;
-  public d3SelectionLabel: any;
-  public d3Scale: any;
 
   constructor(parentChartBody: ChartBodyOrthogonal) {
     super();
@@ -372,7 +384,7 @@ abstract class LabelsAxisGroup extends D3Element {
     let plotAreaHeight: number = this.parentChartBody.getPlotArea()
       .getGeomInfo()
       .height;
-    let styling: iChartStyling = this.parentChartBody
+    let styling: iStylingChart = this.parentChartBody
       .getParentCanvas()
       .getParentChart()
       .getStyling();
@@ -455,7 +467,7 @@ abstract class LabelsAxisGroup extends D3Element {
       });
   }
   protected appendLabel() : any {
-    let styling: iChartStyling = this.parentChartBody.getParentCanvas()
+    let styling: iStylingChart = this.parentChartBody.getParentCanvas()
       .getParentChart()
       .getStyling();
     let plotAreaWidth: number = this.parentChartBody.getPlotArea()
@@ -520,6 +532,27 @@ abstract class LabelsAxisGroup extends D3Element {
       yPos: yPos
     };
   }
+  /* Public methods */
+  public getXPos() : number {
+    let styling: iStylingChart = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling();
+
+    let xPos: number = styling.chartBody.plotArea
+    return xPos;
+  }
+  public getYPos() : number {
+    let outerRadius: number = this.outerRadius;
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling();
+
+    let yPos: number = styling.chartBody.marginTop[0] + outerRadius;
+    return yPos;
+  }
 }
 class LabelsAxisGroupBar extends LabelsAxisGroup {
   constructor(parentChartBody: ChartBodyOrthogonal) {
@@ -534,7 +567,7 @@ class LabelsAxisGroupBar extends LabelsAxisGroup {
     let plotAreaWidth: number = this.parentChartBody.getPlotArea()
       .getGeomInfo()
       .width;
-    let styling: iChartStyling = this.parentChartBody.getParentCanvas()
+    let styling: iStylingChart = this.parentChartBody.getParentCanvas()
       .getParentChart()
       .getStyling();
     let d3SelectionTickLabels: any = this.d3SelectionAxis
@@ -577,7 +610,6 @@ class LabelsAxisGroupLine extends LabelsAxisGroup {
   }
 }
 abstract class Legend extends D3Element {
-  private d3Selection: any;
   private parentVisualization: Visualization;
 
   constructor(parentVisualization: Visualization) {
@@ -586,40 +618,48 @@ abstract class Legend extends D3Element {
     this.d3Selection = this.createD3Selection();
   }
   /* Private methods */
-  private createD3Selection() : any {
-    let parentCanvas: Canvas = this.parentCanvas;
-    let xPos: number
+  protected createD3Selection() : any {
+    let parentCanvas: Canvas = this.parentVisualization.getParentCanvas();
+    let xPos: number = this.getXPos();
+    let yPos: number = this.getYPos();
 
     let d3Selection: any = parentCanvas.getD3Selection()
       .append('g')
       .attr('class', 'chart-legend')
-      .attr('transform', `translate(${hPos} ${vPos})`);
+      .attr('transform', `translate(${xPos} ${yPos})`);
     return d3Selection;
   }
-  /* Protected methods */
   protected abstract getEntryLabels(collections: iCollection[]) : string[];
-  protected createEntries(
-    labels: string[],
-    d3ScalePalette: any,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void {
+  protected createEntries() : void {
     let d3SelectionLegendGroup: any = this.d3Selection;
+    let labels: string[] = this.parentVisualization
+      .getChartBody()
+      .getCollections()[0]
+      .labels;
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
+      .getParentChart()
+      .getInputChart()
+      .getStyling();
+    let d3ScalePalette: any = this.parentVisualization
+      .getChartBody()
+      .getPlotArea()
+      .
 
     for (let i = 0; i < labels.length; i++) {
-      let marginTop: number = styling.legend.marginTop[screenSizeIndex];
+      let marginTop: number = styling.legend.marginTop[0];
       let fontSize: number = styling.legend.legendEntry
         .text
-        .fontSize[screenSizeIndex];
+        .fontSize[0];
       let textMarginLeft: number = styling.legend.legendEntry
         .text
-        .marginLeft[screenSizeIndex];
+        .marginLeft[0];
       let symbolHeight: number = styling.legend.legendEntry
         .symbol
-        .height[screenSizeIndex];
+        .height[0];
       let symbolWidth: number = styling.legend.legendEntry
         .symbol
-        .width[screenSizeIndex];
+        .width[0];
       let legendEntryHeight: number = Math.max(symbolHeight, fontSize);
       let legendEntryVPos: number = i * (marginTop + legendEntryHeight);
       let legendEntry: any = d3SelectionLegendGroup
@@ -648,22 +688,27 @@ abstract class Legend extends D3Element {
         });
     }
   }
-  protected setGeomInfo() : void {
-    let height: number = this.d3Selection[0][0].getBBox().height;
-    let width: number = this.d3Selection[0][0].getBBox().width;
-    let xPos: number = this.parentCanvas.get
-  }
   /* Public methods */
-  private getXPos() : number {
-    let chartBodyXPos: number = this.parentVisualization. chartBody.getXPos();
-    let plotAreaXPos: number = this.chartBody.getPlotArea().getXPos();
+  public getXPos() : number {
+    let chartBodyXPos: number = this.parentVisualization
+      .getChartBody()
+      .getXPos();
+    let plotAreaXPos: number = this.parentVisualization
+      .getChartBody()
+      .getPlotArea()
+      .getXPos();
 
     return chartBodyXPos + plotAreaXPos;
   }
-  private getYPos() : number {
-    let chartBodyYPos: number = this.chartBody.getYPos();
-    let ChartBodyHeight: number = this.chartBody.getHeight();
-    let styling: iChartStyling = this.parentCanvas
+  public getYPos() : number {
+    let chartBodyYPos: number = this.parentVisualization
+      .getChartBody()
+      .getYPos();
+    let ChartBodyHeight: number = this.parentVisualization
+      .getChartBody()
+      .getHeight();
+    let styling: iStylingChart = this.parentVisualization
+      .getParentCanvas()
       .getParentChart()
       .getStyling();
 
@@ -678,7 +723,7 @@ class LegendCircular extends Legend {
     vPos: number,
     collections: iCollection[],
     d3ScalePalette: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -707,7 +752,7 @@ abstract class LegendFactory {
     vPos: number,
     collections: iCollection[],
     d3ScalePalette: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     switch(chartType) {
@@ -761,7 +806,7 @@ class LegendOrthogonal extends Legend {
     vPos: number,
     collections: iCollection[],
     d3ScalePalette: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -779,63 +824,21 @@ class LegendOrthogonal extends Legend {
     return labels;
   }
 }
-abstract class PlotArea {
-  public d3ScalePalette: any;
-  public d3Selection: any;
-  public dimensions: iPlotAreaGeomInfo;
+abstract class PlotArea extends D3Element{
+  private height: number;
+  private parentChartBody: ChartBody;
+  private width: number;
+  private xPos: number;
+  private yPos: number;
 
-  constructor(
-    chartBody: ChartBody,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) {
-    this.setDimensions(
-      chartBody.width,
-      styling,
-      screenSizeIndex
-    );
-  }
+  public d3ScaleColorPalette: any;
 
-  protected createD3ScalePalette(
-    domainLength: number,
-    range: string[]
-  ) : any {
-    let domain: number[] = [];
-    for (let i = 0; i < domainLength; i++) {
-      domain.push(i);
-    }
-    let d3ScalePalette: any = d3.scale.ordinal()
-      .domain(domain)
-      .range(range);
-    return d3ScalePalette;
+  constructor(parentChartBody: ChartBody) {
+    super();
+    this.parentChartBody = parentChartBody;
   }
-  protected createD3Selection(
-    d3SelectionChartBody: any,
-    hPos: number
-  ) : any {
-    let d3Selection: any = d3SelectionChartBody
-      .append('g')
-      .attr('class', 'plotArea')
-      .attr('transform', `translate(${hPos} 0)`);
-    return d3Selection;
-  }
-  public abstract drawData(
-    chartType: string,
-    d3SelectionPlotArea: any,
-    d3ScalePalette: any,
-    collections: iCollection[],
-    plotAreaDimensions: iPlotAreaGeomInfo,
-    hScale: any,
-    vScale: any,
-    tooltip: any,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void;
-  private setDimensions(
-    chartBodyWidth: number,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : void {
+  /* Private methods */
+  private setGeomInfo() : void {
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
     let height: number = chartBodyWidth / aspectRatio;
     this.dimensions = {
@@ -845,6 +848,56 @@ abstract class PlotArea {
       width: chartBodyWidth
     };
   }
+  private setHeight() : void {
+    let aspectRatio: number = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling()
+      .chartBody
+      .plotArea
+      .aspectRatio[0];
+    this.height = this.width / aspectRatio;
+  }
+  private setWidth() : void {
+    let width: number = /// CONTINUE HERE ///;
+    this.height = this.width / aspectRatio;
+  }
+  private setXPos() : void {
+
+  }
+  private setYPos() : void {
+
+  }
+  /* Protected methods */
+  protected createD3ScaleColorPalette() : any {
+    let domain: number[] = [];
+    for (let i = 0; i < domainLength; i++) {
+      domain.push(i);
+    }
+    let d3ScaleColorPalette: any = d3.scale.ordinal()
+      .domain(domain)
+      .range(range);
+    return d3ScaleColorPalette;
+  }
+  protected createD3Selection() : any {
+    let d3Selection: any = d3SelectionChartBody
+      .append('g')
+      .attr('class', 'plotArea')
+      .attr('transform', `translate(${hPos} 0)`);
+    return d3Selection;
+  }
+  /* Public methods */
+  public abstract drawData() : void;
+  public getD3ScaleColorPalette() : any {
+    return this.d3ScaleColorPalette;
+  }
+  public getXPos() : number {
+    return 0;
+  }
+  public getYPos() : number {
+    return 0;
+  }
 }
 abstract class PlotAreaCircular extends PlotArea {
   protected innerRadius: number;
@@ -852,7 +905,7 @@ abstract class PlotAreaCircular extends PlotArea {
 
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -860,7 +913,7 @@ abstract class PlotAreaCircular extends PlotArea {
       styling,
       screenSizeIndex
     );
-    this.d3ScalePalette = this.createD3ScalePalette(
+    this.d3ScaleColorPalette = this.createD3ScaleColorPalette(
       chartBody.collections[0].labels.length,
       styling.chartBody.plotArea.paletteRange[screenSizeIndex],
     );
@@ -878,7 +931,7 @@ abstract class PlotAreaCircular extends PlotArea {
     hScale: any,
     vScale: any,
     tooltip: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let innerRadius = this.innerRadius;
@@ -954,14 +1007,14 @@ abstract class PlotAreaCircular extends PlotArea {
       });
   }
   protected abstract setRadii(
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void;
 }
 class PlotAreaDonut extends PlotAreaCircular {
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -973,7 +1026,7 @@ class PlotAreaDonut extends PlotAreaCircular {
   }
 
   protected setRadii(
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let width: number = this.dimensions.width;
@@ -990,7 +1043,7 @@ class PlotAreaDonut extends PlotAreaCircular {
 class PlotAreaPie extends PlotAreaCircular {
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -1002,7 +1055,7 @@ class PlotAreaPie extends PlotAreaCircular {
   }
 
   protected setRadii(
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let width: number = this.dimensions.width;
@@ -1016,7 +1069,7 @@ class PlotAreaPie extends PlotAreaCircular {
 abstract class PlotAreaOrthogonal extends PlotArea {
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -1024,7 +1077,7 @@ abstract class PlotAreaOrthogonal extends PlotArea {
       styling,
       screenSizeIndex
     );
-    this.d3ScalePalette = this.createD3ScalePalette(
+    this.d3ScaleColorPalette = this.createD3ScaleColorPalette(
       chartBody.collections.length,
       styling.chartBody.plotArea.paletteRange[screenSizeIndex],
     );
@@ -1039,7 +1092,7 @@ abstract class PlotAreaOrthogonal extends PlotArea {
   }
 
   private adjustDimensions(
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let vAxisLeftWidth : number =
@@ -1059,14 +1112,14 @@ abstract class PlotAreaOrthogonal extends PlotArea {
     hScale: any,
     vScale: any,
     tooltip: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void;
 }
 class PlotAreaBar extends PlotAreaOrthogonal {
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -1085,7 +1138,7 @@ class PlotAreaBar extends PlotAreaOrthogonal {
     hScale: any,
     vScale: any,
     tooltip: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let newLine: string = '<br/>';
@@ -1184,7 +1237,7 @@ abstract class PlotAreaFactory {
   public static createPlotArea(
     chartType: string,
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     switch(chartType) {
@@ -1218,7 +1271,7 @@ abstract class PlotAreaFactory {
 class PlotAreaLine extends PlotAreaOrthogonal {
   constructor(
     chartBody: ChartBody,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) {
     super(
@@ -1237,7 +1290,7 @@ class PlotAreaLine extends PlotAreaOrthogonal {
     hScale: any,
     vScale: any,
     tooltip: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let newLine: string = '<br/>';
@@ -1392,7 +1445,7 @@ class Subtitle extends WrappableD3TextElement {
   /* Protected methods */
   protected createD3Selection() : any {
     let parentCanvas: Canvas = this.parentCanvas;
-    let styling: iChartStyling = this.parentCanvas
+    let styling: iStylingChart = this.parentCanvas
       .getParentChart()
       .getStyling();
 
@@ -1422,7 +1475,7 @@ class Subtitle extends WrappableD3TextElement {
     return 0;
   }
   public getYPos() : number {
-    let styling: iChartStyling = this.parentCanvas
+    let styling: iStylingChart = this.parentCanvas
       .getParentChart()
       .getStyling();
     let title: Title = this.parentCanvas.getParentChart().getTitle();
@@ -1445,7 +1498,7 @@ class Title extends WrappableD3TextElement {
   /* Protected methods */
   protected createD3Selection() : any {
     let parentCanvas: Canvas = this.parentCanvas;
-    let styling: iChartStyling = this.parentCanvas
+    let styling: iStylingChart = this.parentCanvas
       .getParentChart()
       .getStyling();
     let text: string = this.parentCanvas.getParentChart().getInputChart()
@@ -1475,7 +1528,7 @@ class Title extends WrappableD3TextElement {
     return 0;
   }
   public getYPos() : number {
-    let styling: iChartStyling = this.parentCanvas
+    let styling: iStylingChart = this.parentCanvas
       .getParentChart()
       .getStyling();
 
@@ -1487,12 +1540,12 @@ class Tooltip {
   private chartContainerId: number;
   private d3Selection: any;
   private parentD3SelectionDocumentBody: any;
-  private styling: iChartStyling;
+  private styling: iStylingChart;
 
   constructor(
     parentD3SelectionDocumentBody: any,
     chartContainerId: number,
-    styling: iChartStyling
+    styling: iStylingChart
   ) {
     this.parentD3SelectionDocumentBody = parentD3SelectionDocumentBody;
     this.chartContainerId = chartContainerId;
@@ -1504,7 +1557,7 @@ class Tooltip {
   private createD3Selection() {
     let chartContainerId: number = this.chartContainerId;
     let parentD3SelectionDocumentBody: any = this.parentD3SelectionDocumentBody;
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let tooltipSelection: any = parentD3SelectionDocumentBody
       .append('div')
@@ -1531,7 +1584,7 @@ class Tooltip {
   }
   private fadeOutOnBodyTouchstart() : void {
     let d3Selection: any = this.d3Selection;
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let fadeOutDuration: number = styling.tooltip
       .fadeOutDuration[0];
@@ -1550,7 +1603,7 @@ class Tooltip {
   }
   /* Public methods */
   public hide() : void {
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let fadeOutDuration: number = styling.tooltip.fadeOutDuration[0];
     this.d3Selection.transition()
@@ -1559,7 +1612,7 @@ class Tooltip {
   }
   public show(d3SelectionPlotArea: any) : void {
     let d3Selection: any = this.d3Selection;
-    let styling: iChartStyling = this.styling;
+    let styling: iStylingChart = this.styling;
 
     let fadeInDuration: number = styling.tooltip.fadeInDuration[0];
     let width: number = d3Selection[0][0].offsetWidth;
@@ -1584,66 +1637,50 @@ class Tooltip {
       );
   }
 }
-class ValuesAxis {
-  public d3SelectionAxis: any;
-  public d3SelectionAxisGroup: any;
-  public d3SelectionLabel: any;
-  public d3Scale: any;
-  public height: number;
-  public hPos: number;
-  public vPos: number;
+class ValuesAxisGroup extends D3Element {
+  private d3SelectionAxis: any;
+  private d3SelectionLabel: any;
+  private d3Scale: any;
+  private parentChartBody: ChartBodyOrthogonal;
 
   constructor(parentChartBody: ChartBodyOrthogonal) {
-    this.d3SelectionAxisGroup = this.createD3SelectionAxisGroup(chartBody);
-    this.d3Scale = this.createD3Scale(
-      minVal,
-      maxVal,
-      0,
-      chartBody.plotArea.dimensions.height
-    );
-    this.d3SelectionAxis = this.appendAxis(
-      this.d3SelectionAxisGroup,
-      this.d3Scale,
-      chartBody.plotArea.dimensions.width,
-      styling,
-      screenIndex
-    );
-    this.d3SelectionLabel = this.appendLabel(
-      this.d3SelectionAxisGroup,
-      chartBody.plotArea.dimensions.height / 2,
-      labelText,
-      styling,
-      screenIndex
-    );
+    super();
+    this.parentChartBody = parentChartBody;
+    this.d3Selection = this.createD3Selection();
+    this.d3Scale = this.createD3Scale();
+    this.d3SelectionAxis = this.appendAxis();
+    this.d3SelectionLabel = this.appendLabel();
   }
+  /* Private methods */
+  private appendAxis() : any {
+    let d3Scale: any = this.d3Scale;
+    let d3Selection: any = this.d3Selection;
+    let styling: iStylingChart = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getInputChart()
+      .getStyling();
+    let xPos: number = this.getXPos();
+    let yPos: number = this.getYPos();
+    let plotAreaWidth: number = this.getParentChartBody()
+      .getPlotArea()
+      .getWidth();
 
-  private appendAxis(
-    d3SelectionAxisGroup: any,
-    d3Scale: any,
-    plotAreaWidth: number,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : any {
     let d3Axis: any = d3.svg.axis()
       .scale(d3Scale)
       .orient('left');
-    let hPos: number =
-      this.hPos +
-      styling.chartBody.marginLeft[screenSizeIndex] +
-      styling.chartBody.vAxis.label.fontSize[screenSizeIndex] +
-      styling.chartBody.vAxis.marginLeft[screenSizeIndex] +
-      styling.chartBody.vAxis.fontSize[screenSizeIndex] * 2;
-    let d3SelectionAxis: any = d3SelectionAxisGroup
+    let d3SelectionAxis: any = d3Selection
       .append('g')
       .call(d3Axis)
       .attr({
         'class': 'axis',
-        'transform': `translate(${this.hPos} ${this.vPos})`
+        'transform': `translate(${xPos} ${yPos})`
       });
     // Styling axis
-    let stroke: string = styling.chartBody.vAxis.stroke[screenSizeIndex];
+    let stroke: string = styling.chartBody.vAxis.stroke[0];
     let strokeWidth: string =
-      styling.chartBody.vAxis.strokeWidth[screenSizeIndex].toString() + 'px';
+      styling.chartBody.vAxis.strokeWidth[0].toString() + 'px';
     d3SelectionAxis.select('.domain')
       .style({
         'fill': 'none',
@@ -1651,14 +1688,10 @@ class ValuesAxis {
         'stroke-width': strokeWidth
       });
     // Styling tick lines
-    let tickOpacity: number = styling.chartBody.vAxis
-      .ticks
-      .opacity[screenSizeIndex];
-    let tickStroke: string = styling.chartBody.vAxis
-      .ticks
-      .stroke[screenSizeIndex];
+    let tickOpacity: number = styling.chartBody.vAxis.ticks.opacity[0];
+    let tickStroke: string = styling.chartBody.vAxis.ticks.stroke[0];
     let tickStrokeWidth: number =
-      styling.chartBody.vAxis.ticks.strokeWidth[screenSizeIndex];
+      styling.chartBody.vAxis.ticks.strokeWidth[0];
     d3SelectionAxis.selectAll('.tick line')
       .attr('class', 'tick-line')
       .attr('x2', -6)
@@ -1668,20 +1701,16 @@ class ValuesAxis {
         'stroke-width': tickStrokeWidth
       });
     // Styling tick labels
-    let fontSize: number = styling.chartBody.vAxis.fontSize[screenSizeIndex];
+    let fontSize: number = styling.chartBody.vAxis.fontSize[0];
     d3SelectionAxis.selectAll('.tick text')
       .style({
         'font-size': fontSize
       });
     // Styling grid lines
-    let gridOpacity: number = styling.chartBody.vAxis
-      .gridLines
-      .opacity[screenSizeIndex];
-    let gridStroke: string = styling.chartBody.vAxis
-      .gridLines
-      .stroke[screenSizeIndex];
+    let gridOpacity: number = styling.chartBody.vAxis.gridLines.opacity[0];
+    let gridStroke: string = styling.chartBody.vAxis.gridLines.stroke[0];
     let gridStrokeWidth: number =
-      styling.chartBody.vAxis.gridLines.strokeWidth[screenSizeIndex];
+      styling.chartBody.vAxis.gridLines.strokeWidth[0];
     d3SelectionAxis.selectAll('.tick')
       .append('line')
       .attr('class', 'grid-line')
@@ -1693,23 +1722,33 @@ class ValuesAxis {
       });
     return d3SelectionAxis;
   }
-  private appendLabel(
-    d3SelectionAxisGroup: any,
-    vPos: number,
-    text: string,
-    styling: iChartStyling,
-    screenSizeIndex: number
-  ) : any {
-    let marginLeft: number = styling.chartBody.marginLeft[screenSizeIndex];
+  private appendLabel() : any {
+    let d3Selection : any = this.d3Selection;
+    let styling: iStylingChart = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getInputChart()
+      .getStyling();
+    let text: string = this.getParentChartBody()
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getInputChart()
+      .vAxisLabel;
+    let yPos: number = this.parentChartBody
+      .getPlotArea()
+      .getHeight() / 2;
+
+    let xPos: number = styling.chartBody.marginLeft[0];
     let fontSize: number = styling.chartBody.vAxis
       .label
-      .fontSize[screenSizeIndex];
+      .fontSize[0];
     let fontWeight: string = styling.chartBody.vAxis
       .label
-      .fontWeight[screenSizeIndex];
+      .fontWeight[0];
     let dy: number = 0.75 * fontSize;
-    let y: number = vPos;
-    let vAxisLabel = d3SelectionAxisGroup
+    let d3SelectionLabel = d3Selection
       .append('g')
       .attr('class', 'label')
       .append('text')
@@ -1717,34 +1756,54 @@ class ValuesAxis {
       .attr({
         'dy': dy,
         'text-anchor': 'middle',
-        'transform': `rotate(-90 ${marginLeft} ${y})`,
-        'x': marginLeft,
-        'y': y
+        'transform': `rotate(-90 ${xPos} ${yPos})`,
+        'x': xPos,
+        'y': yPos
       })
       .style({
         'font-size': fontSize,
         'font-weight': fontWeight
       });
-    return vAxisLabel;
+    return d3SelectionLabel;
   }
-  private createD3Scale(
-    domainMin: number,
-    domainMax: number,
-    rangeMin: number,
-    rangeMax: number
-  ) : any {
-    let vScale: any = d3.scale.linear()
+  private createD3Scale() : any {
+    let domainMin: number = this.getParentChartBody().getCollectionsMinVal();
+    let domainMax: number = this.getParentChartBody().getCollectionsMaxVal();
+    let rangeMin: number = 0;
+    let rangeMax: number = this.parentChartBody.getPlotArea().getWidth();
+
+    let d3Scale: any = d3.scale.linear()
       .domain([domainMin, domainMax])
       .range([rangeMax, rangeMin]);
-    return vScale;
+    return d3Scale;
   }
-  private createD3SelectionAxisGroup(
-    chartBody: ChartBodyOrthogonal
-  ) : any {
-    let d3SelectionAxisGroup: any = chartBody.d3Selection
+  /* Protected methods */
+  protected createD3Selection() : any {
+    let d3SelectionAxisGroup: any = this.parentChartBody.getD3Selection()
       .append('g')
       .attr('class', 'vertAxis');
     return d3SelectionAxisGroup;
+  }
+  /* Public methods */
+  public getParentChartBody() : ChartBodyOrthogonal {
+    return this.parentChartBody;
+  }
+  public getXPos() : number {
+    let styling: iStylingChart = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getInputChart()
+      .getStyling();
+    let xPos: number =
+      styling.chartBody.marginLeft[0] +
+      styling.chartBody.vAxis.label.fontSize[0] +
+      styling.chartBody.vAxis.marginLeft[0] +
+      styling.chartBody.vAxis.fontSize[0] * 2;
+    return xPos;
+  }
+  public getYPos() : number {
+    return 0;
   }
 }
 class Visualization extends D3Element{
@@ -1799,10 +1858,10 @@ interface iCollection {
   values: number[]
 }
 interface iDefaultChartStylings {
-  barStyling: iChartStyling,
-  donutStyling: iChartStyling,
-  lineStyling: iChartStyling,
-  pieStyling: iChartStyling
+  barStyling: iStylingChart,
+  donutStyling: iStylingChart,
+  lineStyling: iStylingChart,
+  pieStyling: iStylingChart
 }
 interface iGeomInfo {
   height: number,
@@ -1831,10 +1890,9 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     'alepNg2ChartContainer'
   ) private alepNg2ChartContainerChild: ElementRef;
   private chartContainerId: number;
-  private chartStyling: iChartStyling;
+  private chartStyling: iStylingChart;
   private defaultChartStylings: iDefaultChartStylings = {
     barStyling: {
-      aspectRatio: [1, 1, 2],
       backgroundColor: ['white'],
       chartBody: {
         hAxis: {
@@ -1862,6 +1920,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         marginRight: [10, 30, 30],
         marginTop: [30],
         plotArea: {
+          aspectRatio: [1, 1, 2],
           bar: {
             barGap: [1, 2, 2],
             dataGroupPadding: [2, 6, 6],
@@ -1953,7 +2012,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     },
     donutStyling: {
-      aspectRatio: [1, 1, 1],
       backgroundColor: ['white'],
       chartBody: {
         hAxis: null,
@@ -1961,6 +2019,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         marginRight: [10, 20,200],
         marginTop: [30],
         plotArea: {
+          aspectRatio: [1, 1, 1],
           bar: null,
           dataPoint: null,
           paletteRange: [
@@ -2033,7 +2092,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     },
     lineStyling: {
-      aspectRatio: [1, 1, 2],
       backgroundColor: ['white'],
       chartBody: {
         hAxis: {
@@ -2061,6 +2119,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         marginRight: [10, 30, 30],
         marginTop: [30],
         plotArea: {
+          aspectRatio: [1, 1, 2],
           bar: null,
           dataPoint: {
             diameterDeselected: [4],
@@ -2151,7 +2210,6 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     },
     pieStyling: {
-      aspectRatio: [1, 1, 1],
       backgroundColor: ['white'],
       chartBody: {
         hAxis: null,
@@ -2159,6 +2217,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         marginRight: [10, 20,200],
         marginTop: [30],
         plotArea: {
+          aspectRatio: [1, 1, 1],
           bar: null,
           dataPoint: null,
           paletteRange: [
@@ -2279,7 +2338,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createChart() : void {
     let chartContainerId: number = this.chartContainerId;
     let inputChart: iAlepNg2InputChart = this.inputChart;
-    let styling: iChartStyling = this.chartStyling;
+    let styling: iStylingChart = this.chartStyling;
 
     new Chart(
       d3.select(`.alep-ng2-chart-container[container-id="${chartContainerId}"`),
@@ -2311,7 +2370,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let canvas: SVGSVGElement = chartContainer.getElementsByTagName('svg')[0];
     chartContainer.removeChild(canvas);
   }
-  private getScreenSizeIndex(styling: iChartStyling) : number {
+  private getScreenSizeIndex(styling: iStylingChart) : number {
     let index: number;
     let width: number = window.innerWidth;
     if (width < styling.mediumScreenSize) {
@@ -2327,8 +2386,8 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return index;
   }
   private getChartStylingForCurrentScreenSize(
-    responsiveStyling: iChartStyling
-  ) : iChartStyling {
+    responsiveStyling: iStylingChart
+  ) : iStylingChart {
     let screenSizeIndex: number = this.getScreenSizeIndex(responsiveStyling);
     let result: Object = {};
     this.getChartStylingForCurrentScreenSize_recursivePart(
@@ -2336,10 +2395,10 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       result,
       screenSizeIndex
     );
-    return (<iChartStyling>result);
+    return (<iStylingChart>result);
   }
   private getChartStylingForCurrentScreenSize_recursivePart(
-    styling: iChartStyling,
+    styling: iStylingChart,
     result: Object,
     screenSizeIndex: number
   ) : void {
@@ -2386,15 +2445,15 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   private mergeChartStylings (
     inputStyling: Object,
-    defaultStyling: iChartStyling
-  ) : iChartStyling {
+    defaultStyling: iStylingChart
+  ) : iStylingChart {
     let result: Object = {};
     this.mergeChartStylings_recursivePart(inputStyling, defaultStyling, result);
-    return (<iChartStyling>result);
+    return (<iStylingChart>result);
   }
   private mergeChartStylings_recursivePart(
     inputStyling: Object,
-    defaultStyling: iChartStyling,
+    defaultStyling: iStylingChart,
     result: Object
   ) : void {
     for (let prop in defaultStyling) {
@@ -2416,12 +2475,12 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     }
   }
-  private processInputChartStyling() : iChartStyling {
+  private processInputChartStyling() : iStylingChart {
     let chartType: string = this.inputChart.type;
     let defaultStylings: iDefaultChartStylings = this.defaultChartStylings;
     let inputStyling: Object = this.inputChartStyling;
 
-    let defaultStyling: iChartStyling;
+    let defaultStyling: iStylingChart;
     switch(chartType) {
       case 'Bar':
         defaultStyling = defaultStylings.barStyling;
@@ -2436,7 +2495,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         defaultStyling = defaultStylings.pieStyling;
         break;
     }
-    let mergedStyling: iChartStyling = this.mergeChartStylings(
+    let mergedStyling: iStylingChart = this.mergeChartStylings(
       inputStyling,
       defaultStyling
     );

@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Rx';
 // import { iAlepNg2InputChart } from '../../models/iAlepNg2InputChart'
 import { iAlepNg2InputChart } from './iAlepNg2InputChart';
 import {iAlepNg2InputChartColl} from "./iAlepNg2InputChartColl";
-import { iChartStyling } from './iChartStyling';
+import { iStylingChart } from './iChartStyling';
 
 declare var d3: any;
 
@@ -22,10 +22,10 @@ interface iCollection_old {
   vScale: any
 }
 interface iDefaultChartStylings {
-  barStyling: iChartStyling,
-  donutStyling: iChartStyling,
-  lineStyling: iChartStyling,
-  pieStyling: iChartStyling
+  barStyling: iStylingChart,
+  donutStyling: iStylingChart,
+  lineStyling: iStylingChart,
+  pieStyling: iStylingChart
 }
 interface iPlotAreaDimensions {
   aspectRatio: number,
@@ -451,7 +451,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     }
   };
   private emOnResize: EventEmitter<any> = new EventEmitter();
-  private finalStyling: iChartStyling;
+  private finalStyling: iStylingChart;
   private hasValidInput: boolean = true;
   private subUpdateChart: Subscription;
   private validTypes: string[] = [
@@ -516,7 +516,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartContainerChild: ElementRef,
     chartContainerId: number,
     inputChart: iAlepNg2InputChart,
-    styling: iChartStyling
+    styling: iStylingChart
   ) : void {
     let chartType: string = inputChart.type;
     let screenSizeIndex: number = this.getScreenSizeIndex(styling);
@@ -720,7 +720,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private calculatePlotAreaDimensions(
     chartType: string,
     chartBodyWidth: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : iPlotAreaDimensions {
     let aspectRatio: number = styling.aspectRatio[screenSizeIndex];
@@ -836,7 +836,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     hScale: any,
     labels: string[],
     plotAreaHeight: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let dataGroupWidth: number;
@@ -932,7 +932,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartBodySelection: any,
     hAxisHeight: number,
     plotAreaWidth: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let marginTop: number = styling.chartBody.hAxis
@@ -969,7 +969,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     legendVPos: number,
     collections: iCollection_old[],
     plotAreaHPos: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
@@ -1094,7 +1094,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartSelection: any,
     plotAreaDimensions: iPlotAreaDimensions,
     tooltipSelection: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let paletteRange = styling.chartBody.plotArea.paletteRange[screenSizeIndex];
@@ -1431,7 +1431,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     canvasSelection: any,
     vPos: number,
     chartObject: iAlepNg2InputChart,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let chartSubtitleSelection: any = canvasSelection
@@ -1457,7 +1457,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     canvasSelection: any,
     vPos: number,
     chartObject: iAlepNg2InputChart,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let chartTitleSelection: any = canvasSelection
@@ -1480,7 +1480,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     return chartTitleSelection;
   }
   private createTooltip(
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number,
     chartContainerId: number
   ) : any {
@@ -1511,7 +1511,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     chartSelection: any,
     vScale: any,
     plotAreaWidth: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let vAxis: any = d3.svg.axis()
@@ -1589,7 +1589,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   private createVAxisLabel(
     chartObject: iAlepNg2InputChart,
     vAxisGroupSelection: any,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : any {
     let height: number = vAxisGroupSelection[0][0].getBBox().height;
@@ -1626,7 +1626,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     let canvas: SVGSVGElement = chartContainer.getElementsByTagName('svg')[0];
     chartContainer.removeChild(canvas);
   }
-  private getScreenSizeIndex(styling: iChartStyling) : number {
+  private getScreenSizeIndex(styling: iStylingChart) : number {
     let index: number;
     let width: number = window.innerWidth;
     if (width < styling.mediumScreenSize) {
@@ -1645,7 +1645,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     tooltipSelection: any,
     plotAreaSelection: any,
     tooltipFadeInDuration: number,
-    styling: iChartStyling,
+    styling: iStylingChart,
     screenSizeIndex: number
   ) : void {
     let width: number = tooltipSelection[0][0].offsetWidth;
@@ -1677,7 +1677,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
   }
   private recursiveMergeStyling (
     inputStyling: Object,
-    defaultStyling: iChartStyling,
+    defaultStyling: iStylingChart,
     temp: Object
   ) : void {
     for (let prop in defaultStyling) {
@@ -1703,7 +1703,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
       }
     }
   }
-  private responsiveStyling(styling: iChartStyling) : void {
+  private responsiveStyling(styling: iStylingChart) : void {
 
     for (let prop in styling) {
       if (styling[prop] === null) {
@@ -1744,7 +1744,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
     defaultChartStylings: iDefaultChartStylings
   ) : void {
     let temp: Object = {};
-    let defaultStyling: iChartStyling;
+    let defaultStyling: iStylingChart;
     switch(chartType) {
       case 'Bar':
         defaultStyling = defaultChartStylings.barStyling;
@@ -1760,7 +1760,7 @@ export class AlepNg2ChartD3Component implements OnDestroy, OnInit {
         break;
     }
     this.recursiveMergeStyling(inputStyling, defaultStyling, temp);
-    this.finalStyling = (<iChartStyling>temp);
+    this.finalStyling = (<iStylingChart>temp);
   }
   private updateChart() : void {
     this.destroyCanvas();
