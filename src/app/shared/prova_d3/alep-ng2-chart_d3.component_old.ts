@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Rx';
 // import { iAlepNg2InputChart } from '../../models/iAlepNg2InputChart'
 import { iAlepNg2InputChart } from './iAlepNg2InputChart';
 import {iAlepNg2InputChartColl} from "./iAlepNg2InputChartColl";
-import { iStylingChart } from './iChartStyling';
+import { iStylingChart } from './iStylingChart';
 
 declare var d3: any;
 
