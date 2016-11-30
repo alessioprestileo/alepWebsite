@@ -16,9 +16,7 @@ export class LabelsAxisGroupBar extends LabelsAxisGroup {
   /* Private methods */
   private adjustTickLabelsPosition() : void {
     let labels: string[] = this.parentChartBody.getCollections()[0].labels;
-    let plotAreaWidth: number = this.parentChartBody.getPlotArea()
-      .getGeomInfo()
-      .width;
+    let plotAreaWidth: number = this.parentChartBody.getPlotArea().getWidth();
     let styling: iStylingChart = this.parentChartBody
       .getParentVisualization()
       .getParentCanvas()
@@ -42,8 +40,7 @@ export class LabelsAxisGroupBar extends LabelsAxisGroup {
   private getD3ScaleDomainMax() : number {
     let domainMax: number = this.parentChartBody
         .getCollections()[0]
-        .labels.length +
-      1;
+        .labels.length;
     return domainMax;
   }
   private getD3ScaleDomainMin() : number {

@@ -12,6 +12,7 @@ export class PlotAreaBar extends PlotAreaOrthogonal {
   }
   /* Public methods */
   public drawData() : void {
+    this.setD3Selection();
     let collections: iCollection[] = this.parentChartBody.getCollections();
     let d3ScaleColorPalette: any = this.d3ScaleColorPalette;
     let d3Selection: any = this.d3Selection;

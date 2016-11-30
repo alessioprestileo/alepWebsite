@@ -23,9 +23,7 @@ export abstract class LabelsAxisGroup extends D3Element {
     let d3SelectionAxisGroup: any = this.d3Selection;
     let d3Scale: any = this.d3Scale;
     let labels: string[] = this.parentChartBody.getCollections()[0].labels;
-    let plotAreaHeight: number = this.parentChartBody.getPlotArea()
-      .getGeomInfo()
-      .height;
+    let plotAreaHeight: number = this.parentChartBody.getPlotArea().getHeight();
     let styling: iStylingChart = this.parentChartBody
       .getParentVisualization()
       .getParentCanvas()
@@ -108,6 +106,7 @@ export abstract class LabelsAxisGroup extends D3Element {
         'stroke': gridStroke,
         'stroke-width': gridStrokeWidth
       });
+    return d3SelectionAxis;
   }
   protected appendLabel() : any {
     let styling: iStylingChart = this.parentChartBody
@@ -115,10 +114,9 @@ export abstract class LabelsAxisGroup extends D3Element {
       .getParentCanvas()
       .getParentChart()
       .getStyling();
-    let plotAreaWidth: number = this.parentChartBody.getPlotArea()
-      .getGeomInfo()
-      .width;
-    let axisGroupHeight: number = this.getHeight();
+    let plotAreaWidth: number = this.parentChartBody.getPlotArea().getWidth();
+    let plotAreaHeight: number = this.parentChartBody.getPlotArea().getHeight();
+    let axisGroupHeight: number = this.getHeight() - plotAreaHeight;
     let d3SelectionAxisGroup: any = this.d3Selection;
     let text: string = this.parentChartBody
       .getParentVisualization()

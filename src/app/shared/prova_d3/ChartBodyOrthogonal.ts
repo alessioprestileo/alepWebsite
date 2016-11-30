@@ -2,6 +2,7 @@ import { ChartBody } from "./ChartBody";
 import { LabelsAxisGroupFactory } from "./LabelsAxisGroupFactory";
 import { PlotAreaFactory } from "./PlotAreaFactory";
 import { ValuesAxisGroup } from "./ValuesAxisGroup";
+import { ValuesAxisGroupFactory } from "./ValuesAxisGroupFactory";
 import { Visualization } from "./Visualization";
 
 export class ChartBodyOrthogonal extends ChartBody {
@@ -13,7 +14,7 @@ export class ChartBodyOrthogonal extends ChartBody {
     super(parentVisualization);
     this.d3Selection = this.createD3Selection();
     this.plotArea = PlotAreaFactory.createPlotArea(this);
-    this.valuesAxisLeft = new ValuesAxisGroup(this);
+    this.valuesAxisLeft = ValuesAxisGroupFactory.createValuesAxis(this);
     this.labelsAxis = LabelsAxisGroupFactory.createLabelsAxis(this);
     this.plotArea.drawData();
   }

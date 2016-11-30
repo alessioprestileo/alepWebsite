@@ -1,6 +1,7 @@
 import { Canvas } from './Canvas';
 import { ChartBodyFactory } from "./ChartBodyFactory";
 import { D3Element } from './D3Element';
+import { iStylingChart } from "./iStylingChart";
 import { LegendFactory } from "./LegendFactory";
 import { Subtitle } from "./Subtitle";
 
@@ -59,6 +60,24 @@ export class Visualization extends D3Element{
   /* Public methods */
   public getChartBody(): any {
     return this.chartBody;
+  }
+  public getHeight() : number {
+    let chartBodyHeight: number = this.chartBody.getHeight();
+    let legendHeight: number = this.legend.getHeight();
+    let styling: iStylingChart = this.parentCanvas
+      .getParentChart()
+      .getStyling();
+
+    let chartBodyMarginTop: number = styling.chartBody.marginTop[0];
+    let legendMarginBottom: number = styling.legend.marginBottom[0];
+    let legendMarginTop: number = styling.legend.marginTop[0];
+    let height: number =
+      chartBodyMarginTop +
+      chartBodyHeight +
+      legendHeight +
+      legendMarginBottom +
+      legendMarginTop;
+    return height;
   }
   public getParentCanvas(): any {
     return this.parentCanvas;

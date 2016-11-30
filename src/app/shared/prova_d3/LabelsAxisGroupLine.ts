@@ -14,8 +14,8 @@ export class LabelsAxisGroupLine extends LabelsAxisGroup {
   /* Private methods */
   private getD3ScaleDomainMax() : number {
     let domainMax: number = this.parentChartBody
-        .getCollections()[0]
-        .labels.length +
+      .getCollections()[0]
+      .labels.length -
       1;
     return domainMax;
   }

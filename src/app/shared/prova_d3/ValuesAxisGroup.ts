@@ -4,11 +4,12 @@ import { iStylingChart } from "./iStylingChart";
 
 declare var d3: any;
 
-export class ValuesAxisGroup extends D3Element {
+export abstract class ValuesAxisGroup extends D3Element {
   private d3SelectionAxis: any;
   private d3SelectionLabel: any;
   private d3Scale: any;
-  private parentChartBody: ChartBodyOrthogonal;
+
+  protected parentChartBody: ChartBodyOrthogonal;
 
   constructor(parentChartBody: ChartBodyOrthogonal) {
     super();
@@ -27,7 +28,7 @@ export class ValuesAxisGroup extends D3Element {
       .getParentCanvas()
       .getParentChart()
       .getStyling();
-    let xPos: number = this.getXPos();
+    let xPos: number = this.getWidth();
     let yPos: number = this.getYPos();
     let plotAreaWidth: number = this.getParentChartBody()
       .getPlotArea()
@@ -131,18 +132,8 @@ export class ValuesAxisGroup extends D3Element {
       });
     return d3SelectionLabel;
   }
-  private createD3Scale() : any {
-    let domainMin: number = this.getParentChartBody().getCollectionsMinVal();
-    let domainMax: number = this.getParentChartBody().getCollectionsMaxVal();
-    let rangeMin: number = 0;
-    let rangeMax: number = this.parentChartBody.getPlotArea().getWidth();
-
-    let d3Scale: any = d3.scale.linear()
-      .domain([domainMin, domainMax])
-      .range([rangeMax, rangeMin]);
-    return d3Scale;
-  }
   /* Protected methods */
+  protected abstract createD3Scale() : any;
   protected createD3Selection() : any {
     let d3SelectionAxisGroup: any = this.parentChartBody.getD3Selection()
       .append('g')
@@ -156,18 +147,13 @@ export class ValuesAxisGroup extends D3Element {
   public getParentChartBody() : ChartBodyOrthogonal {
     return this.parentChartBody;
   }
+  public getWidth() : number {
+    return this.parentChartBody
+      .getPlotArea()
+      .getXPos();
+  }
   public getXPos() : number {
-    let styling: iStylingChart = this.parentChartBody
-      .getParentVisualization()
-      .getParentCanvas()
-      .getParentChart()
-      .getStyling();
-    let xPos: number =
-      styling.chartBody.marginLeft[0] +
-      styling.chartBody.vAxis.label.fontSize[0] +
-      styling.chartBody.vAxis.marginLeft[0] +
-      styling.chartBody.vAxis.fontSize[0] * 2;
-    return xPos;
+    return 0;
   }
   public getYPos() : number {
     return 0;

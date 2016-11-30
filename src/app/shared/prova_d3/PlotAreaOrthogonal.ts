@@ -1,6 +1,7 @@
 import { ChartBody } from "./ChartBody";
 import { ChartBodyOrthogonal } from "./ChartBodyOrthogonal";
 import { PlotArea } from "./PlotArea";
+import {iStylingChart} from "./iStylingChart";
 
 export abstract class PlotAreaOrthogonal extends PlotArea {
   protected aspectRatio: number;
@@ -13,9 +14,8 @@ export abstract class PlotAreaOrthogonal extends PlotArea {
       this.getD3ScaleColorPaletteDomainLength(),
       this.getD3ScaleColorPaletteRange()
     );
-    this.setDimensions();
     this.setPosition();
-    this.d3Selection = this.createD3Selection();
+    this.setDimensions();
   }
   /* Private methods */
   private getD3ScaleColorPaletteDomainLength() : number {
@@ -41,6 +41,9 @@ export abstract class PlotAreaOrthogonal extends PlotArea {
       .aspectRatio[0];
   }
   /* Protected methods */
+  protected setD3Selection() : void {
+    this.d3Selection = this.createD3Selection();
+  }
   protected setDimensions() : void {
     this.setAspectRatio();
     this.setWidth();
@@ -51,20 +54,35 @@ export abstract class PlotAreaOrthogonal extends PlotArea {
   }
   protected setWidth() : void {
     let chartBodyWidth: number = this.parentChartBody.getWidth();
-    let valuesAxisGroupWidth: number = this.parentChartBody
-      .getValuesAxisLeft()
-      .getXPos();
-    let width: number = chartBodyWidth - valuesAxisGroupWidth;
-    this.width = width;
+    let xPos: number = this.xPos;
+
+    this.width = chartBodyWidth - xPos;
   }
   protected setXPos() : void {
-    this.xPos = 0;
+    let styling: iStylingChart = this.parentChartBody
+      .getParentVisualization()
+      .getParentCanvas()
+      .getParentChart()
+      .getStyling();
+
+    let valuesAxisGroupWidth: number =
+      styling.chartBody.marginLeft[0] +
+      styling.chartBody.vAxis.label.fontSize[0] +
+      styling.chartBody.vAxis.marginLeft[0] +
+      styling.chartBody.vAxis.fontSize[0] * 2;
+    this.xPos = valuesAxisGroupWidth;
   }
   protected setYPos() : void {
     this.yPos = 0;
   }
   /* Public methods */
   public abstract drawData() : void;
+  public getHeight() : number {
+    return this.height;
+  }
+  public getWidth() : number {
+    return this.width;
+  }
   public getXPos() : number {
     return this.xPos;
   }

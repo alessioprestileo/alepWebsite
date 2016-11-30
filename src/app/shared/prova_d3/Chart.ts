@@ -49,15 +49,12 @@ export class Chart {
 
     let subtitleMarginTop: number = styling.subtitle.marginTop[0];
     let titleMarginTop: number = styling.title.marginTop[0];
-    let visualizationMarginBottom: number = styling.legend.marginBottom[0];
-
     let height: number =
       titleMarginTop +
       titleHeight +
       subtitleMarginTop +
       subtitleHeight +
-      visualizationHeight +
-      visualizationMarginBottom;
+      visualizationHeight;
 
     this.canvas.getD3Selection().style('height', height);
     this.d3SelectionBackground.style('height', height);
