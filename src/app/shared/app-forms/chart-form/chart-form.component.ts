@@ -55,13 +55,10 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   private collectionInputs: CollectionInput[] = [];
   private collectionsCount: number = 0;
   private collectionsLabel: string = 'collection';
-
   private emUpdateChartPreview: EventEmitter<any> = new EventEmitter();
-
   private formGroupValidator: ValidatorFn = formGroupValidator;
   private nextCollectionId: number = 0;
   private obChartFormValid: BehaviorSubject<boolean>;
-  private obUpdateChartPreview: BehaviorSubject<boolean>;
   private previewMode: boolean = false;
   private subChartFormValid: Subscription;
   private subNameControl: Subscription;
@@ -235,7 +232,6 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     this.collectionRemove(position, label);
   }
   public onPreviewToggleOn() : void {
-    // this.obUpdateChartPreview = new BehaviorSubject(true);
     this.emUpdateChartPreview.emit();
     this.previewMode = true;
   }
@@ -243,7 +239,6 @@ export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
     this.previewMode = false;
   }
   public onUpdatePreview() : void {
-    // this.obUpdateChartPreview.next(true);
     this.emUpdateChartPreview.emit();
   }
   private removeFormControls() : void {

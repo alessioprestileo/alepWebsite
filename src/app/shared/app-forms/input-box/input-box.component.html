@@ -1,28 +1,8 @@
-<div class="container-fluid"
-     style="padding-left: 0;
-            padding-right: 0">
-  <div class="row">
-    <div class="col-sm-4">
-      <label [ngClass]="labelCssClass ? labelCssClass : labelDefaultCssClass">
-        {{label}}
-      </label>
-    </div>
-    <div class="col-sm-8">
-      <div class="form-group"
-           [ngClass]="{'has-error': hasError(boxControl),
-                       'has-success': hasSuccess(boxControl),
-                       'has-feedback': hasError(boxControl) ||
-                                       hasSuccess(boxControl)}"
-           style="margin-bottom: 0">
-        <input #box #boxControl="ngForm" [formControl]="inFormControl"
-               type="text" class="app-input-box">
-        <span [ngClass]="{
-              'glyphicon form-control-feedback':
-                  hasError(boxControl) || hasSuccess(boxControl),
-              'glyphicon-remove': hasError(boxControl),
-              'glyphicon-ok': hasSuccess(boxControl)}">
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
+<alep-ng2-input-box
+  [inFormControl]="inFormControl"
+  [boxCssClass]="boxCssClass"
+  [labelCssClass]="labelCssClass"
+  [label]="label"
+  [placeHolder]="placeHolder"
+  [type]="type">
+</alep-ng2-input-box>

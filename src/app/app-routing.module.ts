@@ -12,7 +12,6 @@ import { MyCvComponent } from './routes/my-cv/my-cv.component';
 import { ProductsComponent } from './routes/projects/warehouse/routes/products/products.component';
 import { ProductDetailComponent } from './routes/projects/warehouse/routes/product-detail/product-detail.component';
 import { ProjectsComponent } from './routes/projects/projects.component';
-import { SamplesComponent } from './routes/projects/charts/routes/samples/samples.component';
 import { WhoAmIComponent } from './routes/who-am-i/who-am-i.component';
 
 export const ROUTES_DICT: {[name: string] : string} = {
@@ -29,7 +28,6 @@ export const ROUTES_DICT: {[name: string] : string} = {
   PRODUCTS: ROUTING_LABELS.PRODUCTS,
   PRODUCTS_DETAIL: ROUTING_LABELS.PRODUCT_DETAIL,
   PROJECTS: ROUTING_LABELS.PROJECTS,
-  SAMPLES: ROUTING_LABELS.SAMPLES,
   WAREHOUSE: ROUTING_LABELS.WAREHOUSE,
   WHO_AM_I: ROUTING_LABELS.WHO_AM_I,
 };
@@ -67,10 +65,6 @@ const APP_ROUTES: Routes = [
           {
             path: ROUTING_LABELS.DASHBOARD,
             component: DashboardComponent,
-          },
-          {
-            path: ROUTING_LABELS.SAMPLES,
-            component: SamplesComponent,
           },
           {
             path: ROUTING_LABELS.CHART_DETAIL,

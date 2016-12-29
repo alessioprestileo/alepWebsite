@@ -117,17 +117,12 @@
       </button>
     </div>
   </div>
-  <!--<div *ngIf="previewMode">-->
-    <!--<alep-ng2-chart-->
-      <!--[inputChartObject]="currentChart">-->
-    <!--</alep-ng2-chart>-->
-  <!--</div>-->
   <div class="row">
     <div class="col-xs-12">
-      <alep-ng2-chart-d3 *ngIf="previewMode"
+      <alep-ng2-chart *ngIf="previewMode"
         [emUpdateChart]="emUpdateChartPreview"
         [inputChart]="currentChart">
-      </alep-ng2-chart-d3>
+      </alep-ng2-chart>
     </div>
   </div>
 </div>

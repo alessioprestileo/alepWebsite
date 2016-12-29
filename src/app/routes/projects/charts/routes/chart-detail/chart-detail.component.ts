@@ -16,7 +16,6 @@ import { formGroupValidator } from '../../../../../shared/app-forms/formGroup.va
 import { UserDataService } from "../../../../../shared/services/user-data.service";
 
 @Component({
-  // moduleId: module.id,
   selector: 'app-chart-detail',
   templateUrl: 'chart-detail.component.html',
   styleUrls: ['chart-detail.component.css'],

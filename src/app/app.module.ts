@@ -19,7 +19,6 @@ import { MyCvModule } from './routes/my-cv/my-cv.module';
 import { ProductsModule } from './routes/projects/warehouse/routes/products/products.module';
 import { ProductDetailModule } from './routes/projects/warehouse/routes/product-detail/product-detail.module';
 import { ProjectsModule } from './routes/projects/projects.module';
-import { SamplesModule } from './routes/projects/charts/routes/samples/samples.module';
 import { WhoAmIModule } from './routes/who-am-i/who-am-i.module';
 // Other app imports
 import { AppComponent }  from './app.component';
@@ -50,7 +49,6 @@ import { WeatherService } from "./shared/services/weather.service";
     ProductsModule,
     ProductDetailModule,
     ProjectsModule,
-    SamplesModule,
     WhoAmIModule,
     // App modules used directly by AppComponent
     ChartsNavModule,

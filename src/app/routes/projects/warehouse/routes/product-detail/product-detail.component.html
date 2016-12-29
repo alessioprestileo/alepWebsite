@@ -1,4 +1,4 @@
-<div *ngIf="prodIsReady">
+<div *ngIf="(obProdIsReady | async)">
   <form>
     <div class="container-fluid app-frame">
       <div class="row">
@@ -13,7 +13,7 @@
         <app-product-form
           [prodFormGroup]="formGroup"
           [product]="product"
-          [newProd]="newProd">
+          [newProd]="(obNewProd | async)">
         </app-product-form>
         <br>
         <div class="container-fluid">
