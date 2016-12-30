@@ -1,13 +1,16 @@
 {
   "project": {
-    "version": "1.0.0-beta.16",
+    "version": "1.0.0-beta.22-1",
     "name": "alep-website"
   },
   "apps": [
     {
       "root": "src",
       "outDir": "dist",
-      "assets": "assets",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
       "index": "index.html",
       "main": "main.ts",
       "test": "test.ts",
@@ -18,7 +21,6 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "../node_modules/d3/build/d3.min.js",
-        "../node_modules/uvCharts/dist/uvcharts.full.min.js",
         "../node_modules/typeahead.js/dist/typeahead.bundle.min.js",
         "../node_modules/slick-carousel/slick/slick.min.js"
       ],
@@ -51,6 +53,18 @@
   },
   "defaults": {
     "styleExt": "css",
-    "prefixInterfaces": false
+    "prefixInterfaces": false,
+    "inline": {
+      "style": false,
+      "template": false
+    },
+    "spec": {
+      "class": false,
+      "component": true,
+      "directive": true,
+      "module": false,
+      "pipe": true,
+      "service": true
+    }
   }
 }
