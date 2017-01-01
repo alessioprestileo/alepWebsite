@@ -9,8 +9,8 @@ import { WeatherService } from '../../../../../services/weather.service'
 @Component({
   // moduleId: module.id,
   selector: 'app-from-weather-data',
-  templateUrl: 'from-weather-data.component.html',
-  styleUrls: ['from-weather-data.component.css']
+  templateUrl: './from-weather-data.component.html',
+  styleUrls: ['./from-weather-data.component.css']
 })
 export class FromWeatherDataComponent
 implements DoCheck, OnDestroy, OnInit {

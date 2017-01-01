@@ -46,8 +46,8 @@ class HierarchyInfo {
 @Component({
   // moduleId: module.id,
   selector: 'app-product-form',
-  templateUrl: 'product-form.component.html',
-  styleUrls: ['product-form.component.css']
+  templateUrl: './product-form.component.html',
+  styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent
 implements DoCheck, OnDestroy, OnInit {

@@ -10,8 +10,8 @@ import { DataSet } from "../../../../models/DataSet";
 @Component({
   // moduleId: module.id,
   selector: 'app-dataset-form',
-  templateUrl: 'dataset-form.component.html',
-  styleUrls: ['dataset-form.component.css'],
+  templateUrl: './dataset-form.component.html',
+  styleUrls: ['./dataset-form.component.css'],
 })
 export class DataSetFormComponent
 implements DoCheck, OnDestroy, OnInit {

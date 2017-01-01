@@ -14,8 +14,8 @@ import { ExternalService } from '../../../../../services/external.service';
 @Component({
   // moduleId: module.id,
   selector: 'app-from-external',
-  templateUrl: 'from-external.component.html',
-  styleUrls: ['from-external.component.css'],
+  templateUrl: './from-external.component.html',
+  styleUrls: ['./from-external.component.css'],
 })
 export class FromExternalComponent
 extends DataSetBasicHandler

@@ -6,8 +6,8 @@ declare var jQuery: any;
 @Component({
   // moduleId: module.id,
   selector: 'app-radio-input',
-  templateUrl: 'radio-input.component.html',
-  styleUrls: ['radio-input.component.css']
+  templateUrl: './radio-input.component.html',
+  styleUrls: ['./radio-input.component.css']
 })
 export class RadioInputComponent implements OnInit {
   @Input() private inFormControl: FormControl;

@@ -13,8 +13,8 @@ import { UserDataService } from '../../../../../../shared/services/user-data.ser
 @Component({
   // moduleId: module.id,
   selector: 'app-user-charts',
-  templateUrl: 'user-charts.component.html',
-  styleUrls: ['user-charts.component.css'],
+  templateUrl: './user-charts.component.html',
+  styleUrls: ['./user-charts.component.css'],
 })
 export class UserChartsComponent implements OnDestroy, OnInit {
   @HostListener('window:resize', ['$event'])

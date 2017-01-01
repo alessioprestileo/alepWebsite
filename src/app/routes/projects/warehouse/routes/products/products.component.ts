@@ -18,8 +18,8 @@ declare var jQuery: any;
 @Component({
   // moduleId: module.id,
   selector: 'app-products',
-  templateUrl: 'products.component.html',
-  styleUrls: ['products.component.css'],
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent
 implements AfterViewChecked, DoCheck, OnInit, OnDestroy {

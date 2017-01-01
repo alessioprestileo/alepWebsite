@@ -14,8 +14,8 @@ import { ExternalService } from "../../../../../../services/external.service";
 @Component({
   // moduleId: module.id,
   selector: 'app-from-field',
-  templateUrl: 'from-field.component.html',
-  styleUrls: ['from-field.component.css'],
+  templateUrl: './from-field.component.html',
+  styleUrls: ['./from-field.component.css'],
 })
 export class FromFieldComponent
 extends DataSetBasicHandler

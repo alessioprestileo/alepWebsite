@@ -34,8 +34,8 @@ class CollectionInput {
 
 @Component({
   selector: 'app-chart-form',
-  templateUrl: 'chart-form.component.html',
-  styleUrls: ['chart-form.component.css'],
+  templateUrl: './chart-form.component.html',
+  styleUrls: ['./chart-form.component.css'],
 })
 export class ChartFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private chartFormGroup: FormGroup;

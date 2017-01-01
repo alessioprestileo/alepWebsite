@@ -5,8 +5,8 @@ import { NavButton } from "../../../../shared/models/NavButton";
 @Component({
   // moduleId: module.id,
   selector: 'app-warehouse-nav',
-  templateUrl: 'warehouse-nav.component.html',
-  styleUrls: ['warehouse-nav.component.css'],
+  templateUrl: './warehouse-nav.component.html',
+  styleUrls: ['./warehouse-nav.component.css'],
 })
 export class WarehouseNavComponent implements OnInit {
   private navInput: any[];

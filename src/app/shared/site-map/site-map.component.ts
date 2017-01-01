@@ -3,8 +3,8 @@ import {Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 @Component({
   // moduleId: module.id,
   selector: 'app-site-map',
-  templateUrl: 'site-map.component.html',
-  styleUrls: ['site-map.component.css']
+  templateUrl: './site-map.component.html',
+  styleUrls: ['./site-map.component.css']
 })
 export class SiteMapComponent implements OnInit {
   @Input() private labels: string[];

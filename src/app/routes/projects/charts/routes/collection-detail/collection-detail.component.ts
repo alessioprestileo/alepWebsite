@@ -17,8 +17,8 @@ import { UserDataService } from "../../../../../shared/services/user-data.servic
 @Component({
   // moduleId: module.id,
   selector: 'app-collection-detail',
-  templateUrl: 'collection-detail.component.html',
-  styleUrls: ['collection-detail.component.css'],
+  templateUrl: './collection-detail.component.html',
+  styleUrls: ['./collection-detail.component.css'],
 })
 export class CollectionDetailComponent
 implements OnDestroy, OnInit, DoCheck, AfterViewChecked {

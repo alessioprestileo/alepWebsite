@@ -4,8 +4,8 @@ import {Observable } from "rxjs/Rx";
 @Component({
   // moduleId: module.id,
   selector: 'app-fluid-buttons',
-  templateUrl: 'fluid-buttons.component.html',
-  styleUrls: ['fluid-buttons.component.css']
+  templateUrl: './fluid-buttons.component.html',
+  styleUrls: ['./fluid-buttons.component.css']
 })
 export class FluidButtonsComponent implements OnInit {
   @Input() buttonType: string;

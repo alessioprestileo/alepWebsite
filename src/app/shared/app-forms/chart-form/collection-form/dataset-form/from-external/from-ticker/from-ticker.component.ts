@@ -14,8 +14,8 @@ import { ExternalService } from "../../../../../../services/external.service";
 @Component({
   // moduleId: module.id,
   selector: 'app-from-ticker',
-  templateUrl: 'from-ticker.component.html',
-  styleUrls: ['from-ticker.component.css'],
+  templateUrl: './from-ticker.component.html',
+  styleUrls: ['./from-ticker.component.css'],
 })
 export class FromTickerComponent
   extends DataSetBasicHandler

@@ -9,8 +9,8 @@ import { UserDataService } from '../../../../../services/user-data.service';
 
 @Component({
   selector: 'app-from-user-data',
-  templateUrl: 'from-user-data.component.html',
-  styleUrls: ['from-user-data.component.css'],
+  templateUrl: './from-user-data.component.html',
+  styleUrls: ['./from-user-data.component.css'],
 })
 export class FromUserDataComponent
 implements DoCheck, OnDestroy, OnInit {

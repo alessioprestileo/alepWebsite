@@ -9,8 +9,8 @@ declare var jQuery: any;
 @Component({
   // moduleId: module.id,
 	selector: 'app-departments',
-	templateUrl: 'departments.component.html',
-	styleUrls: ['departments.component.css'],
+	templateUrl: './departments.component.html',
+	styleUrls: ['./departments.component.css'],
 })
 
 export class DepartmentsComponent implements OnDestroy, OnInit {

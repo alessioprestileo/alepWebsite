@@ -14,8 +14,8 @@ import {ChartSrc_UserData} from "../../../../../../shared/models/ChartSrc_UserDa
 @Component({
   // moduleId: module.id,
   selector: 'app-user-collections',
-  templateUrl: 'user-collections.component.html',
-  styleUrls: ['user-collections.component.css'],
+  templateUrl: './user-collections.component.html',
+  styleUrls: ['./user-collections.component.css'],
 })
 export class UserCollectionsComponent implements OnDestroy, OnInit {
   @HostListener('window:resize', ['$event'])

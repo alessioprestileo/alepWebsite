@@ -5,8 +5,8 @@ declare var jQuery: any;
 @Component({
   // moduleId: module.id,
   selector: 'app-department-detail',
-  templateUrl: 'department-detail.component.html',
-  styleUrls: ['department-detail.component.css'],
+  templateUrl: './department-detail.component.html',
+  styleUrls: ['./department-detail.component.css'],
 
 })
 

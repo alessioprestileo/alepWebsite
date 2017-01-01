@@ -11,8 +11,8 @@ import { ChartColl } from "../../../models/ChartColl";
 
 @Component({
   selector: 'app-collection-form',
-  templateUrl: 'collection-form.component.html',
-  styleUrls: ['collection-form.component.css'],
+  templateUrl: './collection-form.component.html',
+  styleUrls: ['./collection-form.component.css'],
 })
 export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   @Input() private currentPosition: number;

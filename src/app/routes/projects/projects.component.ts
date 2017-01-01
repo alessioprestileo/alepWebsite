@@ -9,8 +9,8 @@ import { CarouselSlide } from "../../shared/models/CarouselSlide";
 @Component({
   // moduleId: module.id,
   selector: 'app-projects',
-  templateUrl: 'projects.component.html',
-  styleUrls: ['projects.component.css']
+  templateUrl: './projects.component.html',
+  styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
   private carouselSlides: CarouselSlide[];

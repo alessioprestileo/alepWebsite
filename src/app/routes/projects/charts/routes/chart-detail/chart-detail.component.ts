@@ -17,8 +17,8 @@ import { UserDataService } from "../../../../../shared/services/user-data.servic
 
 @Component({
   selector: 'app-chart-detail',
-  templateUrl: 'chart-detail.component.html',
-  styleUrls: ['chart-detail.component.css'],
+  templateUrl: './chart-detail.component.html',
+  styleUrls: ['./chart-detail.component.css'],
 })
 export class ChartDetailComponent
 implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
