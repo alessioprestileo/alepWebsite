@@ -1,0 +1,8 @@
+<div *ngFor="let sample of samples">
+	<alep-ng2-chart 
+		*ngIf="sample.isReady"
+		[emUpdateChart]="sample.emitter"
+		[inputChart]="sample.chart"
+	>
+	</alep-ng2-chart>
+</div>
