@@ -6,6 +6,7 @@ import * as ROUTING_LABELS from './app-routing-labels'
 import { ChartDetailComponent } from "./routes/projects/charts/routes/chart-detail/chart-detail.component";
 import { CollectionDetailComponent } from "./routes/projects/charts/routes/collection-detail/collection-detail.component";
 import { DashboardComponent } from './routes/projects/charts/routes/dashboard/dashboard.component';
+import { SamplesComponent } from './routes/projects/charts/routes/samples/samples.component';
 import { DepartmentsComponent } from './routes/projects/warehouse/routes/departments/departments.component';
 import { HomeComponent } from './routes/home/home.component';
 import { MyCvComponent } from './routes/my-cv/my-cv.component';
@@ -28,6 +29,7 @@ export const ROUTES_DICT: {[name: string] : string} = {
   PRODUCTS: ROUTING_LABELS.PRODUCTS,
   PRODUCTS_DETAIL: ROUTING_LABELS.PRODUCT_DETAIL,
   PROJECTS: ROUTING_LABELS.PROJECTS,
+  SAMPLES: ROUTING_LABELS.SAMPLES,
   WAREHOUSE: ROUTING_LABELS.WAREHOUSE,
   WHO_AM_I: ROUTING_LABELS.WHO_AM_I,
 };
@@ -65,6 +67,10 @@ const APP_ROUTES: Routes = [
           {
             path: ROUTING_LABELS.DASHBOARD,
             component: DashboardComponent,
+          },
+          {
+            path: ROUTING_LABELS.SAMPLES,
+            component: SamplesComponent,
           },
           {
             path: ROUTING_LABELS.CHART_DETAIL,

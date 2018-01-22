@@ -14,6 +14,6 @@ export class MyCvComponent implements OnInit {
   }
 
   public onCvEngClicked() : void {
-    window.location.assign('https://drive.google.com/file/d/0B5fpN0QiKMiDSU1WYVZTamVSM28/view?usp=sharing');
+    window.location.assign('https://drive.google.com/file/d/0B5fpN0QiKMiDN2NqWlVIX0cxT3M/view?usp=sharing');
   }
 }

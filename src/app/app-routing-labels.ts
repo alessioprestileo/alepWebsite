@@ -11,5 +11,6 @@ export const NEW_CHART: string = 'New_Chart';
 export const PRODUCTS: string = 'Products';
 export const PRODUCT_DETAIL: string = 'Product_Detail';
 export const PROJECTS: string = 'Projects';
+export const SAMPLES: string = 'Samples';
 export const WAREHOUSE: string = 'Warehouse';
 export const WHO_AM_I: string = 'Who_Am_I';
