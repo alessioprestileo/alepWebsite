@@ -1,11 +1,16 @@
 .app-bordered {
-  border: 2px solid #d1b394;
+  border: 1px solid #d1b394;
   border-radius: 2rem;
   margin: 1rem;
   padding: 2.5rem;
 }
 .container-fluid {
   padding: 0;
+}
+.chartContainer {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 button.btn.btn-default.app-nav-toggle {
   border-radius: 1rem;

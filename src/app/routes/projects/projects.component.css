@@ -8,6 +8,12 @@
   text-align: justify;
   padding-bottom: 8rem;
 }
+.container-fluid > .row {
+  margin-left: 5%;
+  margin-right: 5%;
+  padding-top: 30px;
+}
+
 @media (max-width: 767px) {
   .container-fluid {
     padding: 0.5rem;

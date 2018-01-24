@@ -5,6 +5,7 @@
   color: #eee;
   outline: 0;
   width: 100%;
+  cursor: pointer;
 }
 .app-fluidButton-content {
   height: 100%;
@@ -22,21 +23,19 @@
 }
 .app-fluidButton.departments:hover {
   background-color: #CFD8DC;
-  cursor: default;
   color: black;
 }
 .app-fluidButton.departments.isSelected{
-  background-color: #ffb3b3;
-  color: black;
+  background-color: #039be5;
+  color: #eee;
 }
 .app-fluidButton:hover {
   background-color: #CFD8DC;
-  cursor: default;
   color: black;
 }
 .app-fluidButton.isSelected {
-  background-color: #ffb3b3;
-  color: black;
+  background-color: #039be5;
+  color: #eee;
 }
 .app-fluidButton.sections {
   background-color: #eee;
@@ -50,12 +49,11 @@
 }
 .app-fluidButton.sections:hover {
   background-color: #CFD8DC;
-  cursor: default;
   color: #ffffff;
 }
 .app-fluidButton.sections.isSelected {
-  background-color: #ffb3b3;
-  color: #039be5;
+  background-color: #039be5;
+  color: #eee;
 }
 @media (max-width: 767px) {
   .app-fluidButton {

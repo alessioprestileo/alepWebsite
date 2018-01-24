@@ -4,6 +4,10 @@
   padding-left: 0;
   padding-right: 0;
 }
+img.profilePicture {
+  border-radius: 10px;
+}
+
 @media (max-width: 767px) {
   .container-fluid {
     padding: 0.5rem;
