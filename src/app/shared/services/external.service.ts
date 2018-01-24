@@ -1,5 +1,5 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -9,15 +9,14 @@ import { DataSetSrc_External } from '../models/DataSetSrc_External';
 export class ExternalService {
   private itemsUrl = 'src/external';  // URL to web api
 
-  constructor(private http: Http) { }
+  constructor(private httpClient: HttpClient) { }
 
   // Delete dataset source
   public deleteDataSetSrc(dataSetSrc: DataSetSrc_External) : Promise<any> {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let url = `${this.itemsUrl}/${dataSetSrc.Id}`;
-    return this.http
-      .delete(url, headers)
+    return this.httpClient
+      .delete(url, {headers: headers})
       .toPromise()
       .catch(ExternalService.handleError);
   }
@@ -29,9 +28,9 @@ export class ExternalService {
   }
   // Get all dataset sources
   private getDataSetSrcs() : Promise<DataSetSrc_External[]> {
-    return this.http.get(this.itemsUrl)
+    return this.httpClient.get(this.itemsUrl)
       .toPromise()
-      .then(response => response.json().data)
+      .then(response => response)
       .catch(ExternalService.handleError);
   }
   // Get filtered dataset sources for which "filterBy" property equals "value"
@@ -88,22 +87,19 @@ export class ExternalService {
   }
   // Add new data set source
   private post(dataSetSrc: DataSetSrc_External) : Promise<DataSetSrc_External> {
-    let headers = new Headers({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(this.itemsUrl, JSON.stringify(dataSetSrc), { headers: headers })
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient
+      .post(this.itemsUrl, dataSetSrc, { headers: headers })
       .toPromise()
-      .then(res => res.json().data)
+      .then(res => res)
       .catch(ExternalService.handleError);
   }
   // Update existing data set source
   private put(dataSetSrc: DataSetSrc_External) : Promise<DataSetSrc_External> {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let url = `${this.itemsUrl}/${dataSetSrc.Id}`;
-    return this.http
-      .put(url, JSON.stringify(dataSetSrc), { headers: headers })
+    return this.httpClient
+      .put(url, dataSetSrc, { headers: headers })
       .toPromise()
       .then(() => dataSetSrc)
       .catch(ExternalService.handleError);

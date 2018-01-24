@@ -1,5 +1,5 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -18,22 +18,21 @@ export class UserDataService {
     'collections': 'src/userData_collections'
   };
 
-  constructor(private http: Http) { }
+  constructor(private httpClient: HttpClient) { }
 
   // Delete item from the targeted collection
   public deleteItem(target: string, id: number) : Promise<any> {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let url = `${this.urlsMap[target]}/${id}`;
-    return this.http
-      .delete(url, headers)
+    return this.httpClient
+      .delete(url, {headers: headers})
       .toPromise()
       .catch(UserDataService.handleError);
   }
   // Get all items from the targeted collection
   public getAll(target: string) : Promise<Item[]> {
-    return this.http.get(this.urlsMap[target]).toPromise().then(
-      response => response.json().data
+    return this.httpClient.get(this.urlsMap[target]).toPromise().then(
+      response => response
     ).catch(UserDataService.handleError);
   }
   // Get filtered items from the targeted collection
@@ -102,22 +101,19 @@ export class UserDataService {
   }
   // Add new item to the targeted collection
   private post(target: string, item: Item) : Promise<Item> {
-    let headers = new Headers({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(this.urlsMap[target], JSON.stringify(item), { headers: headers })
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient
+      .post(this.urlsMap[target], item, { headers: headers })
       .toPromise()
-      .then(res => res.json().data)
+      .then(res => res)
       .catch(UserDataService.handleError);
   }
   // Update existing item
   private put(target: string, item: Item) : Promise<Item> {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let url = `${this.urlsMap[target]}/${item.id}`;
-    return this.http
-      .put(url, JSON.stringify(item), { headers: headers })
+    return this.httpClient
+      .put(url, item, { headers: headers })
       .toPromise()
       .then(() => item)
       .catch(UserDataService.handleError);

@@ -1,4 +1,5 @@
-export class InMemoryData {
+import { InMemoryDbService } from 'angular-in-memory-web-api';
+export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     let external = [
       {"Id":"1e7b08fb-d420-42eb-90c2-9c4653be8ab8","Ticker":"COMPANY 1","Field":"AVG_TOT_ASSETS","DataPoints":{"2004-12-31T00:00:00":43312.0,"2005-12-31T00:00:00":49836.0,"2006-12-31T00:00:00":56245.496,"2007-12-31T00:00:00":67049.033,"2008-12-31T00:00:00":85012.6655,"2009-12-31T00:00:00":96582.385,"2010-12-31T00:00:00":96936.1165,"2011-12-31T00:00:00":97027.3685,"2012-12-31T00:00:00":95541.3532,"2013-12-31T00:00:00":97468.581,"2014-03-31T00:00:00":97769.6,"2014-06-30T00:00:00":98453.461}},

@@ -1,5 +1,5 @@
 import { Injectable }    from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -9,13 +9,13 @@ import { WResponse } from "../models/weather-forecast-src-classes";
 export class WeatherService {
   private url: string = 'src/weather';
 
-  constructor(private http: Http) { }
+  constructor(private httpClient: HttpClient) { }
 
   // Get all forecast objects from json file (data includes only one week:
   // 2016-09-12 to 2016-09-18)
   public getAll() : Promise<WResponse[]> {
-    return this.http.get(this.url).toPromise().then(
-      response => response.json().data
+    return this.httpClient.get(this.url).toPromise().then(
+      response => response
     ).catch(WeatherService.handleError);
   }
   // Get value corresponding to the given property for every day in the week

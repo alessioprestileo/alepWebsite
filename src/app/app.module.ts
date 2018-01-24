@@ -1,12 +1,12 @@
 // Imports for loading & configuring the in-memory web api
 import { XHRBackend } from '@angular/http';
-import { InMemoryBackendService, SEED_DATA } from 'angular2-in-memory-web-api';
-import { InMemoryData }               	 from './shared/utils/in-memory-data';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService }  from './shared/utils/in-memory-data';
 
 // Angular modules
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule }     from '@angular/http';
+import { HttpClientModule }    from '@angular/common/http';
 
 // App routing
 import { AlepWebsiteRoutingModule, ROUTES_DICT } from './app-routing.module';
@@ -37,7 +37,10 @@ import { WeatherService } from "./shared/services/weather.service";
   imports: [
     // Angular modules
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    ),
     // ROUTING
     AlepWebsiteRoutingModule,
     // Routes modules
@@ -67,9 +70,7 @@ import { WeatherService } from "./shared/services/weather.service";
     UserDataService,
     WarehouseService,
     WeatherService,
-    { provide: 'ROUTES_DICT', useValue: ROUTES_DICT },
-    { provide: XHRBackend, useClass: InMemoryBackendService }, // in-mem server
-    { provide: SEED_DATA,  useClass: InMemoryData }     // in-mem server data
+    { provide: 'ROUTES_DICT', useValue: ROUTES_DICT }
   ],
   bootstrap: [ AppComponent ]
 })

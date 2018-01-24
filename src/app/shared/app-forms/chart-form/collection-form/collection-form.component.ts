@@ -1,5 +1,5 @@
 import {
-  Component, DoCheck, Input, OnDestroy, OnInit,
+  Component, Input, OnDestroy, OnInit,
 } from '@angular/core';
 import {
   FormControl, FormGroup, Validators
@@ -14,7 +14,7 @@ import { ChartColl } from "../../../models/ChartColl";
   templateUrl: './collection-form.component.html',
   styleUrls: ['./collection-form.component.css'],
 })
-export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
+export class CollectionFormComponent implements OnDestroy, OnInit {
   @Input() private currentPosition: number;
   @Input() private currentCollection: ChartColl;
   @Input() private detachedCollection: boolean = false;
@@ -35,8 +35,6 @@ export class CollectionFormComponent implements DoCheck, OnDestroy, OnInit {
   ngOnDestroy() {
     this.removeFormControls();
     this.cancelSubs();
-  }
-  ngDoCheck() {
   }
 
   private addFormControls() : void {

@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, Component, Inject, OnDestroy, OnInit, DoCheck
+  Component, Inject, OnDestroy, OnInit
 } from '@angular/core';
 import { Location }    from '@angular/common';
 import {
@@ -21,16 +21,16 @@ import { UserDataService } from "../../../../../shared/services/user-data.servic
   styleUrls: ['./collection-detail.component.css'],
 })
 export class CollectionDetailComponent
-implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
+implements OnDestroy, OnInit {
   private collection: ChartColl;
   private collIdKeyword: string;
   private formGroup: FormGroup;
   private formGroupValidator: ValidatorFn = formGroupValidator;
   private newCollection: boolean = false;
-  private obFormGroupValid: BehaviorSubject<boolean>;
+  private obFormGroupValid: BehaviorSubject<boolean> = new BehaviorSubject(true);
   private prevBrowserPath: string;
   private subFormGroup: Subscription;
-  private title: string;
+  private title: string = '';
 
   constructor(
     @Inject('ROUTES_DICT') private ROUTES_DICT,
@@ -42,12 +42,7 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
 
   ngOnInit() {
     this.createFormGroup();
-    this.obFormGroupValid = new BehaviorSubject(null);
-  }
-  ngOnDestroy() {
-    this.cancelSubs();
-  }
-  ngAfterViewChecked() {
+
     let browserPath: string = this.location.path();
     if (browserPath && browserPath !== this.prevBrowserPath) {
       this.prevBrowserPath = browserPath;
@@ -59,7 +54,8 @@ implements OnDestroy, OnInit, DoCheck, AfterViewChecked {
       }
     }
   }
-  ngDoCheck() {
+  ngOnDestroy() {
+    this.cancelSubs();
   }
 
   private cancelSubs() : void {
